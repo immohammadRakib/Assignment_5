@@ -101,7 +101,7 @@ const RegisterForm = () => {
     required
     className="flex h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-gray-700"
   >
-    <option value="" disabled selected>Select your account type</option>
+    <option value="" disabled>Select your account type</option>
     <option value="TENANT">TENANT (Buyer)</option>
     <option value="LANDLORD">LANDLORD (Seller)</option>
   </select>

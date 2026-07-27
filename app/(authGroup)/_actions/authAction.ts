@@ -78,18 +78,24 @@ export const loginAction = async (redirectTo: string, prevState: any, formData: 
   }
 }
 
-// রেজিস্ট্রেশন অ্যাকশন (এখানে কোনো রোল পাস হচ্ছে না, তাই সিকিউর)
+
+
 export const registerAction = async (redirectTo: string, prevState: any, formData: FormData) => {
   const name = formData.get("name");
   const email = formData.get("email");
   const password = formData.get("password");
   const role = formData.get("role");
 
+  if (!role) {
+    return { success: false, message: "Please select a user role!" };
+  }
+
   if (role === "ADMIN") {
-    return { success: false, message: "Action not allowed!" };
+    return { success: false, message: "You cannot register as an ADMIN from here!" };
   }
 
   const payload = { name, email, password, role };
+  let isSuccess = false; // রিডাইরেক্ট ট্র্যাকিংয়ের জন্য ফ্ল্যাগ নিলাম
 
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`, {
@@ -99,20 +105,22 @@ export const registerAction = async (redirectTo: string, prevState: any, formDat
     });
 
     const result = await res.json();
-
+    
     if (result.success) {
-      redirect("/login");
+      isSuccess = true; // সফল হলে ফ্ল্যাগ ট্রু হবে
+    } else {
+      return { success: false, message: result.message || "Registration failed on backend!" };
     }
-
-    return result;
-
   } catch (error) {
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      throw error;
-    }
-    return {
-      success: false,
-      message: "Something went wrong during registration!"
-    };
+    console.error("Fetch Error:", error);
+    return { success: false, message: "Something went wrong during registration!" };
+  }
+
+  // 🎯 ট্রাই-ক্যাচের বাইরে একদম নিচে রিডাইরেক্ট করতে হবে (লগইন অ্যাকশনের মতো)
+  if (isSuccess) {
+    redirect("/login");
   }
 }
+
+
+
