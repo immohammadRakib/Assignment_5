@@ -15,7 +15,17 @@ const RegisterForm = () => {
   const redirectTo = searchParams.get("redirectTo") ?? "";
   
   // আপনার সার্ভার অ্যাকশন অনুযায়ী বাইন্ড করা হয়েছে
-  const [state, action, pending] = useActionState(registerAction.bind(null, redirectTo), false);
+  // const [state, action, pending] = useActionState(registerAction.bind(null, redirectTo), false);
+
+  // ১. ইনিশিয়াল স্টেট হিসেবে একটি অবজেক্ট দাও (null বা false নয়)
+const [state, formAction, pending] = useActionState(
+  async (prevState: any, formData: FormData) => {
+    // সরাসরি অ্যাকশন কল করে redirectTo পাস করে দাও
+    return await registerAction(redirectTo, prevState, formData);
+  },
+  { success: false, message: "" }
+);
+
 
   useEffect(() => {
     if (!state) return;
@@ -26,7 +36,7 @@ const RegisterForm = () => {
 
   return (
     <div className="w-full max-w-md mx-auto p-5">
-      <form action={action} className="space-y-5">
+      <form action={formAction} className="space-y-5">
         <Card className="p-8 space-y-6 shadow-xl border border-neutral-100 rounded-2xl bg-white/80 backdrop-blur-md">
           
           {/* Header */}
