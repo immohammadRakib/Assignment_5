@@ -25,7 +25,7 @@ const RegisterForm = () => {
   }, [state]);
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto p-5">
       <form action={action} className="space-y-5">
         <Card className="p-8 space-y-6 shadow-xl border border-neutral-100 rounded-2xl bg-white/80 backdrop-blur-md">
           

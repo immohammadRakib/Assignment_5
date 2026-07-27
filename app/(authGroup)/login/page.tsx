@@ -4,7 +4,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-[calc(100vh-80px)] items-center justify-center pt-20 px-4">
         <div className="w-full max-w-md space-y-6 rounded-lg border p-8 shadow-lg">
 
           {/* FORM GENERIC TEXTS */}
