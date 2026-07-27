@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { PropertiesSkeleton } from "../_components/properties/propertiesSkeleton"; // তোমার তৈরি করা স্কেলেটন পাথ মিলিয়ে নিও
-import { PublicPropertiesList } from "../_components/properties/propertiesList"; // এই লিস্ট কম্পোনেন্টটি আমরা এখন বানাবো
-import { PropertySearchBar } from "../_components/properties/propertiesSearchBar"; // তোমার তৈরি করা সার্চবার পাথ
+import { PropertiesSkeleton } from "../_components/properties/propertiesSkeleton";
+import { PublicPropertiesList } from "../_components/properties/propertiesList"; 
+import { PropertySearchBar } from "../_components/properties/propertiesSearchBar"; 
 
 type PropertiesPageProps = {
   searchParams: Promise<{ search?: string; category?: string; city?: string }>;

@@ -10,6 +10,7 @@ export const getAllProperties = async (searchParams?: {
   search?: string; 
   category?: string; 
   city?: string;
+  page?: string;
 }) => {
   try {
     // ১. সার্চ এবং ফিল্টার প্যারামিটার অনুযায়ী ডাইনামিক ইউআরএল তৈরি
@@ -19,6 +20,7 @@ export const getAllProperties = async (searchParams?: {
     if (searchParams?.search) queryParts.push(`search=${encodeURIComponent(searchParams.search)}`);
     if (searchParams?.category) queryParts.push(`category=${encodeURIComponent(searchParams.category)}`);
     if (searchParams?.city) queryParts.push(`city=${encodeURIComponent(searchParams.city)}`);
+    if (searchParams?.page) queryParts.push(`page=${searchParams.page}`);
 
     if (queryParts.length > 0) {
       url += `?${queryParts.join("&")}`;
