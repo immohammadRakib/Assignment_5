@@ -92,6 +92,21 @@ const RegisterForm = () => {
             </div>
           </div>
 
+          <div className="space-y-2">
+  <label className="text-xs font-semibold uppercase tracking-wider text-gray-600 pl-1">
+    Register As
+  </label>
+  <select 
+    name="role" 
+    required
+    className="flex h-11 w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 transition text-gray-700"
+  >
+    <option value="" disabled selected>Select your account type</option>
+    <option value="TENANT">TENANT (Buyer)</option>
+    <option value="LANDLORD">LANDLORD (Seller)</option>
+  </select>
+</div>
+
           {/* Terms & Conditions Notice */}
           <div className="flex items-start gap-2 text-xs text-muted-foreground pl-1">
             <ShieldCheck className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
