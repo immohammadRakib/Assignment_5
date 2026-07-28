@@ -6,21 +6,16 @@ import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { registerAction } from "../_actions/authAction"; // আপনার অ্যাকশন ফাইলের সঠিক পাথ দিন
+import { registerAction } from "../_actions/authAction"; 
 import Link from "next/link";
 import { Lock, Mail, User, ShieldCheck } from "lucide-react";
 
-const RegisterForm = () => {
-  const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") ?? "";
+const RegisterForm = () => {  
+const searchParams = useSearchParams();
+const redirectTo = searchParams.get("redirectTo") ?? "";
   
-  // আপনার সার্ভার অ্যাকশন অনুযায়ী বাইন্ড করা হয়েছে
-  // const [state, action, pending] = useActionState(registerAction.bind(null, redirectTo), false);
-
-  // ১. ইনিশিয়াল স্টেট হিসেবে একটি অবজেক্ট দাও (null বা false নয়)
 const [state, formAction, pending] = useActionState(
   async (prevState: any, formData: FormData) => {
-    // সরাসরি অ্যাকশন কল করে redirectTo পাস করে দাও
     return await registerAction(redirectTo, prevState, formData);
   },
   { success: false, message: "" }

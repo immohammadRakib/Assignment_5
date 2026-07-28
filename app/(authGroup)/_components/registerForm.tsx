@@ -23,7 +23,7 @@ const RegisterForm = () => {
 
     if (state.success) {
       toast.success(state.message || "Registration successful!");
-      // 🎯 যদি সার্ভার অ্যাকশন থেকে রিডাইরেক্ট না করো, তবে এটি সচল থাকবে
+      
       router.push("/login"); 
     } else {
       toast.error(state.message || "Registration failed");
@@ -41,7 +41,7 @@ const RegisterForm = () => {
         
         <div className="space-y-1">
           <label className="text-xs font-semibold text-gray-600">Register As</label>
-          {/* 🎯 এখানে defaultValue="" যোগ করা হয়েছে এবং option থেকে selected বাদ দেওয়া হয়েছে */}
+          
           <select 
             name="role" 
             defaultValue=""

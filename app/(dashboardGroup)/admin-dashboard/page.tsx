@@ -12,7 +12,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-// অ্যাসাইনমেন্ট রিকুয়্যারমেন্ট ফিলাপ করার জন্য কাস্টম ডামি ডাটা (অ্যাডমিন স্ট্যাটস)
+
 const adminStats = [
   {
     title: "Total Users",
@@ -44,7 +44,7 @@ const adminStats = [
   },
 ];
 
-// সাম্প্রতিক বুকিং বা অ্যাক্টিভিটির ডামি লিস্ট
+
 const recentTransactions = [
   { id: "TXN101", tenant: "Anisur Rahman", property: "Smart Bachelor Studio", amount: "৳4,500", status: "Success" },
   { id: "TXN102", tenant: "Sabbir Ahmed", property: "Luxury 3BHK Apartment", amount: "৳11,400", status: "Success" },
@@ -55,7 +55,6 @@ const recentTransactions = [
 export default function AdminDashboardPage() {
   return (
     <div className="space-y-6">
-      {/* হেডার সেকশন */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">Admin Overview</h1>
@@ -65,7 +64,6 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* ৪ কলামের স্ট্যাটস গ্রিড (Airbnb/Premium Style) */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {adminStats.map((stat, i) => {
           const Icon = stat.icon;
@@ -97,7 +95,6 @@ export default function AdminDashboardPage() {
         })}
       </div>
 
-      {/* সাম্প্রতিক ট্রানজেকশন টেবিল (Core Features Criteria) */}
       <Card className="shadow-sm border-neutral-100 bg-white">
         <CardHeader className="flex flex-row items-center justify-between">
           <div>

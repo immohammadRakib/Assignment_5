@@ -22,7 +22,6 @@ const LoginForm = () => {
 
   return (
     <form action={action} className="space-y-4">
-      {/* Inputs */}
       <div className="space-y-3">
         <Input 
           name="email" 
@@ -40,7 +39,7 @@ const LoginForm = () => {
         />
       </div>
 
-      {/* Airbnb Style Login Button */}
+
       <Button 
         type="submit" 
         disabled={pending}
@@ -49,7 +48,6 @@ const LoginForm = () => {
         {pending ? "Submitting..." : "Login"}
       </Button>
 
-      {/* Navigation to Register Page */}
       <div className="text-center text-xs text-muted-foreground pt-2 border-t border-neutral-100">
         Don't have an account?{" "}
         <Link 

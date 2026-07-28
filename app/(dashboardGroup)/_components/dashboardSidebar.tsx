@@ -12,13 +12,12 @@ import {
 import { ISidebarItem, NavbarProps } from "@/lib/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { sidebarMenuItems } from "../_config/sidebarMenuItem"; // সঠিক পাথ নিশ্চিত করো
+import { sidebarMenuItems } from "../_config/sidebarMenuItem"; 
 
 export default function DashboardSidebar({ user }: NavbarProps) {
   const pathname = usePathname();
   let navItems: ISidebarItem[] = [];
 
-  // RentNest প্রজেক্টের রোল অনুযায়ী পারফেক্ট কন্ডিশন ম্যাচিং
   const userRole = user?.data?.profile?.role;
 
   if (userRole === "TENANT") {

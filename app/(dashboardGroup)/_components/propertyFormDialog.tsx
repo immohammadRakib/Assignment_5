@@ -17,8 +17,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { PencilIcon, PlusIcon } from "lucide-react";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
-import { createProperty, updateProperty } from "../_actions/myPropertiesAction"; // তোমার তৈরি করা নতুন অ্যাকশন পাথ
-import { IProperty } from "./myPropertyCard"; // কার্ড থেকে ইন্টারফেস ইম্পোর্ট করা হলো
+import { createProperty, updateProperty } from "../_actions/myPropertiesAction"; 
+import { IProperty } from "./myPropertyCard";
 
 type PropertyFormDialogProps = {
   mode: "create" | "edit";
@@ -28,7 +28,6 @@ type PropertyFormDialogProps = {
 export function PropertyFormDialog({ mode, property }: PropertyFormDialogProps) {
   const [open, setOpen] = useState(false);
 
-  // ১. লেটেস্ট Next.js ১৫+ নিয়ম অনুযায়ী অ্যাকশন ডাইনামিক বাইন্ডিং
   const action = mode === "edit" && property ? updateProperty.bind(null, property.id) : createProperty;
   const [state, formAction, pending] = useActionState(action, null) as any;
 
@@ -36,7 +35,7 @@ export function PropertyFormDialog({ mode, property }: PropertyFormDialogProps) 
     if (!state) return;
     if (state.success) {
       toast.success(state.message || (mode === "edit" ? "Property updated successfully!" : "Property listed successfully!"));
-      setOpen(false); // ফর্ম সাবমিট সফল হলে পপআপ বন্ধ হয়ে যাবে
+      setOpen(false); 
     } else {
       toast.error(state.message || "Something went wrong!");
     }
@@ -64,19 +63,16 @@ export function PropertyFormDialog({ mode, property }: PropertyFormDialogProps) 
         </DialogHeader>
         
         <form action={formAction} className="space-y-4 pt-2">
-          {/* ১. প্রপার্টি টাইটেল */}
           <div className="space-y-1">
             <Label htmlFor="title" className="text-xs font-semibold text-gray-600">Property Title</Label>
             <Input id="title" name="title" defaultValue={property?.title} placeholder="e.g. Smart Bachelor Studio Apartment" required className="focus-visible:ring-rose-500" />
           </div>
 
-          {/* ২. ডেসক্রিপশন */}
           <div className="space-y-1">
             <Label htmlFor="description" className="text-xs font-semibold text-gray-600">Description</Label>
             <Textarea id="description" name="description" defaultValue={property?.description} placeholder="Describe your property rooms, facilities..." required className="min-h-24 focus-visible:ring-rose-500" />
           </div>
 
-          {/* ৩. লোকেশন ও সিটি (এক লাইনে দুটি ইনপুট - রেসপন্সিভ গ্রিড) */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <Label htmlFor="location" className="text-xs font-semibold text-gray-600">Area/Location</Label>
@@ -88,7 +84,6 @@ export function PropertyFormDialog({ mode, property }: PropertyFormDialogProps) 
             </div>
           </div>
 
-          {/* ৪. প্রতিদিনের ভাড়া ও ক্যাটাগরি আইডি (এক লাইনে) */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
               <Label htmlFor="pricePerDay" className="text-xs font-semibold text-gray-600">Price Per Day (৳)</Label>
@@ -100,24 +95,20 @@ export function PropertyFormDialog({ mode, property }: PropertyFormDialogProps) 
             </div>
           </div>
 
-          {/* ৫. ইমেজ ইউআরএল */}
           <div className="space-y-1">
             <Label htmlFor="images" className="text-xs font-semibold text-gray-600">Images (Comma separated URLs)</Label>
             <Input id="images" name="images" defaultValue={property?.images?.join(", ")} placeholder="https://image1.com, https://image2.com" className="focus-visible:ring-rose-500" />
           </div>
 
-          {/* ৬. অ্যাভেইলেবিলিটি স্ট্যাটাস (শুধুমাত্র এডিট মোডে দেখাবে) */}
           {mode === "edit" ? (
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer py-1">
               <Checkbox name="isAvailable" defaultChecked={property?.isAvailable} className="data-[state=checked]:bg-rose-500 data-[state=checked]:border-rose-500" />
               Property is currently available for rent
             </Label>
           ) : (
-            // ক্রিয়েট মোডের জন্য বাই ডিফল্ট অন বা ট্রু পাস করার সেফ ফিল্ড
             <input type="hidden" name="isAvailable" value="true" />
           )}
 
-          {/* সাবমিট বোতাম (Airbnb Style Rose Gradient) */}
           <DialogFooter className="pt-2">
             <Button 
               type="submit" 

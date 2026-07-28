@@ -5,7 +5,7 @@ import { isAccessTokenExist } from "@/service/refreshToken";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 
-// প্রপার্টি অ্যাকশনের জন্য টাইপ ডিফাইন করা হলো
+
 type PropertyState = {
   success: boolean;
   statusCode: number;
@@ -13,11 +13,10 @@ type PropertyState = {
   data: Record<string, any>;
 };
 
-/**
- * ১. নতুন প্রপার্টি তৈরি করার অ্যাকশন (Create Property)
- */
+
+
 export const createProperty = async (prevState: any, formData: FormData) => {
-  // ফর্ম ডেটা থেকে মানগুলো নেওয়া হচ্ছে
+
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
   const location = formData.get("location") as string;
@@ -25,11 +24,9 @@ export const createProperty = async (prevState: any, formData: FormData) => {
   const pricePerDay = Number(formData.get("pricePerDay"));
   const categoryId = formData.get("categoryId") as string;
 
-  // ছবিগুলোর ইনপুট স্ট্রিং বা মাল্টিপল হতে পারে, কমা দিয়ে স্প্লিট করে অ্যারে করা হলো
   const imagesInput = formData.get("images") as string;
   const images = imagesInput ? imagesInput.split(",").map((img) => img.trim()) : ["https://unsplash.com"];
 
-  // তোমার cURL রিকোয়েস্ট অনুযায়ী পেলোড তৈরি
   const payload = {
     title,
     description,
@@ -43,13 +40,11 @@ export const createProperty = async (prevState: any, formData: FormData) => {
   console.log("Creating Property Payload:", payload);
 
   try {
-    // অ্যাক্সেস টোকেন চেক করা হচ্ছে
     const accessToken = await isAccessTokenExist();
     if (!accessToken) {
       return { success: false, message: "User not logged in!" };
     }
 
-    // ব্যাকএন্ড এপিআই কল (cURL অনুযায়ী পাথ সেট করা হয়েছে)
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/landlord/properties`, {
       method: "POST",
       headers: {
@@ -61,7 +56,6 @@ export const createProperty = async (prevState: any, formData: FormData) => {
 
     const result = await res.json();
 
-    // ক্যাশ ক্লিয়ার করার জন্য রেভ্যালিডেট ট্যাগ ট্রিগার
     if (result.success) {
         revalidateTag("my-properties", { expire: 0 });
         revalidateTag("public-properties", { expire: 0 });
@@ -74,9 +68,8 @@ export const createProperty = async (prevState: any, formData: FormData) => {
   }
 };
 
-/**
- * ২. প্রপার্টি আপডেট করার অ্যাকশন (Update Property)
- */
+
+
 export const updateProperty = async (propertyId: string, prevState: any, formData: FormData) => {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
@@ -87,7 +80,7 @@ export const updateProperty = async (propertyId: string, prevState: any, formDat
   const imagesInput = formData.get("images") as string;
   const images = imagesInput ? imagesInput.split(",").map((img) => img.trim()) : [];
 
-  // তোমার ২য় cURL (PUT) রিকোয়েস্ট অনুযায়ী পেলোড তৈরি
+  
   const payload = {
     title,
     description,
@@ -105,7 +98,6 @@ export const updateProperty = async (propertyId: string, prevState: any, formDat
       return { success: false, message: "User not logged in!" };
     }
 
-    // cURL অনুযায়ী PUT রিকোয়েস্ট পাঠানো হচ্ছে নির্দিষ্ট propertyId-তে
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/landlord/properties/${propertyId}`, {
       method: "PUT",
       headers: {
@@ -129,9 +121,8 @@ export const updateProperty = async (propertyId: string, prevState: any, formDat
   }
 };
 
-/**
- * ৩. ল্যান্ডলর্ড নিজের প্রপার্টিগুলোর লিস্ট আনার অ্যাকশন (Get My Properties)
- */
+
+
 export const getMyProperties = async () => {
   try {
     const cookieStore = await cookies();
@@ -147,7 +138,7 @@ export const getMyProperties = async () => {
       },
       cache: "force-cache",
       next: {
-        revalidate: 60 * 60 * 24, // ১ দিন ক্যাশ থাকবে
+        revalidate: 60 * 60 * 24, 
         tags: ["my-properties"],
       },
     });

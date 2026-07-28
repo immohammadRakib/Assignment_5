@@ -9,12 +9,12 @@ export const TENANT_SIDEBAR_ITEMS: ISidebarItem[] = [
   },
   { 
     label: "My Bookings", 
-    href: "/dashboard/bookings", // ভাড়াটিয়ার বুকিং হিস্ট্রি
+    href: "/dashboard/bookings",
     icon: History 
   },
   { 
     label: "Wishlist", 
-    href: "/dashboard/wishlist", // পছন্দের প্রপার্টি সেভ রাখার জন্য
+    href: "/dashboard/wishlist",
     icon: Heart 
   },
   { 

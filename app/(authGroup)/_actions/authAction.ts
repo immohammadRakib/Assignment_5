@@ -15,7 +15,7 @@ type LoginState = {
   }
 }
 
-// অল-ইন-ওয়ান লগইন অ্যাকশন (USER, AUTHOR, ADMIN সবার জন্য)
+
 export const loginAction = async (redirectTo: string, prevState: any, formData: FormData) => {
   const email = formData.get("email");
   const password = formData.get("password");
@@ -47,12 +47,12 @@ export const loginAction = async (redirectTo: string, prevState: any, formData: 
 
       const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
 
-      // যদি মিডলওয়্যার বা অন্য কোনো পেজ থেকে রিডাইরেক্ট ইউআরএল আসে
+      
       if (redirectTo && typeof redirectTo === "string" && redirectTo.startsWith("/") && !redirectTo.startsWith("//")) {
         redirect(redirectTo)
       }
 
-      // রোল অনুযায়ী ড্যাশবোর্ডে পাঠানো (এখানেই অ্যাডমিন তার ড্যাশবোর্ডে চলে যাবে)
+      
       if (decodedToken.role === "TENANT") {
         redirect("/dashboard");
       } else if (decodedToken.role === "ADMIN") {
@@ -65,9 +65,6 @@ export const loginAction = async (redirectTo: string, prevState: any, formData: 
     return result;
 
   } catch (error) {
-    // Next.js-এর redirect() ইন্টারনালি একটা এরর থ্রো করে। 
-    // ট্রাই-ক্যাচের ভেতর সেই রিডাইরেক্ট এরর আটকালে রিডাইরেক্ট কাজ করে না। 
-    // তাই এই চেকটি দেওয়া বাধ্যতামূলক।
     if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
       throw error;
     }
@@ -95,7 +92,7 @@ export const registerAction = async (redirectTo: string, prevState: any, formDat
   }
 
   const payload = { name, email, password, role };
-  let isSuccess = false; // রিডাইরেক্ট ট্র্যাকিংয়ের জন্য ফ্ল্যাগ নিলাম
+  let isSuccess = false; 
 
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`, {
@@ -107,7 +104,7 @@ export const registerAction = async (redirectTo: string, prevState: any, formDat
     const result = await res.json();
     
     if (result.success) {
-      isSuccess = true; // সফল হলে ফ্ল্যাগ ট্রু হবে
+      isSuccess = true;
     } else {
       return { success: false, message: result.message || "Registration failed on backend!" };
     }
@@ -116,7 +113,6 @@ export const registerAction = async (redirectTo: string, prevState: any, formDat
     return { success: false, message: "Something went wrong during registration!" };
   }
 
-  // 🎯 ট্রাই-ক্যাচের বাইরে একদম নিচে রিডাইরেক্ট করতে হবে (লগইন অ্যাকশনের মতো)
   if (isSuccess) {
     redirect("/login");
   }

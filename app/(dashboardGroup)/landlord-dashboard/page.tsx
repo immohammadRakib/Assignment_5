@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { PropertyFormDialog } from "../_components/propertyFormDialog";
 import { MyPropertiesList } from "../_components/getMyPropertyList"
 
-// বাড়ির মালিকদের জন্য কাস্টম ডামি স্ট্যাটস ডাটা
+
 const landlordStats = [
   {
     title: "My Properties",
@@ -44,7 +44,6 @@ const landlordStats = [
 export default function LandlordDashboardPage() {
   return (
     <div className="space-y-6">
-      {/* हेडर সেকশন (Airbnb/RentNest Style) */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900">Landlord Panel</h1>
@@ -52,11 +51,9 @@ export default function LandlordDashboardPage() {
             Manage your rental listings, track bookings, and check real-time earnings.
           </p>
         </div>
-        {/* 🎯 নতুন প্রপার্টি এড করার জন্য আমরা যে ডায়ালগটি বানিয়েছিলাম, তা এখানে যুক্ত করা হলো */}
         <PropertyFormDialog mode="create" />
       </div>
 
-      {/* ৪ কলামের স্ট্যাটস গ্রিড */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {landlordStats.map((stat, i) => {
           const Icon = stat.icon;
@@ -82,14 +79,14 @@ export default function LandlordDashboardPage() {
         })}
       </div>
 
-      {/* 🎯 ল্যান্ডলর্ডের নিজের প্রপার্টিগুলোর লাইভ গ্রিড লিস্ট */}
+
       <div className="space-y-3 pt-4">
         <div>
           <h2 className="text-lg font-bold text-gray-850">Your Rental Listings</h2>
           <p className="text-xs text-muted-foreground">Active houses and apartments currently listed on RentNest.</p>
         </div>
         
-        {/* এখানে তোমার তৈরি করা সার্ভার-কম্পোনেন্ট লিস্টটি কল হবে */}
+        
         <MyPropertiesList />
       </div>
     </div>

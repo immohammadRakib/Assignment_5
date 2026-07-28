@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
-// ২য় কোডের ৪-৫ লাইনের ন্যাভ আইটেম লিস্ট
+
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
@@ -36,7 +36,6 @@ export function Navbar({ user }: NavbarProps) {
 
   const handleUserMenuAction = async (action: string) => {
     if (action === "dashboard") {
-      // টেন্যান্ট এবং ল্যান্ডলর্ড রোল হ্যান্ডেল করার জন্য কন্ডিশন সেফ রাখা হলো
       const role = user?.data?.profile?.role;
       if (role === "USER" || role === "TENANT") router.push("/dashboard");
       else if (role === "AUTHOR" || role === "LANDLORD") router.push("/landlord-dashboard");
@@ -51,18 +50,15 @@ export function Navbar({ user }: NavbarProps) {
   };
 
   return (
-    // Airbnb Style Sticky এবং Padding দেওয়া ব্যাকগ্রাউন্ড
     <nav className="w-full bg-white border-b-[1px] border-neutral-200 sticky top-0 z-50 px-4 md:px-10 lg:px-20 py-3">
       <div className="flex flex-row items-center justify-between h-12 relative">
         
-        {/* লোগো (Airbnb Style Rose-500 Color) */}
         <Link href="/" className="shrink-0">
           <span className="text-xl font-bold text-rose-500 tracking-tight">
             RentNest
           </span>
         </Link>
 
-        {/* মাঝখানের ৪-৫ লাইনের ন্যাভ লিঙ্কগুলো (Airbnb থিমে সেন্ট্রাল পজিশন) */}
         <div className="hidden md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:flex md:items-center md:gap-8">
           {navItems.map((item) => (
             <Link
@@ -75,12 +71,10 @@ export function Navbar({ user }: NavbarProps) {
           ))}
         </div>
 
-        {/* ডানদিকের অপশন: লগইন স্ট্যাটাস চেক */}
         <div className="flex flex-row items-center gap-3">
           {user?.success ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                {/* Airbnb-এর মতো বর্ডারযুক্ত রেসপন্সিভ মেনু + প্রোফাইল বাটন */}
                 <div className="p-2 md:py-1.5 md:px-2 border-[1px] border-neutral-200 flex flex-row items-center gap-3 rounded-full cursor-pointer hover:shadow-md transition bg-white">
                   <Menu size={16} className="text-gray-600" />
                   <div className="w-6 h-6 rounded-full bg-gray-500 text-white flex items-center justify-center">
@@ -89,7 +83,6 @@ export function Navbar({ user }: NavbarProps) {
                 </div>
               </DropdownMenuTrigger>
               
-              {/* Airbnb প্রিমিয়াম ড্রপডাউন ইউআই */}
               <DropdownMenuContent align="end" className="w-56 mt-2 rounded-xl shadow-lg border-neutral-100 bg-white">
                 <DropdownMenuLabel className="font-normal px-4 py-3">
                   <div className="flex flex-col gap-0.5">
@@ -133,7 +126,6 @@ export function Navbar({ user }: NavbarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            // Airbnb Style গোল বোতাম (Rose কালার থিম)
             <Link href="/login">
               <Button className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-5 text-sm cursor-pointer shadow-none">
                 Login

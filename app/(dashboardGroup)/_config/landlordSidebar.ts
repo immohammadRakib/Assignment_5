@@ -9,12 +9,12 @@ export const LANDLORD_SIDEBAR_ITEMS: ISidebarItem[] = [
   },
   { 
     label: "My Properties", 
-    href: "/landlord-dashboard/properties", // মালিকের আপলোড করা সব বাসা/ফ্ল্যাট
+    href: "/landlord-dashboard/properties", 
     icon: Home 
   },
   { 
     label: "Add Property", 
-    href: "/landlord-dashboard/properties/add", // নতুন প্রপার্টি লিস্টিং ফর্মের রুট
+    href: "/landlord-dashboard/properties/add", 
     icon: PlusCircle 
   },
   { 

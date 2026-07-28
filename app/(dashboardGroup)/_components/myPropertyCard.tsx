@@ -4,9 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardAction, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MessageSquareIcon, MapPinIcon, DollarSignIcon, HomeIcon } from "lucide-react";
 import Image from "next/image";
-import { PropertyFormDialog } from "./propertyFormDialog"; // তোমার পরবর্তী ডায়ালগ কম্পোনেন্ট পাথ
+import { PropertyFormDialog } from "./propertyFormDialog"; 
 
-// RentNest প্রপার্টির জন্য টাইপ ইন্টারফেস
 export interface IProperty {
   id: string;
   title: string;
@@ -19,7 +18,7 @@ export interface IProperty {
   categoryId: string;
   createdAt: string;
   _count?: {
-    reviews?: number; // যদি রিভিউ বা বুকিং কাউন্ট থাকে
+    reviews?: number; 
   };
   reviews?: any[];
 }
@@ -29,12 +28,10 @@ type MyPropertyCardProps = {
 };
 
 export function MyPropertyCard({ property }: MyPropertyCardProps) {
-  // রিভিউ বা বুকিং কাউন্টের জন্য সেফটি চেক
   const reviewCount = property._count?.reviews ?? property.reviews?.length ?? 0;
 
   return (
     <Card className="overflow-hidden hover:shadow-md transition-shadow">
-      {/* প্রপার্টির ইমেজ সেকশন (Airbnb Style) */}
       <div className="relative w-full h-48 bg-muted">
         <Image
           src={property.images?.[0] || "https://unsplash.com"}
@@ -44,7 +41,6 @@ export function MyPropertyCard({ property }: MyPropertyCardProps) {
           sizes="(max-w-768px) 100vw, 33vw"
           priority={false}
         />
-        {/* অ্যাভেইলেবিলিটি স্ট্যাটাস ব্যাজ */}
         <div className="absolute top-3 left-3 flex gap-1.5">
           {property.isAvailable ? (
             <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white">Available</Badge>
@@ -56,37 +52,31 @@ export function MyPropertyCard({ property }: MyPropertyCardProps) {
 
       <CardHeader className="pt-4">
         <div className="flex items-center justify-between gap-2">
-          {/* লোকেশন ও সিটি */}
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <MapPinIcon className="size-3.5 text-rose-500 shrink-0" />
             <span className="truncate">{property.location}, {property.city}</span>
           </div>
-          {/* এডিট বাটন অ্যাকশন ডায়ালগ */}
           <CardAction>
             <PropertyFormDialog mode="edit" property={property} />
           </CardAction>
         </div>
-        
-        {/* প্রপার্টি টাইটেল */}
+
         <CardTitle className="text-lg font-bold text-gray-800 line-clamp-1 mt-1">
           {property.title}
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-3 pt-0">
-        {/* প্রপার্টি ডেসক্রিপশন */}
         <p className="line-clamp-2 text-sm text-muted-foreground whitespace-pre-line">
           {property.description}
         </p>
 
         <div className="border-t pt-3 flex items-center justify-between text-xs text-muted-foreground">
-          {/* প্রতিদিনের ভাড়া (Airbnb Style Highlighted Price) */}
           <div className="flex items-center text-gray-900 font-semibold text-sm">
             <span className="text-rose-500 font-bold">৳{property.pricePerDay}</span>
             <span className="text-muted-foreground text-xs font-normal"> / day</span>
           </div>
-
-          {/* রিভিউ কাউন্ট বা তৈরি করার তারিখ */}
+          
           <div className="flex items-center gap-3">
             <span>{new Date(property.createdAt).toLocaleDateString()}</span>
             {reviewCount > 0 && (
