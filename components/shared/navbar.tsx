@@ -37,15 +37,15 @@ export function Navbar({ user }: NavbarProps) {
   const handleUserMenuAction = async (action: string) => {
     if (action === "dashboard") {
       const role = user?.data?.profile?.role;
-      if (role === "USER" || role === "TENANT") router.push("/tenant-dashboard");
-      else if (role === "AUTHOR" || role === "LANDLORD") router.push("/landlord-dashboard");
-      else if (role === "ADMIN") router.push("/admin-dashboard");
+      if (role === "USER" || role === "TENANT") router.push("/dashboard/tenant");
+      else if (role === "AUTHOR" || role === "LANDLORD") router.push("/dashboard/landlord");
+      else if (role === "ADMIN") router.push("/dashboard/admin");
       return;
     }
     if (action === "logout") {
       await logout();
       toast.success("User Logged Out Successfully!");
-      router.push("/login");
+      router.push("/auth/login");
     }
   };
 
@@ -126,7 +126,7 @@ export function Navbar({ user }: NavbarProps) {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/login">
+            <Link href="/auth/login">
               <Button className="bg-rose-500 hover:bg-rose-600 text-white rounded-full px-5 text-sm cursor-pointer shadow-none">
                 Login
               </Button>

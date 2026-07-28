@@ -176,11 +176,11 @@ export const loginAction = async (redirectTo: string, prevState: any, formData: 
       }
 
       if (decodedToken.role === "TENANT") {
-        redirect("/tenant-dashboard");
+        redirect("/dashboard/tenant");
       } else if (decodedToken.role === "ADMIN") {
-        redirect("/admin-dashboard");
+        redirect("/dashboard/admin");
       } else if (decodedToken.role === "LANDLORD") {
-        redirect("/landlord-dashboard");
+        redirect("/dashboard/landlord");
       }
     }
     
@@ -242,7 +242,7 @@ export const registerAction = async (redirectTo: string, prevState: any, formDat
   }
 
   if (isSuccess) {
-    redirect("/login");
+    redirect("/auth/login");
   }
 }
 
