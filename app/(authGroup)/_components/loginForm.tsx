@@ -129,7 +129,7 @@ const LoginForm = () => {
           <div className="text-center pt-2 border-t border-neutral-100">
             <p className="text-sm text-muted-foreground">
               New to RentNest?{" "}
-              <Link href="/register" className="text-rose-500 font-semibold hover:underline">
+              <Link href="/auth/register" className="text-rose-500 font-semibold hover:underline">
                 Create Account
               </Link>
             </p>

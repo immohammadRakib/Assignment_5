@@ -127,7 +127,7 @@ const RegisterForm = () => {
           </Button>
 
           <div className="text-center pt-2 border-t border-neutral-100">
-            <p className="text-sm text-muted-foreground">Already have an account? <Link href="/login" className="text-rose-500 font-semibold hover:underline">Log in</Link></p>
+            <p className="text-sm text-muted-foreground">Already have an account? <Link href="/auth/login" className="text-rose-500 font-semibold hover:underline">Log in</Link></p>
           </div>
         </Card>
       </form>

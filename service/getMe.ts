@@ -3,37 +3,30 @@
 import { cookies } from "next/headers";
 
 export const getMe = async () => {
-    const cookieStore = await cookies();
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value || null;
 
-    const accessToken = cookieStore.get("accessToken")?.value || null;
+  if (!accessToken) {
+    return { success: false, message: "User not logged in!" };
+  }
 
-    if(!accessToken){
-        // throw new Error("User Not Logged In!");
-
-        return {
-            success : false,
-            message : "User not logged in!"
-        }
-    }
-
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/users/me`, {
-        headers : {
-            // Authorization : accessToken as unknown as string,
-            // Authorization : `${accessToken}`,
-            // Authorization : `Bearer ${accessToken}`
-
-            Cookie : `accessToken=${accessToken}`
-        },
-
-        cache : "force-cache",
-        next : {
-            revalidate : 60 * 60 * 24, // 1day
-            tags : ["my-profile"]
-        }
+  try {
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        // 🎯 ব্যাকএন্ডের জন্য স্ট্যান্ডার্ড বিয়ারার টোকেন ফরম্যাট:
+        "Authorization": `Bearer ${accessToken}`, 
+      },
+      // ডাটা চেঞ্জ হতে পারে (যেমন প্রোফাইল আপডেট), তাই ক্যাশ টাইম কমিয়ে দেওয়া ভালো
+      next: { revalidate: 60, tags: ["my-profile"] } 
     });
 
-    const result = res.json();
-
-
-    return result
+    // 🛠️ ফিক্স: এখানে অবশ্যই await দিতে হবে
+    const result = await res.json(); 
+    return result;
+  } catch (error) {
+    console.error("Fetch error in getMe:", error);
+    return { success: false, message: "Internal Server Error" };
+  }
 }
