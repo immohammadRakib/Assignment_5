@@ -37,7 +37,7 @@ export function Navbar({ user }: NavbarProps) {
   const handleUserMenuAction = async (action: string) => {
     if (action === "dashboard") {
       const role = user?.data?.profile?.role;
-      if (role === "USER" || role === "TENANT") router.push("/dashboard");
+      if (role === "USER" || role === "TENANT") router.push("/tenant-dashboard");
       else if (role === "AUTHOR" || role === "LANDLORD") router.push("/landlord-dashboard");
       else if (role === "ADMIN") router.push("/admin-dashboard");
       return;

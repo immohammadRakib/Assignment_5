@@ -1,10 +1,11 @@
+// components/ui/button.tsx
 import * as React from "react"
-import { Slot } from "@radix-ui/react-slot" // 🎯 এটি নিশ্চিত করুন
+import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center ...", // base styles
   {
     variants: {
       variant: {
@@ -20,6 +21,7 @@ const buttonVariants = cva(
         sm: "h-8 rounded-md px-3 text-xs",
         lg: "h-10 rounded-md px-8",
         icon: "h-9 w-9",
+        xs: "h-7 rounded-md px-2 text-[px]", // আপনার আগের অ্যাড করা xs সাইজ
       },
     },
     defaultVariants: {
@@ -31,13 +33,13 @@ const buttonVariants = cva(
 
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    // 🎯 এটি নিশ্চিত করুন: VariantProps যেন buttonVariants-কে রেফার করে
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean // 🎯 এই লাইনটি যোগ হলো
+  asChild?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
-    // 🎯 asChild ট্রু হলে Slot কম্পোনেন্ট ব্যবহার হবে, না হলে স্বাভাবিক 'button' ট্যাগ হবে
     const Comp = asChild ? Slot : "button"
     return (
       <Comp

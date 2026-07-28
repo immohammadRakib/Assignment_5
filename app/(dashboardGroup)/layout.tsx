@@ -13,7 +13,7 @@ const DashboardLayout = async (
    const user = await getMe();
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar user={user} />
+      {/* <Navbar user={user} /> */}
       <SidebarProvider>
         <div className="flex flex-1">
           <DashboardSidebar user={user} />
