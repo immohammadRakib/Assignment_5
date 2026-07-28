@@ -1,93 +1,25 @@
-// "use client"
-
-// import { Button } from "@/components/ui/button"
-// import { Input } from "@/components/ui/input"
-// import { useSearchParams } from "next/navigation"
-// import { useActionState, useEffect } from "react"
-// import { toast } from "sonner"
-// import { loginAction } from "../_actions/authAction"
-// import Link from "next/link"
-
-// const LoginForm = () => {
-//   const searchParams = useSearchParams();
-//   const redirectTo = searchParams.get("redirectTo") ?? ""
-//   const [state, action, pending] = useActionState(loginAction.bind(null, redirectTo), false)
-
-//   useEffect(() => {
-//     if (!state) return;
-//     if (!state.success) {
-//       toast.error(state.message || "Login failed");
-//     }
-//   }, [state]);
-
-//   return (
-//     <form action={action} className="space-y-4">
-//       <div className="space-y-3">
-//         <Input 
-//           name="email" 
-//           type="email" 
-//           placeholder="Enter Your Email" 
-//           className="h-11 focus-visible:ring-rose-500 rounded-lg"
-//           required 
-//         />
-//         <Input 
-//           name="password" 
-//           type="password" 
-//           placeholder="Enter Your Password" 
-//           className="h-11 focus-visible:ring-rose-500 rounded-lg"
-//           required 
-//         />
-//       </div>
-
-
-//       <Button 
-//         type="submit" 
-//         disabled={pending}
-//         className="w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-lg shadow-sm transition cursor-pointer disabled:opacity-70"
-//       >
-//         {pending ? "Submitting..." : "Login"}
-//       </Button>
-
-//       <div className="text-center text-xs text-muted-foreground pt-2 border-t border-neutral-100">
-//         Don't have an account?{" "}
-//         <Link 
-//           href="/register" 
-//           className="text-roase-500 font-semibold hover:underline transition"
-//         >
-//           Sign up
-//         </Link>
-//       </div>
-//     </form>
-//   )
-// }
-
-// export default LoginForm
-
-
-
-
-
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState, useEffect, useTransition } from "react";
+import { useActionState, useEffect, useTransition, useState } from "react"; // 🛠️ useState যোগ করা হয়েছে
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail } from "lucide-react";
-
+import { Lock, Mail, Eye, EyeOff } from "lucide-react"; // 🛠️ Eye এবং EyeOff আইকন যোগ করা হয়েছে
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { loginSchema } from "../_actions/authSchema"; // 🎯 Zod Schema পাথ নিশ্চিত করো
-import { loginAction } from "../_actions/authAction"; // 🎯 Auth Action পাথ নিশ্চিত করো
+import { loginSchema } from "../_actions/authSchema";
+import { loginAction } from "../_actions/authAction";
 
 const LoginForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "";
+  
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false); // 🛠️ পাসওয়ার্ড অন/অফের জন্য স্টেট
 
   // সার্ভার অ্যাকশন স্টেট হ্যান্ডলিং
   const [state, formAction] = useActionState(
@@ -97,12 +29,8 @@ const LoginForm = () => {
     { success: false, message: null }
   );
 
-  // 🎯 React Hook Form + Zod Setup (Requirement 4)
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  // 🎯 React Hook Form + Zod Setup
+  const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
@@ -114,7 +42,6 @@ const LoginForm = () => {
   const onSubmit = (data: any) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => formData.append(key, data[key]));
-    
     startTransition(() => {
       formAction(formData);
     });
@@ -125,7 +52,6 @@ const LoginForm = () => {
     if (!state) return;
     if (state.success) {
       toast.success("Login successful! Welcome back.");
-      // রিডাইরেক্ট লজিক সার্ভার অ্যাকশনে অলরেডি আছে, তাও সেফটি হিসেবে এখানেও রাখা যায়
     } else if (typeof state.message === "string") {
       toast.error(state.message);
     }
@@ -148,22 +74,17 @@ const LoginForm = () => {
               </label>
               <div className="relative flex items-center">
                 <Mail className="absolute left-3 w-4 h-4 text-gray-400" />
-                <Input 
-                  {...register("email")} 
-                  type="email"
-                  placeholder="you@example.com" 
-                  className={`pl-10 h-11 transition ${errors.email ? "border-rose-500 focus-visible:ring-rose-500" : "border-neutral-200"}`} 
-                />
+                <Input {...register("email")} type="email" placeholder="you@example.com" className={`pl-10 h-11 transition ${errors.email ? "border-rose-500 focus-visible:ring-rose-500" : "border-neutral-200"}`} />
               </div>
-              {/* 🎯 Zod Inline Error Feedback (Requirement 2) */}
+              {/* 🎯 Zod Inline Error Feedback */}
               {errors.email && (
-                <p className="text-[px] text-rose-500 font-medium pl-1 animate-in fade-in">
+                <p className="text-xs text-rose-500 font-medium pl-1 mt-1 animate-in fade-in">
                   {errors.email.message as string}
                 </p>
               )}
             </div>
 
-            {/* Password */}
+            {/* Password (🛠️ চোখ অন/অফ সিস্টেমসহ) */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-gray-600 pl-1 uppercase tracking-wider">
                 Password
@@ -172,26 +93,31 @@ const LoginForm = () => {
                 <Lock className="absolute left-3 w-4 h-4 text-gray-400" />
                 <Input 
                   {...register("password")} 
-                  type="password"
+                  type={showPassword ? "text" : "password"} // 🛠️ স্টেট অনুযায়ী টাইপ চেঞ্জ
                   placeholder="••••••••" 
-                  className={`pl-10 h-11 transition ${errors.password ? "border-rose-500 focus-visible:ring-rose-500" : "border-neutral-200"}`} 
+                  className={`pl-10 pr-10 h-11 transition ${errors.password ? "border-rose-500 focus-visible:ring-rose-500" : "border-neutral-200"}`} 
                 />
+                
+                {/* 🛠️ আইকন বাটন */}
+                <button
+                  type="button" // এটি অবশ্যই 'button' টাইপ হতে হবে, নয়তো ফর্ম সাবমিট হয়ে যাবে
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
               {errors.password && (
-                <p className="text-[px] text-rose-500 font-medium pl-1 animate-in fade-in">
+                <p className="text-xs text-rose-500 font-medium pl-1 mt-1 animate-in fade-in">
                   {errors.password.message as string}
                 </p>
               )}
             </div>
           </div>
 
-          <Button 
-            type="submit" 
-            disabled={isPending} 
-            className="w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg shadow-md transition-all active:scale- cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
-          >
+          <Button type="submit" disabled={isPending} className="w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg shadow-md transition-all active:scale-[0.98] cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed" >
             {isPending ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 justify-center">
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 <span>Authenticating...</span>
               </div>
@@ -215,5 +141,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-

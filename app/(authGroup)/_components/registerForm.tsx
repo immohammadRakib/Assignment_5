@@ -1,93 +1,25 @@
-  // // app/(authGroup)/_components/registerform.tsx
-  // "use client";
-  // import { Button } from "@/components/ui/button";
-  // import { Card } from "@/components/ui/card";
-  // import { Input } from "@/components/ui/input";
-  // import { useSearchParams, useRouter } from "next/navigation"; 
-  // import { useActionState, useEffect } from "react";
-  // import { toast } from "sonner";
-  // import { registerAction } from "../_actions/authAction";
-
-  // const RegisterForm = () => {
-  //   const searchParams = useSearchParams();
-  //   const router = useRouter(); 
-  //   const redirectTo = searchParams.get("redirectTo") ?? "";
-    
-  //   const [state, action, pending] = useActionState(
-  //     registerAction.bind(null, redirectTo),
-  //     null
-  //   );
-
-  //   useEffect(() => {
-  //     if (!state) return;
-
-  //     if (state.success) {
-  //       toast.success(state.message || "Registration successful!");
-        
-  //       router.push("/login"); 
-  //     } else {
-  //       toast.error(state.message || "Registration failed");
-  //     }
-  //   }, [state, router]);
-
-  //   return (
-  //     <form action={action} className="space-y-4">
-  //       <Card className="p-5 space-y-4 max-w-md mx-auto">
-  //         <h2 className="text-xl font-bold text-center">Create Account</h2>
-          
-  //         <Input name="name" type="text" placeholder="Enter Your Full Name" required />
-  //         <Input name="email" type="email" placeholder="Enter Your Email" required />
-  //         <Input name="password" type="password" placeholder="Enter Your Password" required />
-          
-  //         <div className="space-y-1">
-  //           <label className="text-xs font-semibold text-gray-600">Register As</label>
-            
-  //           <select 
-  //             name="role" 
-  //             defaultValue=""
-  //             required 
-  //             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-rose-500 text-gray-700"
-  //           >
-  //             <option value="" disabled>Select Account Type</option>
-  //             <option value="TENANT">TENANT (Buyer)</option>
-  //             <option value="LANDLORD">LANDLORD (Seller)</option>
-  //           </select>
-  //         </div>
-
-  //         <Button type="submit" disabled={pending} className="w-full bg-rose-500 hover:bg-rose-600">
-  //           {pending ? "Registering..." : "Register"}
-  //         </Button>
-  //       </Card>
-  //     </form>
-  //   );
-  // };
-
-  // export default RegisterForm;
-
-
-
-
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useActionState, useEffect, useTransition } from "react";
+import { useActionState, useEffect, useTransition, useState } from "react"; // 🛠️ useState যোগ করা হয়েছে
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Lock, Mail, User } from "lucide-react";
-
+import { Lock, Mail, User, Eye, EyeOff } from "lucide-react"; // 🛠️ Eye এবং EyeOff আইকন যোগ করা হয়েছে
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { registerSchema } from "../_actions/authSchema"; 
+import { registerSchema } from "../_actions/authSchema";
 import { registerAction } from "../_actions/authAction";
 
 const RegisterForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") ?? "";
+  
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false); // 🛠️ পাসওয়ার্ড অন/অফের জন্য স্টেট
 
   const [state, formAction] = useActionState(
     async (prevState: any, formData: FormData) => {
@@ -98,14 +30,19 @@ const RegisterForm = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
-    defaultValues: { name: "", email: "", password: "", role: "" as any },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      role: "" as any
+    },
   });
 
   const onSubmit = (data: any) => {
     const formData = new FormData();
     Object.keys(data).forEach((key) => formData.append(key, data[key]));
-    startTransition(() => { 
-      formAction(formData); 
+    startTransition(() => {
+      formAction(formData);
     });
   };
 
@@ -129,33 +66,51 @@ const RegisterForm = () => {
           </div>
 
           <div className="space-y-4">
+            {/* Name Input */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-gray-600 pl-1 uppercase">Name</label>
               <div className="relative flex items-center">
                 <User className="absolute left-3 w-4 h-4 text-gray-400" />
-                <Input {...register("name")} placeholder="Your Name" className={`pl-10 h-11 ${errors.name ? "border-rose-500" : ""}`} />
+                <Input {...register("name")} placeholder="Your Name" className={`pl-10 h-11 ${errors.name ? "border-rose-500 focus-visible:ring-rose-500" : ""}`} />
               </div>
-              {errors.name && <p className="text-[px] text-rose-500 font-medium pl-1">{errors.name.message as string}</p>}
+              {errors.name && <p className="text-xs text-rose-500 font-medium pl-1">{errors.name.message as string}</p>}
             </div>
 
+            {/* Email Input */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-gray-600 pl-1 uppercase">Email</label>
               <div className="relative flex items-center">
                 <Mail className="absolute left-3 w-4 h-4 text-gray-400" />
-                <Input {...register("email")} type="email" placeholder="email@example.com" className={`pl-10 h-11 ${errors.email ? "border-rose-500" : ""}`} />
+                <Input {...register("email")} type="email" placeholder="email@example.com" className={`pl-10 h-11 ${errors.email ? "border-rose-500 focus-visible:ring-rose-500" : ""}`} />
               </div>
-              {errors.email && <p className="text-[px] text-rose-500 font-medium pl-1">{errors.email.message as string}</p>}
+              {errors.email && <p className="text-xs text-rose-500 font-medium pl-1">{errors.email.message as string}</p>}
             </div>
 
+            {/* Password Input (🛠️ চোখ অন/অফ সিস্টেমসহ) */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-gray-600 pl-1 uppercase">Password</label>
               <div className="relative flex items-center">
                 <Lock className="absolute left-3 w-4 h-4 text-gray-400" />
-                <Input {...register("password")} type="password" placeholder="••••••••" className={`pl-10 h-11 ${errors.password ? "border-rose-500" : ""}`} />
+                <Input 
+                  {...register("password")} 
+                  type={showPassword ? "text" : "password"} // 🛠️ স্টেট অনুযায়ী টাইপ চেঞ্জ হবে
+                  placeholder="••••••••" 
+                  className={`pl-10 pr-10 h-11 ${errors.password ? "border-rose-500 focus-visible:ring-rose-500" : ""}`} 
+                />
+                
+                {/* 🛠️ আইকন বাটন */}
+                <button
+                  type="button" // এটি দেওয়া বাধ্যতামূলক, নয়তো ফর্মে ক্লিক করলে সাবমিট হয়ে যাবে
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
-              {errors.password && <p className="text-[px] text-rose-500 font-medium pl-1">{errors.password.message as string}</p>}
+              {errors.password && <p className="text-xs text-rose-500 font-medium pl-1">{errors.password.message as string}</p>}
             </div>
 
+            {/* Role Select Input */}
             <div className="space-y-1">
               <label className="text-xs font-semibold text-gray-600 pl-1 uppercase">Role</label>
               <select {...register("role")} className={`flex h-11 w-full rounded-lg border px-3 text-sm focus:ring-2 focus:ring-rose-500 outline-none ${errors.role ? "border-rose-500" : "border-neutral-200"}`}>
@@ -163,11 +118,11 @@ const RegisterForm = () => {
                 <option value="TENANT">TENANT</option>
                 <option value="LANDLORD">LANDLORD</option>
               </select>
-              {errors.role && <p className="text-[px] text-rose-500 font-medium pl-1">{errors.role.message as string}</p>}
+              {errors.role && <p className="text-xs text-rose-500 font-medium pl-1">{errors.role.message as string}</p>}
             </div>
           </div>
 
-          <Button type="submit" disabled={isPending} className="w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg shadow-md">
+          <Button type="submit" disabled={isPending} className="w-full h-11 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-lg shadow-md cursor-pointer disabled:opacity-70">
             {isPending ? "Creating Account..." : "Register Now"}
           </Button>
 
@@ -181,5 +136,3 @@ const RegisterForm = () => {
 };
 
 export default RegisterForm;
-
-
