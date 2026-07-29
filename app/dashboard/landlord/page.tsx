@@ -1,45 +1,53 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HomeIcon, CalendarCheckIcon, BadgeCheckIcon, WalletIcon, ArrowUpRight } from "lucide-react";
-import { PropertyFormDialog } from "../_components/propertyFormDialog";
-import { MyPropertiesList } from "../_components/getMyPropertyList";
 import { getMyProperties } from "../_actions/myPropertiesAction";
-import { IncomingRequestsList } from "../_components/incomingRequest"; // 🛠️ নতুন ইম্পোর্ট
+import { IncomingRequestsList } from "../_components/incomingRequest";
 
 export default async function LandlordDashboardPage() {
-  // ১. সরাসরি এপিআই কল করে আপনার আসল ডাটা আনা হচ্ছে
+  // ১. ব্যাকএন্ড এপিআই অ্যাকশন কল করা হচ্ছে
   const result = await getMyProperties();
-  const properties = result?.data || []; 
+  
+  // 🛡️ সেফগার্ড লেয়ার: ডাটাবেজ বা রেসপন্স পুরোপুরি খালি (null/undefined) হলেও কোড ক্র্যাশ করবে না
+  const properties = Array.isArray(result?.data) ? result.data : [];
+  const incomingRequests = Array.isArray(result?.requests) ? result.requests : [];
 
-  // 🛠️ রিকোয়ারমেন্ট মেলাতে ইনকামিং রিকোয়েস্ট ডাটা আনা হচ্ছে (তোমার রিয়েল অ্যাকশন দিয়ে পাথ ঠিক করে নিও)
-  // যদি এপিআই রেডি না থাকে, তবে এক্সামিনারকে দেখানোর জন্য এটি ডিফল্ট ডামি ডাটা দিয়ে হ্যান্ডেল করবে
-  const incomingRequests = result?.requests || [
-    { _id: "req_1", propertyName: "Luxury Modern Villa", tenantName: "John Tenant", status: "PENDING", propertyId: "123", price: 45000 },
-    { _id: "req_2", propertyName: "Minimalist Studio Flat", tenantName: "Alice Tenant", status: "APPROVED", propertyId: "125", price: 18000 }
-  ];
+  // ২. রিয়েল ডাটা স্ট্যাটস ক্যালকুলেশন (টাইপ সেফ)
+  const totalEarnings = properties.reduce(
+    (acc: number, curr: any) => acc + (Number(curr?.pricePerDay) || 0), 
+    0
+  );
 
-  // ২. আসল ডাটা অনুযায়ী স্ট্যাটাস ক্যালকুলেশন
+  const activeBookingsCount = incomingRequests.filter(
+    (r: any) => r?.status === "ACTIVE"
+  ).length;
+
+  // ডাইনামিক অকুপেন্সি রেট ক্যালকুলেশন
+  const occupancyRate = properties.length > 0 
+    ? `${Math.round((activeBookingsCount / properties.length) * 100)}%` 
+    : "0%";
+
   const stats = [
     {
       title: "My Properties",
-      value: properties.length.toString(),
+      value: properties.length.toString(), // এখন আর কখনো undefined হবে না
       change: "Total listed items",
       icon: HomeIcon,
     },
     {
       title: "Total Earnings",
-      value: `৳${properties.reduce((acc: number, curr: any) => acc + (Number(curr.pricePerDay) || 0), 0)}`,
-      change: "Calculated from all stays",
+      value: `৳${totalEarnings}`,
+      change: "Calculated from listed assets",
       icon: WalletIcon,
     },
     {
       title: "Active Bookings",
-      value: incomingRequests.filter((r: any) => r.status === "ACTIVE").length.toString() || "0", 
+      value: activeBookingsCount.toString(),
       change: "Stays currently running",
       icon: CalendarCheckIcon,
     },
     {
       title: "Occupancy Rate",
-      value: properties.length > 0 ? "75%" : "0%",
+      value: occupancyRate,
       change: "Live rental statistics",
       icon: BadgeCheckIcon,
     },
@@ -47,15 +55,15 @@ export default async function LandlordDashboardPage() {
 
   return (
     <div className="space-y-8 p-4 md:p-6 max-w-7xl mx-auto">
-      {/* हेडर सेकशन */}
+      
+      {/* হেডার সেকশন */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Landlord Panel</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Landlord Overview</h1>
           <p className="text-sm text-muted-foreground">
-            Manage your real properties, handle tenant requests, and track live earnings.
+            Monitor real-time rental applications, track live revenue data, and oversee platform performance.
           </p>
         </div>
-        <PropertyFormDialog mode="create" />
       </div>
 
       {/* লাইভ স্ট্যাটস গ্রিড */}
@@ -83,17 +91,18 @@ export default async function LandlordDashboardPage() {
         })}
       </div>
 
-      {/* 🛠️ রিকোয়ারমেন্ট পূরণ: ইনকামিং রেন্টাল রিকোয়েস্ট টেবিল (Optimistic UI) */}
+      {/* রিয়েল-টাইম ইনকামিং রেন্টাল রিকোয়েস্ট টেবিল */}
       <div className="space-y-3 pt-2">
         <h2 className="text-lg font-bold text-gray-900">Incoming Rental Requests</h2>
-        <IncomingRequestsList initialRequests={incomingRequests} />
+        {incomingRequests.length > 0 ? (
+          <IncomingRequestsList initialRequests={incomingRequests} />
+        ) : (
+          <div className="text-center py-10 border border-dashed rounded-xl text-neutral-400 text-sm">
+            No incoming tenant applications found.
+          </div>
+        )}
       </div>
 
-      {/* আসল প্রপার্টি লিস্টিং */}
-      <div className="space-y-3 pt-2">
-        <h2 className="text-lg font-bold text-gray-900">Your Rental Listings</h2>
-        <MyPropertiesList />
-      </div>
     </div>
   );
 }
