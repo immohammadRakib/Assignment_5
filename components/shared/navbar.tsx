@@ -63,11 +63,11 @@ export function Navbar({ user }: NavbarProps) {
   if (action === "settings") {
     const role = user?.data?.profile?.role;
     if (role === "USER" || role === "TENANT") {
-      router.push("/dashboard/tenant/me"); // সেটিংস এবং প্রোফাইল একই পেজে হ্যান্ডেল করা হয়েছে
+      router.push("/dashboard/settings"); // সেটিংস এবং প্রোফাইল একই পেজে হ্যান্ডেল করা হয়েছে
     } else if (role === "AUTHOR" || role === "LANDLORD") {
-      router.push("/dashboard/landlord");
+      router.push("/dashboard/settings");
     } else if (role === "ADMIN") {
-      router.push("/dashboard/admin");
+      router.push("/dashboard/settings");
     }
     return;
   }

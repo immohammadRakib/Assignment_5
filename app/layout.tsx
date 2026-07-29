@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import jwt from "jsonwebtoken"; 
 import { Navbar } from "@/components/shared/navbar"; 
 import { Footer } from "@/components/shared/footer"; 
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -75,6 +76,7 @@ return (
     suppressHydrationWarning={true} // 🎯 এই ম্যাজিক লাইনটি যোগ করো
   >
     <body className="min-h-full flex flex-col">
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <Toaster position="top-right" richColors />
       
       {/* ডাইনামিক নেভবার */}
@@ -87,6 +89,7 @@ return (
       
       {/* ফুটার */}
       <Footer />
+      </ThemeProvider>
     </body>
   </html>
 );

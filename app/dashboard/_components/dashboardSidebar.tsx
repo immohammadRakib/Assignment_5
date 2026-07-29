@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, PlusCircle, Inbox, Building, 
   Clock, CreditCard, Star, Users, ShieldAlert,
-  LogOut, ChevronRight, Home, UserCheck
+  LogOut, ChevronRight, Home, UserCheck, Settings
 } from "lucide-react";
 import { logout } from "@/service/logout";
 import { toast } from "sonner";
@@ -24,12 +24,14 @@ export default function DashboardSidebar({ user }: { user: any }) {
       { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
       { label: "User Management", href: "/dashboard/admin/users", icon: Users },
       { label: "Content Moderation", href: "/dashboard/admin/moderation", icon: ShieldAlert },
+      { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ],
     LANDLORD: [
       { label: "Overview", href: "/dashboard/landlord", icon: LayoutDashboard },
       { label: "Create Listing", href: "/dashboard/landlord/properties/new", icon: PlusCircle },
       { label: "Incoming Requests", href: "/dashboard/landlord/requests", icon: Inbox },
       { label: "My Listings", href: "/dashboard/landlord/my-properties", icon: Building },
+      { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ],
     TENANT: [
       { label: "Overview", href: "/dashboard/tenant", icon: UserCheck },
@@ -37,6 +39,7 @@ export default function DashboardSidebar({ user }: { user: any }) {
       { label: "Rental Requests", href: "/dashboard/tenant/requests", icon: Clock },
       { label: "Payment History", href: "/dashboard/tenant/payments", icon: CreditCard },
       { label: "Write Reviews", href: "/dashboard/tenant/reviews", icon: Star },
+      { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ]
   };
 
