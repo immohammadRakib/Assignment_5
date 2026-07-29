@@ -9,8 +9,9 @@ export function middleware(request: NextRequest) {
   const isAdminRoute = pathname.startsWith('/dashboard/admin');
   const isLandlordRoute = pathname.startsWith('/dashboard/landlord');
   const isTenantRoute = pathname.startsWith('/dashboard/tenant');
+  const isGlobalSettingsRoute = pathname.startsWith('/dashboard/settings');
 
-  const isProtectedRoute = isAdminRoute || isLandlordRoute || isTenantRoute;
+  const isProtectedRoute = isAdminRoute || isLandlordRoute || isTenantRoute || isGlobalSettingsRoute;
   
   // অথেনটিকেশন রাউটস গ্রুপ
   const authRoutes = ['/auth/login', '/auth/register', '/login', '/register'];
