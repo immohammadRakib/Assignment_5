@@ -32,7 +32,8 @@ export default function DashboardSidebar({ user }: { user: any }) {
       { label: "My Listings", href: "/dashboard/landlord/my-properties", icon: Building },
     ],
     TENANT: [
-      { label: "My Profile", href: "/dashboard/tenant", icon: UserCheck },
+      { label: "Overview", href: "/dashboard/tenant", icon: UserCheck },
+      { label: "My Profile", href: "/dashboard/tenant/me", icon: UserCheck },
       { label: "Rental Requests", href: "/dashboard/tenant/requests", icon: Clock },
       { label: "Payment History", href: "/dashboard/tenant/payments", icon: CreditCard },
       { label: "Write Reviews", href: "/dashboard/tenant/reviews", icon: Star },

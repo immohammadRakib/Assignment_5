@@ -1,65 +1,72 @@
-"use client"; // Remove this line if you decide to fetch data directly in a Server Component
+import { cookies } from "next/headers";
+import TenantDashboard from "../_components/tenantDashboard";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { 
-  CalendarDaysIcon, 
-  HeartIcon, 
-  CreditCardIcon, 
-  ClockIcon 
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+async function getTenantLiveFields() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
 
-// 🎯 Ensure 'export default' is present and the function name is unique
-export default function TenantDashboardPage() {
-  
-  // Dummy Stats for Tenant (Requirement 1: Modern UI)
-  const tenantStats = [
-    { title: "Active Bookings", value: "", desc: "Your ongoing rentals", icon: CalendarDaysIcon },
-    { title: "Wishlist", value: "", desc: "Properties you liked", icon: HeartIcon },
-    { title: "Total Spent", value: "৳", desc: "Paid through RentNest", icon: CreditCardIcon },
-    { title: "Pending", value: "", desc: "Awaiting landlord response", icon: ClockIcon },
-  ];
+  // টোকেন না থাকলে খালি অ্যারে ব্যাক করবে
+  if (!token) return { rentals: [], payments: [] };
+
+  try {
+    // 🎯 cURL ডকস অনুযায়ী নিখুঁত এন্ডপয়েন্ট কানেকশন
+    const [rentalsRes, paymentsRes] = await Promise.all([
+      fetch("https://assignment-4-vnjw.onrender.com/api/rentals", {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        next: { revalidate: 0 } // লাইভ ট্র্যাকিংয়ের জন্য ক্যাশ অফ রাখা হলো
+      }),
+      fetch("https://onrender.com", {
+        method: "GET",
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` 
+        },
+        next: { revalidate: 0 }
+      })
+    ]);
+
+    // রেন্ডার সার্ভারের ওয়েক-আপ বা content-type সেফটি চেক
+    const contentTypeRentals = rentalsRes.headers.get("content-type");
+    const contentTypePayments = paymentsRes.headers.get("content-type");
+
+    const rentalsData = contentTypeRentals && contentTypeRentals.includes("application/json") 
+      ? await rentalsRes.json() 
+      : null;
+
+    const paymentsData = contentTypePayments && contentTypePayments.includes("application/json") 
+      ? await paymentsRes.json() 
+      : null;
+
+    // 🛠️ মঙ্গোডিবি/অ্যাপোলো আর্কিটেকচার অনুযায়ী ডাটা এক্সট্র্যাকশন ফিল্টার
+    const finalRentals = rentalsData?.data || rentalsData?.result || rentalsData || [];
+    const finalPayments = paymentsData?.data || paymentsData?.result || paymentsData || [];
+
+    return {
+      rentals: Array.isArray(finalRentals) ? finalRentals : [],
+      payments: Array.isArray(finalPayments) ? finalPayments : []
+    };
+  } catch (error) {
+    console.error("Render Live Sync Failed, acting fallback:", error);
+    return { rentals: [], payments: [] };
+  }
+}
+
+export default async function TenantDashboardPage() {
+  const { rentals, payments } = await getTenantLiveFields();
+
+  // 🐞 সার্ভার সাইড ডিবাগিং ইন্টিগ্রেটর (তোমার VS Code টার্মিনালে ডাটা দেখতে পাবে)
+  console.log("--- TENANT API REALTIME SYNC ---");
+  console.log("Total Fetched Rentals Count:", rentals.length);
+  console.log("Raw Rentals Content:", JSON.stringify(rentals, null, 2));
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">Tenant Dashboard</h1>
-        <p className="text-sm text-muted-foreground">
-          Manage your rentals and view your payment history.
-        </p>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {tenantStats.map((stat, i) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={i} className="shadow-sm border-neutral-100 bg-white">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xs font-semibold uppercase text-gray-500">{stat.title}</CardTitle>
-                <div className="p-2 rounded-lg bg-rose-50 text-rose-500">
-                  <Icon className="size-4" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-gray-400 mt-1">{stat.desc}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Placeholder for Booking List (Requirement 5: CRUD/Functionality) */}
-      <Card className="p-8 text-center border-dashed border-2">
-        <p className="text-muted-foreground">You have no upcoming bookings.</p>
-        <Link href="/properties">
-          <Button className="mt-4 bg-rose-500 hover:bg-rose-600 cursor-pointer">
-            Browse Properties
-          </Button>
-        </Link>
-      </Card>
+    <div className="max-w-6xl mx-auto p-2">
+      {/* আসল ডাটা ক্লায়েন্ট ডিজাইনে পাস করা হচ্ছে */}
+      <TenantDashboard rentals={rentals} payments={payments} />
     </div>
   );
 }

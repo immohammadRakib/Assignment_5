@@ -8,15 +8,21 @@ import { requestToRentAction } from "../../_actions/bookingAction";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Loader2, Phone, Calendar, Clock } from "lucide-react";
+import { Loader2, Phone, Calendar } from "lucide-react";
 
 export function RentalRequestModal({ propertyId, price }: { propertyId: string, price: number }) {
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
+  // 🎯 ব্যাকএন্ডের রিকোয়ারমেন্ট অনুযায়ী defaultValues এবং স্কিমা ফিল্ড সিঙ্ক করা হয়েছে
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(bookingSchema),
-    defaultValues: { propertyId, phone: "", checkInDate: "", stayDuration: 1 }
+    defaultValues: {
+      propertyId,
+      phone: "",
+      startDate: "", // 🛠️ checkInDate বদলে startDate
+      endDate: ""    // 🛠️ stayDuration বদলে endDate
+    }
   });
 
   const onSubmit = async (data: any) => {
@@ -34,16 +40,12 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-     <DialogTrigger className="w-full block border-none p-0 bg-transparent outline-none">
-  <div 
-    role="button"
-    tabIndex={0}
-    className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center select-none active:scale-[0.98] px-4"
-  >
-    Request to Rent 
-  </div>
-</DialogTrigger>
-
+      <DialogTrigger className="w-full block border-none p-0 bg-transparent outline-none">
+        <div role="button" tabIndex={0} className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center select-none active:scale-[0.98] px-4" >
+          Request to Rent
+        </div>
+      </DialogTrigger>
+      
       <DialogContent className="bg-white rounded-3xl p-6 md:p-8 border-none shadow-2xl max-w-[400px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-black text-gray-900 tracking-tight">Booking Details</DialogTitle>
@@ -53,6 +55,7 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
           <input type="hidden" {...register("propertyId")} />
 
+          {/* Phone Number */}
           <div className="space-y-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1 flex items-center gap-1">
               <Phone size={12} /> Phone Number
@@ -62,26 +65,37 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            {/* Start Date (Check-In) */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1 flex items-center gap-1">
-                <Calendar size={12} /> Check-in
+                <Calendar size={12} /> Check-In
               </label>
-              <Input {...register("checkInDate")} type="date" className="rounded-xl h-11 focus-visible:ring-rose-500 border-neutral-200" required />
+              <Input 
+                {...register("startDate")} // 🎯 'startDate' এ কনভার্ট করা হয়েছে
+                type="date" 
+                className={`rounded-xl h-11 focus-visible:ring-rose-500 ${errors.startDate ? "border-rose-500" : "border-neutral-200"}`}
+                required 
+              />
+              {errors.startDate && <p className="text-[10px] text-rose-500 font-medium pl-1">{errors.startDate.message as string}</p>}
             </div>
 
+            {/* End Date (Check-Out) */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1 flex items-center gap-1">
-                <Clock size={12} /> Days
+                <Calendar size={12} /> Check-Out
               </label>
-              <Input {...register("stayDuration")} type="number" min={1} className="rounded-xl h-11 focus-visible:ring-rose-500 border-neutral-200" required />
+              <Input 
+                {...register("endDate")} // 🎯 'endDate' এ কনভার্ট করা হয়েছে
+                type="date" 
+                className={`rounded-xl h-11 focus-visible:ring-rose-500 ${errors.endDate ? "border-rose-500" : "border-neutral-200"}`}
+                required 
+              />
+              {errors.endDate && <p className="text-[10px] text-rose-500 font-medium pl-1">{errors.endDate.message as string}</p>}
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            disabled={isPending} 
-            className="w-full h-12 bg-gray-900 hover:bg-black text-white rounded-xl mt-4 font-bold shadow-md transition-all active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50"
-          >
+          {/* Submit Button */}
+          <button type="submit" disabled={isPending} className="w-full h-12 bg-gray-900 hover:bg-black text-white rounded-xl mt-4 font-bold shadow-md transition-all active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50" >
             {isPending ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin" />

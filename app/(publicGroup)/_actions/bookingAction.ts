@@ -1,17 +1,16 @@
 "use server"
 
 import { cookies } from "next/headers";
-import { bookingSchema } from "./bookingSchema";
+import { bookingSchema } from "../_actions/bookingSchema";
 
 export const requestToRentAction = async (formData: any) => {
-  // ১. সার্ভার-সাইড ভ্যালিডেশন (উল্টাপাল্টা ডেটা এখানে এসে আটকে যাবে)
   const validatedFields = bookingSchema.safeParse(formData);
 
   if (!validatedFields.success) {
     return {
       success: false,
-      message: "Invalid data provided!",
-      errors: validatedFields.error.flatten().fieldErrors, // সুনির্দিষ্ট ভুলের লিস্ট পাঠাবে
+      message: "Validation failed!",
+      errors: validatedFields.error.flatten().fieldErrors,
     };
   }
 
@@ -21,13 +20,20 @@ export const requestToRentAction = async (formData: any) => {
   if (!token) return { success: false, message: "Unauthorized! Please login." };
 
   try {
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/rentals`, {
+    // 🎯 ডেটগুলোকে ব্যাকএন্ডের পছন্দমতো ISO 8601 ফরম্যাটে রূপান্তর করা হচ্ছে
+    const payload = {
+      propertyId: validatedFields.data.propertyId,
+      startDate: new Date(validatedFields.data.startDate).toISOString(),
+      endDate: new Date(validatedFields.data.endDate).toISOString(),
+    };
+
+    const res = await fetch(`https://assignment-4-vnjw.onrender.com/api/rentals`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify(validatedFields.data) // শুধুমাত্র ভ্যালিড ডেটা পাঠানো হচ্ছে
+      body: JSON.stringify(payload) // 🎯 এনক্রিপ্টেড পারফেক্ট পেলোড পাঠানো হচ্ছে
     });
 
     const result = await res.json();
