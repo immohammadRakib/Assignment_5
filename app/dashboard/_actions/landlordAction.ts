@@ -4,6 +4,22 @@ import { revalidatePath } from "next/cache";
 
 const BASE_URL = "https://assignment-4-vnjw.onrender.com/api";
 
+// 🏷️ ০. গেট অল ক্যাটাগরিজ (Live Categories Fetch)
+export async function getCategories() {
+  try {
+    const res = await fetch(`${BASE_URL}/categories`, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 60 }
+    });
+    if (!res.ok) throw new Error("Categories could not be retrieved");
+    const data = await res.json();
+    return Array.isArray(data) ? data : data?.data || [];
+  } catch (error) {
+    return [];
+  }
+}
+
 // 🏠 ১. গেট অল প্রপার্টিজ (My Listings)
 export async function getLandlordProperties() {
   try {

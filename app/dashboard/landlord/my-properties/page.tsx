@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getLandlordProperties, deleteProperty, toggleAvailability } from "../../_actions/landlordAction";
 import { toast } from "sonner";
-import { Trash2, RefreshCw, MapPin } from "lucide-react";
+import { Trash2, RefreshCw, MapPin, Tag } from "lucide-react"; // Tag আইকন অ্যাড করা হয়েছে
 
 export default function MyListingsPage() {
   const [properties, setProperties] = useState<any[]>([]);
@@ -50,10 +50,22 @@ export default function MyListingsPage() {
           {properties.map((item) => (
             <div key={item._id} className="bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
               <div>
-                <img src={item.images?.[0] || "https://unsplash.com"} alt={item.title} className="w-full h-44 object-cover" />
+                <div className="relative">
+                  <img src={item.images?.[0] || "https://unsplash.com"} alt={item.title} className="w-full h-44 object-cover" />
+                  
+                  {/* ডাইনামিক ক্যাটাগরি স্লাগ ব্যাজ */}
+                  {item.categoryId && (
+                    <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-[10px] font-black text-neutral-800 px-2.5 py-1 rounded-lg border border-neutral-200/50 uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                      <Tag className="w-2.5 h-2.5 text-indigo-500" />
+                      {item.categoryId === "cf5d2544-ef0b-446f-b2f4-3553c21c9600" ? "Studio" : "Apartment"}
+                    </span>
+                  )}
+                </div>
+
                 <div className="p-4 space-y-2">
                   <h3 className="font-bold text-gray-900 text-base line-clamp-1">{item.title}</h3>
                   <p className="text-xs text-neutral-500 line-clamp-2">{item.description}</p>
+                  
                   <div className="flex items-center gap-1 text-xs text-gray-400 font-medium">
                     <MapPin className="w-3.5 h-3.5 text-rose-500" />
                     <span>{item.location}, {item.city}</span>
@@ -68,12 +80,11 @@ export default function MyListingsPage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <button onClick={() => handleToggle(item._id)} className={`px-3 py-1.5 text-xs font-bold rounded-xl flex items-center gap-1 border transition-all ${
-                    item.isAvailable !== false ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-neutral-50 text-neutral-500 border-neutral-100"
-                  }`}>
+                  <button onClick={() => handleToggle(item._id)} className={`px-3 py-1.5 text-xs font-bold rounded-xl flex items-center gap-1 border transition-all ${ item.isAvailable !== false ? "bg-emerald-50 text-emerald-600 border-emerald-100" : "bg-neutral-50 text-neutral-500 border-neutral-100" }`}>
                     <RefreshCw className="w-3 h-3" />
                     {item.isAvailable !== false ? "Available" : "Booked"}
                   </button>
+
                   <button onClick={() => handleDelete(item._id)} className="p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-colors">
                     <Trash2 className="w-4 h-4" />
                   </button>
