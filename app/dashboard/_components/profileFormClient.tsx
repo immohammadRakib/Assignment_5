@@ -63,7 +63,12 @@ const { register, handleSubmit, control, formState: { errors } } = useForm({
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 relative z-10 select-none">
+    // <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 relative z-10 select-none">
+    <form 
+  onSubmit={handleSubmit(onSubmit)} 
+  onDragOver={(e) => e.preventDefault()} // 🎯 ফর্ম লেভেলের ব্রাউজার রিডাইরেক্ট লক
+  className="space-y-5 relative z-10 select-none"
+>
       
       {/* 📸 প্লাস (+) বাটন এবং ড্র্যাগ/ড্রপ কাস্টম ইমেজ আপলোডার সেকশন */}
       <div className="flex flex-col items-center justify-center space-y-2 border-b border-neutral-50 pb-4">

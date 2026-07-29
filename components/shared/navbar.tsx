@@ -47,6 +47,30 @@ export function Navbar({ user }: NavbarProps) {
       toast.success("User Logged Out Successfully!");
       router.push("/auth/login");
     }
+    if (action === "profile") {
+      const role = user?.data?.profile?.role;
+    if (role === "USER" || role === "TENANT") {
+      router.push("/dashboard/tenant/me"); // টেন্যান্টের সেই প্রিমিয়াম প্রোফাইল পেজ
+    } else if (role === "AUTHOR" || role === "LANDLORD") {
+      router.push("/dashboard/landlord"); // ল্যান্ডলর্ডের জন্য ডিফল্ট ওভারভিউ/প্রোফাইল
+    } else if (role === "ADMIN") {
+      router.push("/dashboard/admin");
+    }
+    return;
+  }
+
+  // 🎯 ৩. সেটিংস রিডাইরেক্ট লজিক
+  if (action === "settings") {
+    const role = user?.data?.profile?.role;
+    if (role === "USER" || role === "TENANT") {
+      router.push("/dashboard/tenant/me"); // সেটিংস এবং প্রোফাইল একই পেজে হ্যান্ডেল করা হয়েছে
+    } else if (role === "AUTHOR" || role === "LANDLORD") {
+      router.push("/dashboard/landlord");
+    } else if (role === "ADMIN") {
+      router.push("/dashboard/admin");
+    }
+    return;
+  }
   };
 
   return (
