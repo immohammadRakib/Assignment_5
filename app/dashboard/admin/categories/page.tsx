@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Plus, Layers, Loader2, X, AlertTriangle } from 'lucide-react';
 import CategoryRow from './categoriesRaw';
+// import { useCategoryStore } from '../../../store/useCategoryStore'; 
 
 interface Category {
   id: string;
@@ -20,6 +21,9 @@ export default function AdminCategoriesPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+//   const { categories, setCategories, isLoading, setLoading } = useCategoryStore();
+
 
   const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
 
