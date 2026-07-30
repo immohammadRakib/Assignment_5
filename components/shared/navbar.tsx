@@ -52,9 +52,9 @@ export function Navbar({ user }: NavbarProps) {
     if (role === "USER" || role === "TENANT") {
       router.push("/dashboard/tenant/me"); // টেন্যান্টের সেই প্রিমিয়াম প্রোফাইল পেজ
     } else if (role === "AUTHOR" || role === "LANDLORD") {
-      router.push("/dashboard/landlord"); // ল্যান্ডলর্ডের জন্য ডিফল্ট ওভারভিউ/প্রোফাইল
+      router.push("/dashboard/landlord/me"); // ল্যান্ডলর্ডের জন্য ডিফল্ট ওভারভিউ/প্রোফাইল
     } else if (role === "ADMIN") {
-      router.push("/dashboard/admin");
+      router.push("/dashboard/admin/me");
     }
     return;
   }

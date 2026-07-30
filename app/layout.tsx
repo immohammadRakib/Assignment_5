@@ -15,18 +15,15 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // ১. কুকি থেকে টোকেন নেওয়া
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
 
-  // ২. ডিফল্ট ইউজার ডাটা অবজেক্ট
   let userData = { 
     success: false, 
     data: null, 
     message: "" 
   };
 
-  // ৩. টোকেন থাকলে ডিকোড করে ডাটা রেডি করা
   if (token) {
     try {
       const decoded = jwt.decode(token) as any;
@@ -48,46 +45,23 @@ export default async function RootLayout({
     }
   }
 
-  // return (
-  //   <html lang="en" className={cn("h-full antialiased", "font-sans", inter.variable)} >
-  //     <body className="min-h-full flex flex-col">
-  //       <Toaster position="top-right" richColors />
-        
-  //       {/* ডাইনামিক নেভবার */}
-  //       <Navbar user={userData as any} /> 
-        
-  //       {/* 🛠️ ফিক্স: এখানে শুধু একবারই children থাকবে এবং flex-1 কন্টেন্টকে নিচে ঠেলে দেবে */}
-  //       <main className="flex-1 flex flex-col">
-  //         {children}
-  //       </main>
-        
-  //       {/* ফুটার */}
-  //       <Footer />
-  //     </body>
-  //   </html>
-  // );
-
-
-  // 🛠️ app/layout.tsx এর রিটার্ন স্টেটমেন্ট এভাবে আপডেট করো:
+  
 return (
   <html 
     lang="en" 
     className={cn("h-full antialiased", "font-sans", inter.variable)} 
-    suppressHydrationWarning={true} // 🎯 এই ম্যাজিক লাইনটি যোগ করো
+    suppressHydrationWarning={true} 
   >
-    <body className="min-h-full flex flex-col">
+<body className="min-h-full flex flex-col" suppressHydrationWarning={true}>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <Toaster position="top-right" richColors />
-      
-      {/* ডাইনামিক নেভবার */}
+
       <Navbar user={userData as any} /> 
-      
-      {/* মেইন কন্টেন্ট */}
+
       <main className="flex-1 flex flex-col">
         {children}
       </main>
-      
-      {/* ফুটার */}
+
       <Footer />
       </ThemeProvider>
     </body>

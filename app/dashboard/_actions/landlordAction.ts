@@ -1,10 +1,25 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies } from "next/headers"; // 🎯 কুকি রিড করার জন্য এটি যোগ করা হয়েছে
 
 const BASE_URL = "https://assignment-4-vnjw.onrender.com/api";
 
-// 🏷️ ০. গেট অল ক্যাটাগরিজ (Live Categories Fetch)
+// 🔐 হেল্পার ফাংশন: ব্রাউজার থেকে কুকি টোকেন তুলে হেডার তৈরি করবে
+async function getAuthHeaders() {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value; // আপনার কুকির নাম
+
+  // 🎯 টার্মিনালে চেক করার জন্য এই লাইনটি যোগ করুন
+  console.log("---- SERVER ACTION TOKEN CHECK ----", token);
+
+  const headers: Record<string, string> = { "Content-Type": "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  return headers;
+}
+
+
+// 🏷️ ০. গেট অল ক্যাটাগরিজ
 export async function getCategories() {
   try {
     const res = await fetch(`${BASE_URL}/categories`, {
@@ -21,39 +36,116 @@ export async function getCategories() {
 }
 
 // 🏠 ১. গেট অল প্রপার্টিজ (My Listings)
-export async function getLandlordProperties() {
+// export async function getLandlordProperties() {
+//   try {
+//     const authHeaders = await getAuthHeaders(); // 🎯 টোকেনসহ হেডার নেওয়া হলো
+//     const res = await fetch(`${BASE_URL}/landlord/properties`, {
+//       method: "GET",
+//       headers: authHeaders,
+//       cache: "no-store",
+//     });
+//     if (!res.ok) throw new Error("Failed to fetch properties");
+//     return await res.json();
+//   } catch (error) {
+//     return { success: false, data: [] };
+//   }
+// }
+
+
+export const getMyProperties = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/landlord/properties`, {
-      cache: "no-store",
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value || null;
+    if (!accessToken) {
+      return { success: false, message: "User not logged in!" };
+    }
+
+    // 🎯 ফিক্স: cache চেইঞ্জ করে no-store করা হলো যাতে নতুন লিস্টিং সাথে সাথে ভিউতে আসে
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/landlord/properties`, {
+      headers: {
+        Cookie: `accessToken=${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store", // 🚀 ২৪ ঘণ্টার ওল্ড ক্যাশ মেমোরি ধ্বংস করে দেওয়া হলো
     });
-    if (!res.ok) throw new Error("Failed to fetch properties");
-    return await res.json();
+
+    const result = await res.json();
+    return result;
   } catch (error) {
-    return { success: false, data: [] };
+    console.error("Get My Properties Error:", error);
+    return { success: false, message: "Failed to fetch properties!" };
   }
-}
+};
+
 
 // ➕ ২. ক্রিয়েট নিউ প্রপার্টি (Create Listing)
-export async function createProperty(formData: any) {
+export const createProperty = async (prevState: any, formData: FormData) => {
+  const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const location = formData.get("location") as string;
+  const city = formData.get("city") as string;
+  const pricePerDay = Number(formData.get("pricePerDay"));
+  const categoryId = formData.get("categoryId") as string;
+  const imagesInput = formData.get("images") as string;
+  const images = imagesInput ? imagesInput.split(",").map((img) => img.trim()) : ["https://unsplash.com"];
+  
+  const payload = {
+    title,
+    description,
+    location,
+    city,
+    pricePerDay,
+    images,
+    categoryId,
+  };
+  
+  console.log("Creating Property Payload:", payload);
+  
   try {
-    const res = await fetch(`${BASE_URL}/landlord/properties`, {
+    // 🎯 ১. নেক্সট জেএস-এর নেটিভ কুকি ইঞ্জিন থেকে লাইভ এক্সেস টোকেন রিড
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value || null;
+    
+    console.log("---- SERVER ACTION NESTED COOKIE CHECK ----", accessToken);
+
+    if (!accessToken) {
+      return { success: false, message: "User not logged in! accessToken missing in cookies." };
+    }
+    
+    // 🎯 ২. সরাসরি ব্রাউজারের নেটিভ হেডার্স ফরমেটে ব্যাকএন্ড হিট
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/landlord/properties`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
+      headers: {
+        // এক্সপ্রেস ব্যাকএন্ডের কুকি-পার্সার যাতে এক চান্সেই ধরে ফেলে
+        "Cookie": `accessToken=${accessToken}`,
+        // ব্যাকএন্ড যদি পাসপোর্ট বিয়ারার খোঁজে, তার জন্য ফলব্যাক
+        "Authorization": `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
-    revalidatePath("/dashboard/landlord/my-properties");
-    return await res.json();
+    
+    const result = await res.json();
+    console.log("🔥 Direct Gateway Response Object:", result);
+
+    if (result.success) {
+      revalidateTag("my-properties", { expire: 0 });
+      revalidateTag("public-properties", { expire: 0 });
+    }
+    return result;
   } catch (error) {
-    return { success: false, message: "Creation failed" };
+    console.error("Create Property Error:", error);
+    return { success: false, message: "Something went wrong while creating property!" };
   }
-}
+};
 
 // 📝 ৩. আপডেট প্রপার্টি (Edit Listing)
 export async function updateProperty(id: string, formData: any) {
   try {
+    const authHeaders = await getAuthHeaders(); // 🎯 টোকেনসহ হেডার নেওয়া হলো
     const res = await fetch(`${BASE_URL}/landlord/properties/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: authHeaders,
       body: JSON.stringify(formData),
     });
     revalidatePath("/dashboard/landlord/my-properties");
@@ -66,8 +158,10 @@ export async function updateProperty(id: string, formData: any) {
 // ❌ ৪. ডিলিট প্রপার্টি
 export async function deleteProperty(id: string) {
   try {
+    const authHeaders = await getAuthHeaders(); // 🎯 টোকেনসহ হেডার নেওয়া হলো
     const res = await fetch(`${BASE_URL}/landlord/properties/${id}`, {
       method: "DELETE",
+      headers: authHeaders,
     });
     revalidatePath("/dashboard/landlord/my-properties");
     return await res.json();
@@ -77,42 +171,114 @@ export async function deleteProperty(id: string) {
 }
 
 // 🔄 ৫. টগল অ্যাভেলেবিলিটি (PATCH)
-export async function toggleAvailability(id: string) {
+// 🎯 ফিক্সড ও ১০০% ডাটাবেজ সিঙ্কড প্যাচ রিকোয়েস্ট:
+export const toggleAvailability = async (id: string, currentStatus: boolean) => {
   try {
-    const res = await fetch(`${BASE_URL}/landlord/properties/isAvailable/${id}`, {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value || null;
+
+    // ব্যাকএন্ডে পাঠানোর জন্য অপোজিট বুুলিয়ান ভ্যালু নির্ধারণ (True থাকলে False, False থাকলে True)
+    const nextStatus = !currentStatus;
+
+    const res = await fetch(`https://onrender.com{id}`, {
       method: "PATCH",
+      headers: {
+        Cookie: `accessToken=${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      // 🚀 মোস্ট ইম্পর্ট্যান্ট ফিক্স: তোমার কার্ল রিকোয়েস্ট অনুযায়ী ব্যাকএন্ড বডিতে ট্রু/ফলস ডাটা পাস করা হলো
+      body: JSON.stringify({ isAvailable: nextStatus }),
+      cache: "no-store"
     });
-    revalidatePath("/dashboard/landlord/my-properties");
-    return await res.json();
+
+    if (!res.ok) throw new Error("Toggle status update failed on server");
+    const result = await res.json();
+
+    // মেইন পাবলিক পেজ ও ইনভেন্টরির ওল্ড ক্যাশ মেমোরি ফ্ল্যাশ
+    revalidatePath("/properties",); 
+    revalidateTag("my-properties", { expire: 0 });
+
+    return result;
   } catch (error) {
+    console.error("Toggle Availability Error:", error);
     return { success: false, message: "Toggle failed" };
   }
-}
+};
+
 
 // 📥 ৬. গেট ইনকামিং রেন্টাল রিকোয়েস্ট
+// 📥 ১. গেট ইনকামিং রেন্টাল রিকোয়েস্ট (Real API Docs Mapped)
 export async function getIncomingRequests() {
   try {
-    const res = await fetch(`${BASE_URL}/rentals/landlord/requests`, {
-      cache: "no-store",
+    // কুকি স্টোর থেকে সরাসরি লাইভ এক্সেস টোকেন রিড
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value || null;
+
+    if (!accessToken) {
+      console.error("Auth Error: Access Token missing in cookies context for requests.");
+      return { success: false, data: [] };
+    }
+
+    // 🎯 রিয়াল কার্ল কম্যান্ড অনুযায়ী নিখুঁত এন্ডপয়েন্ট কানেকশন
+    const res = await fetch("https://assignment-4-vnjw.onrender.com/api/rentals/landlord/requests", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Cookie": `accessToken=${accessToken}`,
+        "Authorization": `Bearer ${accessToken}` // সিকিউর গেটওয়ে ফলব্যাক
+      },
+      cache: "no-store", // লাইভ বুকিং ট্র্যাকিংয়ের জন্য ক্যাশ ডিরেক্ট অফ
     });
-    if (!res.ok) throw new Error("Failed to fetch requests");
-    return await res.json();
+
+    if (!res.ok) throw new Error("Failed to fetch incoming requests from server gateway");
+    const result = await res.json();
+    
+    console.log("🔥 Landlord Incoming Requests Live API Output:", result);
+    return result;
   } catch (error) {
+    console.error("Get Incoming Requests Error:", error);
     return { success: false, data: [] };
   }
 }
 
+
 // 🔒 ৭. রিকোয়েস্ট স্ট্যাটাস আপডেট (CONFIRMED/REJECTED)
+
+// 🔒 রিকোয়েস্ট স্ট্যাটাস আপডেট (Real API Docs Mapped with correct Interpolation)
 export async function updateRequestStatus(id: string, status: string) {
   try {
-    const res = await fetch(`${BASE_URL}/rentals/landlord/requests/${id}`, {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value || null;
+
+    if (!id || id === "undefined") {
+      return { success: false, message: "Validation Error: Request ID is undefined!" };
+    }
+
+    // 🎯 ফিক্স: `${id}` এর আগে ডলার ($) সাইন এবং সঠিক বেস ইউআরএল কনক্যাটিনেশন নিশ্চিত করা হলো
+    const targetUrl = `https://assignment-4-vnjw.onrender.com/api/rentals/landlord/requests/${id}`;
+    console.log("🚀 Hitting Real PATCH Status Gateway URL:", targetUrl);
+
+    const res = await fetch(targetUrl, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status }),
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `accessToken=${accessToken}`,
+        Authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify({ status }), // কার্ল ডকস অনুযায়ী বডিতে স্ট্যাটাস পাস
     });
+
+    if (!res.ok) throw new Error("Status update failed on server gateway");
+    const result = await res.json();
+
     revalidatePath("/dashboard/landlord/requests");
-    return await res.json();
+    revalidatePath("/dashboard/tenant/requests");
+
+    return result;
   } catch (error) {
+    console.error("Status update error in action:", error);
     return { success: false, message: "Status update failed" };
   }
 }
+

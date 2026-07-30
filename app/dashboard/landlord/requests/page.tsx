@@ -114,24 +114,49 @@ export default function LandlordRequestsPage() {
   }, []);
 
   // স্ট্যাটাস চেঞ্জ হ্যান্ডেলার (CONFIRMED / REJECTED)
-  const handleStatusUpdate = async (id: string, newStatus: string) => {
-    const originalRequests = [...requests];
+//   const handleStatusUpdate = async (id: string, newStatus: string) => {
+//     const originalRequests = [...requests];
     
-    // অপটিমিস্টিক UI আপডেট (ইউজার এক্সপেরিয়েন্স ফাস্ট করার জন্য)
-    setRequests((prev) =>
-      prev.map((req) => (req._id === id ? { ...req, status: newStatus } : req))
-    );
+//     // অপটিমিস্টিক UI আপডেট (ইউজার এক্সপেরিয়েন্স ফাস্ট করার জন্য)
+//     setRequests((prev) =>
+//       prev.map((req) => (req._id === id ? { ...req, status: newStatus } : req))
+//     );
 
-    const result = await updateRequestStatus(id, newStatus);
+//     const result = await updateRequestStatus(id, newStatus);
 
-    if (result && result.success !== false) {
-      toast.success(`Application status updated to ${newStatus}!`);
-      loadRequests(); // ফাইনাল স্টেট সিঙ্ক
-    } else {
-      toast.error(result?.message || "Failed to update status on backend.");
-      setRequests(originalRequests); // এরর হলে আগের স্টেটে ব্যাক করবে
-    }
-  };
+//     if (result && result.success !== false) {
+//       toast.success(`Application status updated to ${newStatus}!`);
+//       loadRequests(); // ফাইনাল স্টেট সিঙ্ক
+//     } else {
+//       toast.error(result?.message || "Failed to update status on backend.");
+//       setRequests(originalRequests); // এরর হলে আগের স্টেটে ব্যাক করবে
+//     }
+//   };
+
+const handleStatusUpdate = async (id: string, newStatus: string) => {
+  if (!id) {
+    toast.error("Error: Application ID is missing or invalid.");
+    return;
+  }
+
+  const originalRequests = [...requests];
+  
+  // অপটিমিস্টিক UI আপডেট (ইউজার আইডি বা আন্ডারস্কোর আইডি দুইটাই সিঙ্ক করবে)
+  setRequests((prev) =>
+    prev.map((req) => (req._id === id || req.id === id ? { ...req, status: newStatus } : req))
+  );
+
+  const result = await updateRequestStatus(id, newStatus);
+
+  if (result && result.success !== false) {
+    toast.success(`Application status updated to ${newStatus}!`);
+    loadRequests(); // ফাইনাল ডাটা রি-লোডিং
+  } else {
+    toast.error(result?.message || "Failed to update status on backend.");
+    setRequests(originalRequests); // এরর হলে রিভার্ট ব্যাক করবে
+  }
+};
+
 
   if (loading) {
     return (
@@ -165,9 +190,10 @@ export default function LandlordRequestsPage() {
                   <th className="p-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-neutral-50 text-neutral-700">
-                {requests.map((req) => (
-                  <tr key={req._id} className="hover:bg-neutral-50/50 transition-colors">
+             <tbody className="divide-y divide-neutral-50 text-neutral-700">
+  {requests.map((req, index) => (
+    // 🚀 ফলব্যাক ট্রিক: ডাটাবেজে _id বা id কোনোটি না থাকলেও index ওয়ান-টাইম কি হিসেবে সেভ করবে
+    <tr key={req._id || req.id || index} className="hover:bg-neutral-50/50 transition-colors">
                     {/* Property info */}
                     <td className="p-4">
                       <div className="flex items-center gap-3">
@@ -227,20 +253,24 @@ export default function LandlordRequestsPage() {
                     <td className="p-4 text-right">
                       {req.status === "PENDING" ? (
                         <div className="flex gap-2 justify-end">
-                          <button 
-                            onClick={() => handleStatusUpdate(req._id, "CONFIRMED")}
-                            className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-xl transition-all shadow-xs"
-                            title="Approve Lease"
-                          >
-                            <Check className="w-4 h-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleStatusUpdate(req._id, "REJECTED")}
-                            className="p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-all shadow-xs"
-                            title="Decline Lease"
-                          >
-                            <X className="w-4 h-4" />
-                          </button>
+                        {/* 🎯 Approve Button Fix */}
+<button 
+  onClick={() => handleStatusUpdate(req.id || req._id, "CONFIRMED")}
+  className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-600 rounded-xl transition-all shadow-xs"
+  title="Approve Lease"
+>
+  <Check className="w-4 h-4" />
+</button>
+
+{/* 🎯 Reject Button Fix */}
+<button 
+  onClick={() => handleStatusUpdate(req.id || req._id, "REJECTED")}
+  className="p-2 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-all shadow-xs"
+  title="Decline Lease"
+>
+  <X className="w-4 h-4" />
+</button>
+
                         </div>
                       ) : (
                         <span className="text-xs text-neutral-400 italic font-medium">Processed</span>
