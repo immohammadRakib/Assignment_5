@@ -1,18 +1,29 @@
 
 export const dynamic = "force-dynamic";
 
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HomeIcon, CalendarCheckIcon, BadgeCheckIcon, WalletIcon, ArrowUpRight } from "lucide-react";
 import { getMyProperties, getIncomingRequests } from "../_actions/landlordAction"; // 🎯 ফিক্স: রিয়াল রিকোয়েস্ট একশন ইম্পোর্ট করা হলো
 import { IncomingRequestsList } from "../_components/incomingRequest";
 
 export default async function LandlordDashboardPage() {
+
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
+  // 🎯 লগ আউট করার পর টোকেন না থাকলে ইউজারকে আর ড্যাশবোর্ড দেখতে দিবে না
+  if (!token) {
+    redirect("/login");
+  }
   
   // 🎯 ১. ম্যাজিক ট্রিক: ওল্ড ক্যাশ এড়িয়ে দুটি রিয়াল এপিআই অ্যাকশন একসাথে প্যারালাল ফেচ করা হচ্ছে
   const [propertiesResult, requestsResult] = await Promise.all([
     getMyProperties(),
     getIncomingRequests()
   ]);
+  
 
   // 🛡️ ডিফেনসিভ সেফগার্ড লেয়ার: ডাটাবেজ রেসপন্স অবজেক্ট বা অ্যারে যেভাবে আসুক ক্র্যাশ করবে না
   // const properties = Array.isArray(propertiesResult) 
