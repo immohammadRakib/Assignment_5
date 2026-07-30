@@ -389,12 +389,23 @@ export default function PaymentInitiationPage() {
       const result = await createPaymentSessionAction(rentalId);
       console.log("🔥 Server Action Gateway Response:", result);
 
-      if (result?.success && result?.GatewayPageURL) {
-        toast.success("Secure checkout session initialized. Redirecting to SSLCommerz...");
-        window.location.replace(result.GatewayPageURL);
-      } else {
-        toast.error(result?.message || "Payment initiation rejected by Render secure node.");
-      }
+      // if (result?.success && result?.GatewayPageURL) {
+      //   toast.success("Secure checkout session initialized. Redirecting to SSLCommerz...");
+      //   window.location.replace(result.GatewayPageURL);
+      // } else {
+      //   toast.error(result?.message || "Payment initiation rejected by Render secure node.");
+      // }
+
+      if (result?.success && result?.data?.GatewayPageURL) {
+  toast.success("Secure checkout session initialized. Redirecting to SSLCommerz...");
+  
+  // 🎯 ম্যাজিক লাইন: সরাসরি ডাটার ভেতর থেকে লাইভ স্যান্ডবক্স ইউআরএল নিয়ে রিডাইরেক্ট করবে
+  window.location.replace(result.data.GatewayPageURL);
+} else {
+  toast.error(result?.message || "Payment initiation rejected by Render secure node.");
+}
+
+
     } catch (error) {
       console.error("Gateway interface connection error:", error);
       toast.error("Network interface connection failure.");
