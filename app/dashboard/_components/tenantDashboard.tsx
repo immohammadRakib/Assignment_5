@@ -6,41 +6,22 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 // অফিসিয়াল রিকোয়ারমেন্ট ব্যাজ কালার ম্যাপ
-const badgeStyles = {
-  PENDING: "bg-amber-50 border-amber-200 text-amber-700",
-  CONFIRMED: "bg-emerald-50 border-emerald-200 text-emerald-700", // 🎯 APPROVED বদলে CONFIRMED
-  REJECTED: "bg-rose-50 border-rose-200 text-rose-700",
-  ACTIVE: "bg-blue-50 border-blue-200 text-blue-700",
-  COMPLETED: "bg-neutral-100 border-neutral-200 text-neutral-600"
+const badgeStyles: any = {
+  pending: "bg-amber-50 border-amber-200 text-amber-700",
+  confirmed: "bg-emerald-50 border-emerald-200 text-emerald-700",
+  rejected: "bg-rose-50 border-rose-200 text-rose-700",
+  active: "bg-blue-50 border-blue-200 text-blue-700",
+  paid: "bg-emerald-50 border-emerald-200 text-emerald-700",
+  completed: "bg-neutral-100 border-neutral-200 text-neutral-600"
 };
 
 export default function TenantDashboard({ rentals = [], payments = [] }: { rentals: any[]; payments: any[] }) {
   
-  // 🎯 রিয়াল ডাটা স্ট্যাটস ক্যালকুলেশন
-  const activeBookingsCount = rentals.filter((r: any) => r.status === "ACTIVE" || r.status === "CONFIRMED").length.toString();
-  const pendingBookingsCount = rentals.filter((r: any) => r.status === "PENDING").length.toString();
-  
-  // ল্যান্ডলর্ড ওভারভিউয়ের মতো এখানেও রিয়াল টাকা ক্যালকুলেশন
-  const totalSpentAmount = rentals.reduce((acc: number, curr: any) => {
-    return (curr.status === "CONFIRMED" || curr.status === "ACTIVE") 
-      ? acc + (Number(curr.totalPrice) || 0) 
-      : acc;
-  }, 0);
-
-  // const tenantStats = [
-  //   { title: "Confirmed Stays", value: activeBookingsCount, desc: "Your ongoing rentals", icon: CalendarDaysIcon },
-  //   { title: "Wishlist", value: "0", desc: "Properties you liked", icon: HeartIcon },
-  //   { title: "Total Spent", value: `৳${totalSpentAmount.toLocaleString()}`, desc: "Paid through RentNest", icon: CreditCardIcon },
-  //   { title: "Pending Requests", value: pendingBookingsCount, desc: "Awaiting response", icon: ClockIcon },
-  // ];
-
   return (
     <div className="space-y-8 select-none">
-      {/* হেডার */}
-
-      {/* 📊 রেন্টাল রিকোয়েস্ট হিস্ট্রি টেবিল */}
       <div className="space-y-4 pt-2">
         <h3 className="text-base font-bold text-gray-900 tracking-tight">Your Rental Feed History</h3>
+        
         {rentals.length === 0 ? (
           <Card className="p-12 text-center border-dashed border-2 border-neutral-200 rounded-2xl bg-white">
             <p className="text-muted-foreground text-sm font-medium">You have no upcoming or recorded bookings.</p>
@@ -62,43 +43,66 @@ export default function TenantDashboard({ rentals = [], payments = [] }: { renta
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-50 font-semibold text-gray-700">
-                {rentals.map((rental: any, index: number) => (
-                  <tr key={rental.id || rental._id || index} className="hover:bg-neutral-50/20 transition-colors">
-                    <td className="p-4">
-                       <div className="flex items-center gap-2">
+                {rentals.map((rental: any, index: number) => {
+                  // 🎯 স্ট্যাটাসকে ছোট হাতের অক্ষরে কনভার্ট করা হলো সেফটির জন্য
+                  const status = (rental.status || "pending").toLowerCase();
+                  const propertyId = rental.property?.id || rental.property?._id || rental.propertyId;
+                  const bookingId = rental.id || rental._id;
+
+                  return (
+                    <tr key={bookingId || index} className="hover:bg-neutral-50/20 transition-colors">
+                      <td className="p-4">
+                        <div className="flex items-center gap-2">
                           <Home className="size-3.5 text-rose-500" />
                           <span className="font-bold text-gray-900 truncate max-w-[200px]">
-                            {/* 🎯 ফিক্স: propertyId এর বদলে সরাসরি property.title ব্যবহার করা হয়েছে */}
                             {rental.property?.title || "Premium Rental Unit"}
                           </span>
-                       </div>
-                    </td>
-                    <td className="p-4 text-gray-500 text-xs font-mono">
-                      {rental.startDate ? new Date(rental.startDate).toLocaleDateString() : "N/A"} - {rental.endDate ? new Date(rental.endDate).toLocaleDateString() : "N/A"}
-                    </td>
-                    <td className="p-4">
-                      <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black border uppercase ${badgeStyles[rental.status as keyof typeof badgeStyles] || badgeStyles.PENDING}`}>
-                        {rental.status || "PENDING"}
-                      </span>
-                    </td>
-                    <td className="p-4 text-right">
-                      {/* 🎯 ফিক্স: স্ট্যাটাস CONFIRMED হলে পে করার অপশন আসবে */}
-                      {rental.status === "CONFIRMED" ? (
-                        <Link href={`/dashboard/tenant/requests/${rental.id || rental._id}/pay`}>
-                          <button className="bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-sm cursor-pointer transition flex items-center gap-1 ml-auto active:scale-95">
-                            Pay Now <ArrowUpRight className="w-3.5 h-3.5" />
-                          </button>
-                        </Link>
-                      ) : rental.status === "ACTIVE" ? (
-                        <button className="bg-gray-900 hover:bg-black text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition active:scale-95">
-                          Leave Review
-                        </button>
-                      ) : (
-                        <span className="text-[10px] text-neutral-400 italic font-bold uppercase">Awaiting Host</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                        </div>
+                      </td>
+                      <td className="p-4 text-gray-500 text-xs font-mono">
+                        {rental.startDate ? new Date(rental.startDate).toLocaleDateString() : "N/A"} - {rental.endDate ? new Date(rental.endDate).toLocaleDateString() : "N/A"}
+                      </td>
+                      <td className="p-4">
+                        <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black border uppercase ${badgeStyles[status] || badgeStyles.pending}`}>
+                          {rental.status}
+                        </span>
+                      </td>
+                      <td className="p-4 text-right">
+                        {(() => {
+                          // ১. মালিক কনফার্ম করেছে কিন্তু টাকা দেওয়া হয়নি
+                          if (status === "confirmed") {
+                            return (
+                              <Link href={`/dashboard/tenant/requests/${bookingId}/pay`}>
+                                <button className="bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow-sm cursor-pointer transition flex items-center gap-1 ml-auto active:scale-95">
+                                  Pay Now <ArrowUpRight className="size-3.5" />
+                                </button>
+                              </Link>
+                            );
+                          }
+
+                          // ২. পেমেন্ট ডান বা বুকিং একটিভ
+                          if (["paid", "active", "completed", "success"].includes(status)) {
+                            return (
+                              <Link href={`/dashboard/tenant/reviews/write?propertyId=${propertyId}&bookingId=${bookingId}`}>
+                                <button className="bg-gray-950 hover:bg-black text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition active:scale-95 shadow-sm ml-auto">
+                                  Leave Review
+                                </button>
+                              </Link>
+                            );
+                          }
+
+                          // ৩. রিজেক্টেড
+                          if (status === "rejected") {
+                            return <span className="text-[10px] text-rose-500 font-black uppercase bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100">Lease Denied</span>;
+                          }
+
+                          // ৪. অন্য সব ক্ষেত্রে (পেন্ডিং)
+                          return <span className="text-[10px] text-neutral-400 italic font-bold uppercase bg-neutral-50 px-2.5 py-1 rounded-lg border border-neutral-100/60 tracking-wider">Awaiting Host</span>;
+                        })()}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

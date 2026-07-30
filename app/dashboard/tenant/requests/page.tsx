@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { Home, Calendar, CreditCard, Clock, CheckCircle2, AlertCircle, ArrowLeft } from "lucide-react";
+import { Home, Calendar, CreditCard, Clock, CheckCircle2, AlertCircle, ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 
 // অফিসিয়াল রিকোয়ারমেন্ট ব্যাজ কালার কনফিগারেশন ম্যাপ
@@ -141,7 +141,7 @@ export default async function TenantRequestsPage() {
                         ৳{Number(rental.totalPrice || 0).toLocaleString()}
                       </td>
 
-                      <td className="p-4">
+                      {/* <td className="p-4">
                         <span className={`px-2.5 py-1 rounded-lg text-[10px] font-black border uppercase tracking-wider inline-flex items-center gap-1 ${badgeStyles[rental.status as keyof typeof badgeStyles] || badgeStyles.PENDING}`}>
                           {rental.status === "PENDING" && <Clock className="w-3 h-3 animate-spin text-amber-500" />}
                           {rental.status === "CONFIRMED" && <CheckCircle2 className="w-3 h-3 text-emerald-500" />}
@@ -165,7 +165,62 @@ export default async function TenantRequestsPage() {
                         ) : (
                           <span className="text-[10px] text-neutral-400 italic font-bold uppercase bg-neutral-50 px-2.5 py-1 rounded-lg border border-neutral-100/60 tracking-wider">Awaiting Landlord Node</span>
                         )}
-                      </td>
+                      </td> */}
+
+                      {/* ১. ডাইনামিক স্ট্যাটাস ব্যাজ সেকশন */}
+<td className="p-4">
+  {(() => {
+    const stat = (rental.status || "PENDING").toUpperCase();
+    return (
+      <span className={`px-2.5 py-1 rounded-lg text-[px] font-black border uppercase tracking-wider inline-flex items-center gap-1 ${badgeStyles[stat as keyof typeof badgeStyles] || badgeStyles.PENDING}`}>
+        {stat === "PENDING" && <Clock className="w-3 h-3 animate-spin text-amber-500" />}
+        {(stat === "CONFIRMED" || stat === "ACTIVE" || stat === "SUCCESS") && <CheckCircle2 className="w-3 h-3 text-emerald-500" />}
+        {stat}
+      </span>
+    );
+  })()}
+</td>
+
+{/* ২. ইন্টারেক্টিভ অ্যাকশন গেটওয়ে বোতাম */}
+<td className="p-4 text-right">
+  {(() => {
+    // 🚀 প্রো-টিপ: সব চেক করার আগে ছোট হাতের অক্ষরে নিয়ে আসা হলো
+    const status = (rental.status || "").toLowerCase();
+    const bID = rental.id || rental._id;
+    const pID = rental.property?.id || rental.property?._id || rental.propertyId;
+
+    // কন্ডিশন ১: ল্যান্ডলর্ড কনফার্ম করেছে কিন্তু পেমেন্ট বাকি
+    if (status === "confirmed") {
+      return (
+        <Link href={`/dashboard/tenant/requests/${bID}/pay`}>
+          <button className="bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-black text-xs px-4 py-2 rounded-xl shadow-md cursor-pointer transition flex items-center gap-1 ml-auto active:scale-95 border border-rose-500/10">
+            Pay Bill Now <CreditCard className="w-3.5 h-3.5" />
+          </button>
+        </Link>
+      );
+    }
+
+    // 🎯 কন্ডিশন ২: পেমেন্ট সফল বা বুকিং রানিং (SUCCESS, VALID, PAID, ACTIVE, COMPLETED)
+    if (["success", "valid", "paid", "active", "completed"].includes(status)) {
+      return (
+        <Link href={`/dashboard/tenant/reviews/write?propertyId=${pID}&bookingId=${bID}`}>
+          <button className="bg-gray-950 hover:bg-black text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition active:scale-95 shadow-sm ml-auto flex items-center gap-1">
+            Leave Review <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+          </button>
+        </Link>
+      );
+    }
+
+    // কন্ডিশন ৩: রিজেক্টেড
+    if (status === "rejected") {
+      return <span className="text-[px] text-rose-500 font-black uppercase bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100">Lease Denied</span>;
+    }
+
+    // ডিফল্ট: পেন্ডিং বা মালিকের সাড়ার অপেক্ষায়
+    return <span className="text-[px] text-neutral-400 italic font-bold uppercase bg-neutral-50 px-2.5 py-1 rounded-lg border border-neutral-100/60 tracking-wider">Awaiting Host</span>;
+  })()}
+</td>
+
 
                     </tr>
                   );

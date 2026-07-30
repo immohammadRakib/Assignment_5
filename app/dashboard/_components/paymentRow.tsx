@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, CreditCard, Calendar, RefreshCw, CheckCircle2, XCircle, AlertTriangle, Eye, ShieldCheck } from "lucide-react";
+import { ChevronDown, ChevronUp, CreditCard, Calendar, RefreshCw, CheckCircle2, XCircle, AlertTriangle, Eye, ShieldCheck, Star } from "lucide-react";
 import Link from "next/link";
 
 const badgeStyles = {
@@ -55,31 +55,54 @@ export default function PaymentRow({ pay, index }: { pay: any; index: number }) 
 
         {/* 🚀 ৬. অ্যাকশন হাব: ডিটেইলস এবং রি-ট্রাই বাটন কন্ট্রোলার */}
         <td className="p-4 text-right">
-          <div className="flex items-center justify-end gap-2">
-            {/* ইন্টারেক্টিভ ডিটেইলস টগল বাটন */}
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-neutral-500 hover:text-gray-900 hover:bg-neutral-100 rounded-xl transition-all border border-neutral-200/50 bg-neutral-50/50 cursor-pointer"
-              title="View Invoice Details"
-            >
-              <Eye className="w-3.5 h-3.5" />
-            </button>
+  <div className="flex items-center justify-end gap-2">
+    {/* ১. ডিটেইলস দেখার বাটন */}
+    <button 
+      onClick={() => setIsOpen(!isOpen)}
+      className="p-2 text-neutral-500 hover:text-gray-900 hover:bg-neutral-100 rounded-xl transition-all border border-neutral-200/50 bg-neutral-50/50 cursor-pointer"
+    >
+      <Eye className="size-3.5" />
+    </button>
 
-            {/* ফেইল বা ক্যানসেল হলে রি-ট্রাই করার সুযোগ */}
-            {currentStatus === "FAILED" || currentStatus === "CANCELLED" || currentStatus === "PENDING" ? (
-              <Link href={`/dashboard/tenant/requests/${currentBookingId}/pay`}>
-                <button className="bg-rose-500 hover:bg-rose-600 text-white font-black text-xs px-3.5 py-2 rounded-xl shadow-xs transition active:scale-95 cursor-pointer inline-flex items-center gap-1">
-                  <RefreshCw className="w-3 h-3 animate-pulse" /> Retry Pay
-                </button>
-              </Link>
-            ) : currentStatus === "VALID" || currentStatus === "SUCCESS" ? (
-              <span className="text-[10px] text-emerald-600 font-black uppercase bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">Settled</span>
-            ) : (
-              <span className="text-xs text-neutral-400 italic font-medium">Processed</span>
-            )}
-          </div>
-        </td>
-      </tr>
+    {/* 🚀 ২. কিলার বাটন লজিক: পেমেন্ট হিস্ট্রি অবজেক্ট থেকে রিভিউ বাটন এক্সট্র্যাক্ট করা */}
+    {(() => {
+      const stat = (pay.status || "").toLowerCase();
+      
+      // 🎯 মোস্ট ইম্পর্ট্যান্ট: পেমেন্ট অবজেক্ট থেকে নিখুঁতভাবে আইডিগুলো বের করা
+      // পেমেন্ট এপিআই-তে সাধারণত ডাটা থাকে pay.booking.property.id ফরম্যাটে
+      const bookingRef = pay.booking || {};
+      const bID = pay.bookingId || bookingRef.id || bookingRef._id;
+      const pID = bookingRef.property?.id || bookingRef.property?._id || pay.propertyId;
+
+      // কন্ডিশন A: পেমেন্ট ফেইল বা ক্যানসেল হলে রি-ট্রাই বাটন
+      if (["failed", "fail", "cancelled", "cancel"].includes(stat)) {
+        return (
+          <Link href={`/dashboard/tenant/requests/${bID}/pay`}>
+            <button className="bg-rose-500 hover:bg-rose-600 text-white font-black text-[px] px-3 py-1.5 rounded-lg shadow-sm transition active:scale-95 cursor-pointer inline-flex items-center gap-1">
+              <RefreshCw className="size-3 animate-pulse" /> Retry Pay
+            </button>
+          </Link>
+        );
+      }
+
+      // 🎯 কন্ডিশন B: পেমেন্ট সফল হলে রিভিউ বাটন (যা এখন কাজ করবেই!)
+      if (["success", "valid", "paid"].includes(stat)) {
+        return (
+          <Link href={`/dashboard/tenant/reviews/write?propertyId=${pID}&bookingId=${bID}`}>
+            <button className="bg-gray-950 hover:bg-black text-white font-black font-semibold text-[px] px-3 py-1.5 rounded-lg shadow-sm transition active:scale-95 cursor-pointer inline-flex items-center gap-1">
+              Leave Review <Star className="size-3 fill-amber-400 text-amber-400" />
+            </button>
+          </Link>
+        );
+      }
+
+      // ডিফল্ট: অন্য কোনো স্ট্যাটাস থাকলে সাধারণ ব্যাজ
+      return <span className="text-[px] text-neutral-400 italic font-medium bg-neutral-50 px-2 py-1 rounded-md border border-neutral-100/50 uppercase">Processed</span>;
+    })()}
+  </div>
+</td>
+
+        </tr>
 
       {/* 🎯 ৭. গ্লাস-মরফিজম ইন্টারেক্টিভ পেমেন্ট ডিটেইলস সাব-প্যানেল */}
       {isOpen && (
