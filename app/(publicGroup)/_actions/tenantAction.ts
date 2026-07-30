@@ -73,3 +73,22 @@ export async function createReviewAction(payload: {
     return { success: false, message: "Server connection failed!" };
   }
 }
+
+
+
+export async function deleteReviewAction(reviewId: string) {
+  try {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+    const baseUrl = process.env.BACKEND_API_URL;
+
+    const res = await fetch(`${baseUrl}/api/reviews/${reviewId}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    return await res.json();
+  } catch (error) {
+    return { success: false, message: "Delete operation failed." };
+  }
+}
