@@ -115,7 +115,6 @@ export default async function TenantOverviewPage() {
 
       {/* কুইক টেবিল ভিউ */}
       <div className="space-y-4">
-        <h2 className="text-lg font-bold text-gray-900">Recent Rental Activity</h2>
         <TenantDashboard rentals={rentals} payments={[]} />
       </div>
     </div>

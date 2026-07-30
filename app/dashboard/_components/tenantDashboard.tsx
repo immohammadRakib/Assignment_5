@@ -37,31 +37,6 @@ export default function TenantDashboard({ rentals = [], payments = [] }: { renta
   return (
     <div className="space-y-8 select-none">
       {/* হেডার */}
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">Tenant Dashboard</h1>
-        <p className="text-sm text-muted-foreground mt-0.5">Manage your rentals and view your payment history with live sync.</p>
-      </div>
-
-      {/* Stats Grid */}
-      {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {tenantStats.map((stat, i) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={i} className="shadow-sm border-neutral-100 bg-white rounded-2xl group hover:shadow-md transition-all duration-300">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xs font-bold uppercase text-gray-400">{stat.title}</CardTitle>
-                <div className="p-2 rounded-xl bg-rose-50 text-rose-500 group-hover:scale-105 transition-transform">
-                  <Icon className="size-4" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-black text-gray-900 tracking-tight">{stat.value}</div>
-                <p className="text-[10px] text-gray-400 mt-1 font-bold uppercase tracking-tighter">{stat.desc}</p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div> */}
 
       {/* 📊 রেন্টাল রিকোয়েস্ট হিস্ট্রি টেবিল */}
       <div className="space-y-4 pt-2">
