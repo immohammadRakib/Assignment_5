@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, PlusCircle, Inbox, Building, 
   Clock, CreditCard, Star, Users, ShieldAlert,
-  LogOut, ChevronRight, Home, UserCheck, Settings
+  LogOut, ChevronRight, Home, UserCheck, Settings, Layers
 } from "lucide-react";
 import { logout } from "@/service/logout";
 import { toast } from "sonner";
@@ -22,12 +22,15 @@ export default function DashboardSidebar({ user }: { user: any }) {
   const menuConfig = {
     ADMIN: [
       { label: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
+      { label: "My Profile", href: "/dashboard/admin/me", icon: UserCheck },
       { label: "User Management", href: "/dashboard/admin/users", icon: Users },
+      { label: "Manage Categories", href: "/dashboard/admin/categories", icon: Layers },
       { label: "Content Moderation", href: "/dashboard/admin/moderation", icon: ShieldAlert },
       { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ],
     LANDLORD: [
       { label: "Overview", href: "/dashboard/landlord", icon: LayoutDashboard },
+      { label: "My Profile", href: "/dashboard/landlord/me", icon: UserCheck },
       { label: "Create Listing", href: "/dashboard/landlord/properties/new", icon: PlusCircle },
       { label: "Incoming Requests", href: "/dashboard/landlord/requests", icon: Inbox },
       { label: "My Listings", href: "/dashboard/landlord/my-properties", icon: Building },
