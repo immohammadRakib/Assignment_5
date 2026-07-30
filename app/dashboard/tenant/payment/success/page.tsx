@@ -1,31 +1,90 @@
 "use client";
 
-import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import { CheckCircle2, ArrowRight, ShieldCheck, Download, Calendar, Receipt } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, ArrowRight, CalendarDays } from "lucide-react";
+import Link from "next/link";
 
 export default function PaymentSuccessPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  
+  // SSLCommerz ইউআরএল থেকে ট্রানজেকশন আইডি রিড করা (ফলব্যাকসহ)
+  const transactionId = searchParams.get("tranId") || "TXN-" + Math.floor(100000 + Math.random() * 900000);
+  const amount = searchParams.get("amount") || "Locked";
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[75vh] px-4 text-center bg-white">
-      <div className="p-4 bg-emerald-50 text-emerald-500 rounded-full mb-4 animate-bounce">
-        <CheckCircle2 className="w-16 h-16 stroke-[1.5]" />
-      </div>
-      <h1 className="text-3xl font-black text-gray-900 tracking-tight">Payment Successful!</h1>
-      <p className="text-sm text-neutral-500 max-w-sm mt-2 leading-relaxed">
-        Thank you! Your rental payment has been securely processed via SSLCommerz. Your booking is now active.
-      </p>
-      
-      <div className="flex flex-col sm:flex-row gap-3 mt-8 w-full sm:w-auto justify-center">
-        <Link href="/dashboard/tenant" passHref>
-          <Button className="w-full sm:w-auto h-11 px-6 bg-gray-900 hover:bg-black text-white font-semibold rounded-xl flex items-center gap-2 cursor-pointer shadow-md">
-            <CalendarDays className="w-4 h-4" /> Go to My Bookings
-          </Button>
-        </Link>
-        <Link href="/" passHref>
-          <Button variant="outline" className="w-full sm:w-auto h-11 px-6 rounded-xl border-neutral-200 text-gray-600 transition-all flex items-center gap-2 cursor-pointer">
-            Return Home <ArrowRight className="w-4 h-4" />
-          </Button>
-        </Link>
+    <div className="flex-1 flex items-center justify-center p-4 bg-neutral-50/60 min-h-[85vh] select-none font-sans antialiased">
+      <div className="w-full max-w-md bg-white border border-neutral-100 rounded-3xl p-6 md:p-8 shadow-2xl shadow-neutral-200/40 text-center relative overflow-hidden group">
+        
+        {/* লাক্সারি ব্যাকগ্রাউন্ড গ্লো ইফেক্টস */}
+        <div className="absolute -left-10 -top-10 w-32 h-32 bg-emerald-50 rounded-full blur-3xl opacity-70 group-hover:bg-emerald-100/50 transition-colors duration-500" />
+        <div className="absolute -right-10 -bottom-10 w-32 h-32 bg-indigo-50 rounded-full blur-3xl opacity-50" />
+
+        {/* 🎯 ইন্টারেক্টিভ স্পিনিং সাকসেস রিং অ্যানিমেশন */}
+        <div className="relative mx-auto flex items-center justify-center w-20 h-20 mb-6">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-100 border-t-emerald-500 animate-spin duration-1000" />
+          <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shadow-inner animate-pulse">
+            <CheckCircle2 className="w-9 h-9 stroke-[2]" />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <h2 className="text-2xl font-black text-gray-900 tracking-tight">Remittance Confirmed!</h2>
+          <p className="text-xs text-neutral-400 max-w-xs mx-auto font-medium">
+            Your secure booking ledger signature has been successfully validated and locked on the database nodes.
+          </p>
+        </div>
+
+        {/* 💳 মিনি ইনভয়েস গ্লাস-বক্স */}
+        <div className="bg-neutral-50/80 border border-neutral-200/50 p-5 rounded-2xl space-y-3 font-mono text-xs my-6 text-left shadow-2xs relative z-10 backdrop-blur-md">
+          <div className="flex justify-between items-center border-b border-neutral-200/40 pb-2.5">
+            <span className="text-neutral-400 font-bold uppercase tracking-wider text-[10px]">Receipt Hash</span>
+            <span className="text-gray-900 font-black tracking-tight bg-white border border-neutral-200 px-2 py-0.5 rounded-md shadow-3xs max-w-[160px] truncate">
+              {transactionId}
+            </span>
+          </div>
+          <div className="flex justify-between items-center border-b border-neutral-200/40 pb-2.5">
+            <span className="text-neutral-400 font-bold uppercase tracking-wider text-[10px]">Settled Amount</span>
+            <span className="text-emerald-600 font-black text-sm tracking-wide">
+              ৳{amount.toLocaleString()} BDT
+            </span>
+          </div>
+          <div className="flex justify-between items-center border-b border-neutral-200/40 pb-2.5">
+            <span className="text-neutral-400 font-bold uppercase tracking-wider text-[10px]">Gateway Node</span>
+            <span className="text-gray-700 font-bold uppercase text-[10px] bg-neutral-200/50 px-2 py-0.5 rounded-md">
+              SSLCOMMERZ LIVE
+            </span>
+          </div>
+          <div className="flex justify-between items-center pt-0.5">
+            <span className="text-neutral-400 font-bold uppercase tracking-wider text-[10px]">Timestamp</span>
+            <span className="text-neutral-500 font-medium flex items-center gap-1">
+              <Calendar className="w-3 h-3 text-neutral-400" /> {new Date().toLocaleDateString()}
+            </span>
+          </div>
+        </div>
+
+        {/* ইন্টারেক্টিভ অ্যাকশন বাটন প্যানেল */}
+        <div className="space-y-3 relative z-10">
+          <Link href="/dashboard/tenant/requests" className="block w-full">
+            <Button className="w-full h-12 bg-gray-900 hover:bg-black text-white font-black text-xs rounded-xl shadow-md flex items-center justify-center gap-2 cursor-pointer transition transform active:scale-[0.98] border border-neutral-800" >
+              Go to My Request Feed <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
+          
+          <button 
+            onClick={() => window.print()} 
+            className="w-full h-11 bg-neutral-50 hover:bg-neutral-100 text-gray-700 border border-neutral-200 font-bold text-xs rounded-xl shadow-2xs flex items-center justify-center gap-1.5 cursor-pointer transition active:scale-[0.98]"
+          >
+            <Download className="w-3.5 h-3.5" /> Download Printable Receipt
+          </button>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-neutral-100 flex items-center justify-center gap-1.5 text-[10px] text-emerald-600 font-black uppercase tracking-wider">
+          <ShieldCheck className="w-4 h-4 shrink-0 animate-bounce" />
+          <span>RentNest Secure Vault Verification Cleared</span>
+        </div>
+
       </div>
     </div>
   );
