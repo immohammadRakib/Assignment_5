@@ -19,21 +19,24 @@ async function getTenantRentalFeeds() {
   if (!token) return [];
 
   try {
-    const res = await fetch("https://assignment-4-vnjw.onrender.com", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      cache: "no-store" 
-    });
+ 
+    // 🎯 তোমার রিকোয়েস্টেড এনভায়রনমেন্ট ভ্যারিয়েবল এবং ডাইনামিক কুকি সিঙ্কড ফেচ ব্লক:
+const baseUrl = process.env.BACKEND_API_URL;
 
-    // 🚀 মোস্ট ইম্পর্ট্যান্ট সেফটি গার্ড: রেসপন্সটি খাঁটি JSON কি না তা চেক করা হচ্ছে
-    // const contentType = res.headers.get("content-type");
-    // if (!res.ok || !contentType || !contentType.includes("application/json")) {
-    //   console.error("⚠️ Backend returned raw HTML/Text instead of JSON. Server might be waking up.");
-    //   return []; // HTML এরর পেজ আসলে ক্র্যাশ না করে নিরাপদ খালি অ্যারে ব্যাক করবে
-    // }
+// এপিআই ইউআরএল এর শেষে যদি স্ল্যাশ (/) থাকে, তবে ওটা নিখুঁতভাবে ক্লিন করার সেফগার্ড
+const sanitizedBaseUrl = baseUrl?.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+
+const res = await fetch(`${sanitizedBaseUrl}/api/rentals`, {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    // 🚀 টেন্যান্ট সিঙ্কের জন্য বিয়ারার এবং ডিরেক্ট কুকি ওয়ান-স্টপ বাইন্ডিং
+    "Cookie": `accessToken=${token}`,
+    "Authorization": `Bearer ${token}`
+  },
+  cache: "no-store" // ওল্ড রাউটার বাফার এড়িয়ে তাজা ডাটা রিড করবে
+});
+
 
     const contentType = res.headers.get("content-type");
 if (!res.ok || !contentType || !contentType.includes("application/json")) {
