@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { 
   LayoutDashboard, PlusCircle, Inbox, Building, 
-  Clock, CreditCard, Star, Users, ShieldAlert,
+  Clock, CreditCard, Star, Users, ShieldAlert, Activity,
   LogOut, ChevronRight, Home, UserCheck, Settings, Layers
 } from "lucide-react";
 import { logout } from "@/service/logout";
@@ -37,7 +37,7 @@ export default function DashboardSidebar({ user }: { user: any }) {
       { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ],
     TENANT: [
-      { label: "Overview", href: "/dashboard/tenant", icon: UserCheck },
+      { label: "Overview", href: "/dashboard/tenant", icon: LayoutDashboard },
       { label: "My Profile", href: "/dashboard/tenant/me", icon: UserCheck },
       { label: "Rental Requests", href: "/dashboard/tenant/requests", icon: Clock },
       { label: "Payment History", href: "/dashboard/tenant/payments", icon: CreditCard },
@@ -60,7 +60,7 @@ export default function DashboardSidebar({ user }: { user: any }) {
 
   return (
     // 🛠️ mt-8 এবং pt-4 দিয়ে উপরের মার্জিন বাড়ানো হয়েছে
-    <aside className="w-72 bg-white border-r border-neutral-100 p-6 hidden md:flex flex-col justify-between shrink-0 sticky top-16 h-[calc(100vh-4rem)] select-none mt-4">
+    <aside className="w-72 bg-white dark:bg-slate-900 dark:border-slate-800 border-r border-neutral-100 p-6 hidden md:flex flex-col justify-between shrink-0 sticky top-16 h-[calc(100vh-4rem)] select-none mt-4">
       <div className="space-y-8">
         
         {/* 🎨 সিগনেচার রোজ থিম প্রোফাইল কার্ড */}

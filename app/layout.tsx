@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { Navbar } from "@/components/shared/navbar"; 
 import { Footer } from "@/components/shared/footer"; 
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import TanstackProvider from "@/components/providers/transtackProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -53,6 +54,7 @@ return (
     suppressHydrationWarning={true} 
   >
 <body className="min-h-full flex flex-col" suppressHydrationWarning={true}>
+     <TanstackProvider>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <Toaster position="top-right" richColors />
 
@@ -64,6 +66,7 @@ return (
 
       <Footer />
       </ThemeProvider>
+      </TanstackProvider>
     </body>
   </html>
 );
