@@ -25,7 +25,7 @@ export default function DashboardSidebar({ user }: { user: any }) {
       { label: "My Profile", href: "/dashboard/admin/me", icon: UserCheck },
       { label: "User Management", href: "/dashboard/admin/users", icon: Users },
       { label: "Manage Categories", href: "/dashboard/admin/categories", icon: Layers },
-      { label: "Content Moderation", href: "/dashboard/admin/moderation", icon: ShieldAlert },
+      { label: "Property Moderation", href: "/dashboard/admin/moderation", icon: ShieldAlert },
       { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ],
     LANDLORD: [

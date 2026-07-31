@@ -1,83 +1,124 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { Trash2, Eye, EyeOff, FolderOpen, Home, Compass } from 'lucide-react';
+import { useUserStore } from '@/app/store/userStore';
+import { useQueryClient, useMutation } from '@tanstack/react-query';
+import { Tag, Trash2, Eye, EyeOff, Info, Compass, Building } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
-interface Category {
-  id: string;
-  name: string;
-  slug?: string;
-}
+export default function CategoryRow({ category }: { category: any }) {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  
+  // Zustand গ্লোবাল স্টেট কানেকশন
+  const { expandedCategoryId, setExpandedCategoryId } = useUserStore();
+  const isExpanded = expandedCategoryId === category.id;
+  const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
 
-interface CategoryRowProps {
-  category: Category;
-  allProperties: any[];
-  onDeleteClick: (id: string) => void;
-}
+  // 🚀 প্রপার্টি কাউন্ট লজিক (ব্যাকএন্ডের অবজেক্ট স্ট্রাকচার অনুযায়ী প্রপার্টির সংখ্যা বের করা)
+  const propertyCount = category.properties?.length || category._count?.properties || 0;
 
-export default function CategoryRow({ category, allProperties, onDeleteClick }: CategoryRowProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  // 🎯 আল্টিমেট স্মার্ট ফিল্টারিং ম্যাচিং নো-ফেল লজিক:
-  const liveCount = Array.isArray(allProperties)
-    ? allProperties.filter((property) => {
-        // ১. সরাসরি ক্যাটাগরি আইডি ম্যাচিং
-        const isIdMatch = property?.categoryId === category.id;
-        
-        // ২. নেস্টেড ক্যাটাগরি অবজেক্ট আইডি ম্যাচিং
-        const isNestedIdMatch = property?.category?.id === category.id;
-        
-        // ৩. ব্যাকআপ নেম-বেসড স্ট্রিক্ট ম্যাচিং (জাস্ট ইন কেস আইডি সিঙ্ক না থাকলে)
-        const isNameMatch = property?.category?.name?.toLowerCase().trim() === category.name?.toLowerCase().trim();
-
-        return isIdMatch || isNestedIdMatch || isNameMatch;
-      }).length
-    : 0;
+  // 🗑️ ক্যাটাগরি ডিলিট করার Mutation (🚀 কার্ল কমান্ড অনুযায়ী রুট ফিক্সড)
+  const deleteCategoryMutation = useMutation({
+    mutationFn: async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
+      // ✅ আপনার লোকালহোস্ট কার্ল কমান্ড প্যাটার্ন অনুযায়ী নিখুঁত রুট হিট
+      const res = await fetch(`${API_BASE}/api/categories/${category.id}`, {
+        method: 'DELETE',
+        headers: {
+          ...(token ? { 'Authorization': token } : {})
+        },
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Delete failed');
+      return res.json();
+    },
+    onSuccess: () => {
+      toast.success('Category removed from system.');
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+    onError: () => {
+      toast.error('Cannot remove category. Check backend restrictions.');
+    }
+  });
 
   return (
-    <div className={`bg-white rounded-xl border transition-all duration-200 ${isExpanded ? 'border-rose-200 shadow-md ring-1 ring-rose-50' : 'border-slate-100 hover:border-slate-200'}`}>
+    <div className={`bg-white transition-all ${isExpanded ? 'bg-slate-50/40 shadow-inner' : 'hover:bg-slate-50/30'}`}>
       
-      {/* মেইন রো */}
-      <div className="flex items-center justify-between p-4.5">
-        <div className="flex items-center gap-3.5">
-          <div className={`p-2 rounded-xl transition-colors ${isExpanded ? 'bg-rose-50 text-rose-500' : 'bg-slate-50 text-slate-400'}`}>
-            <FolderOpen className="w-4.5 h-4.5" />
+      {/* 🌟 মেইন লিস্ট রো */}
+      <div 
+        onClick={() => setExpandedCategoryId(isExpanded ? null : category.id)} 
+        className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-center px-6 py-4 cursor-pointer text-slate-700 select-none group"
+      >
+        {/* ক্যাটাগরি নাম */}
+        <div className="col-span-1 lg:col-span-5 flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-rose-50 text-rose-500 transition-transform group-hover:scale-105">
+            <Tag className="w-4 h-4" />
           </div>
-          <span className="font-extrabold text-sm text-slate-700 tracking-tight">{category.name}</span>
+          <div>
+            <h3 className="font-bold text-slate-800 text-sm">{category.name || 'General Tag'}</h3>
+          </div>
         </div>
 
-        {/* বাটন গ্রুপ */}
-        <div className="flex items-center gap-1.5">
-          <button onClick={() => setIsExpanded(!isExpanded)} className={`p-2 rounded-xl transition-all ${isExpanded ? 'bg-rose-50 text-rose-500 shadow-inner' : 'text-slate-400 hover:text-slate-600'}`}>
-            {isExpanded ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-          </button>
-          <button onClick={() => onDeleteClick(category.id)} className="p-2 text-slate-400 hover:text-red-500 rounded-xl">
-            <Trash2 className="w-4.5 h-4.5" />
-          </button>
+        {/* 🔢 লাইভ প্রপার্টি কাউন্ট ব্যাজ */}
+        <div className="col-span-1 lg:col-span-4 text-left lg:text-center">
+          <span className="lg:hidden font-bold text-slate-400 text-[11px] uppercase tracking-wider mr-2">Listings:</span>
+          <span className={`px-2.5 py-0.5 rounded-lg text-xs font-black ${propertyCount > 0 ? 'bg-blue-50 text-blue-600 border border-blue-100' : 'bg-slate-100 text-slate-400'}`}>
+            {propertyCount} Properties
+          </span>
+        </div>
+
+        {/* চোখ অন/অফ আইকন */}
+        <div className="col-span-1 lg:col-span-3 text-right flex items-center justify-end gap-2">
+          {isExpanded ? (
+            <EyeOff className="w-4 h-4 text-rose-500 scale-110 transition-all" />
+          ) : (
+            <Eye className="w-4 h-4 text-slate-400 group-hover:text-rose-400 group-hover:scale-110 transition-all" />
+          )}
         </div>
       </div>
 
-      {/* 👁️ চোখ বাটনের ইন্টারেক্টিভ ড্রপডাউন প্যানেল */}
+      {/* 🔓 এক্সপ্যান্ডেবল অ্যাকশন প্যানেল (Explore এবং Delete বাটন সহ) */}
       {isExpanded && (
-        <div className="px-5 pb-5 pt-3 border-t border-slate-50 bg-slate-50/40 rounded-b-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs animate-fadeIn">
-          
-          <div className="bg-white p-3.5 rounded-xl border border-slate-100 shadow-2xs flex items-center gap-3 w-full sm:w-auto min-w-[200px]">
-            <div className="p-2 bg-emerald-50 text-emerald-500 rounded-lg"><Home className="w-4 h-4" /></div>
-            <div>
-              <p className="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Database Status</p>
-              <p className="text-slate-700 font-black text-sm mt-0.5">{liveCount} Active Listings</p>
+        <div className="px-6 pb-6 pt-1 border-t border-slate-100 bg-slate-50/30 animate-in fade-in slide-in-from-top-1 duration-200">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
+            
+            {/* ডেসক্রিপশন মেসেজ */}
+            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+              <Info className="w-4 h-4 text-rose-400 shrink-0" />
+              <span>Slug URL parameter: <strong className="text-slate-700">/{category.slug || 'n-a'}</strong></span>
             </div>
+
+            {/* অ্যাকশন বাটন গ্রুপ */}
+            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+              
+              {/* 🧭 আপনার কাঙ্ক্ষিত Explore বাটন যা সার্চ প্যারামিটার দিয়ে রিডাইরেক্ট করবে */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(`/dashboard/admin/moderation?category=${category.slug}`); // 🚀 মডারেশন পেজে সার্চ প্যারাম সহ পাঠানো
+                }}
+                className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl hover:bg-slate-700 transition-all active:scale-95 cursor-pointer"
+              >
+                <Compass className="w-3.5 h-3.5" /> Explore Properties
+              </button>
+
+              {/* ഡিলিট বাটন */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if(confirm('Are you sure you want to completely remove this category?')) {
+                    deleteCategoryMutation.mutate();
+                  }
+                }}
+                disabled={deleteCategoryMutation.isPending}
+                className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-100 text-xs font-black rounded-xl hover:bg-red-100 active:scale-95 transition-all cursor-pointer disabled:opacity-40"
+              >
+                <Trash2 className="w-3.5 h-3.5" /> Remove
+              </button>
+            </div>
+
           </div>
-
-          <Link 
-            href={`/properties?search=${encodeURIComponent(category.name.toLowerCase())}`} 
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-800 text-white font-bold rounded-xl hover:bg-rose-600 active:bg-rose-700 transition-all shadow-sm group"
-          >
-            <Compass className="w-4 h-4 text-rose-400 group-hover:text-white transition-colors" />
-            Explore {category.name} →
-          </Link>
-
         </div>
       )}
     </div>
