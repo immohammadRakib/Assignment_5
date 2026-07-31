@@ -148,31 +148,184 @@
 
 
 
-import React from "react";
+// import React from "react";
+// import Hero from "./home/hero";
+// import FeaturedProperties from "./home/featuredProperties";
+// import ValueSection from "./home/valueSection";
+
+// export default function HomePage() {
+//   return (
+//     <main className="min-h-screen bg-white">
+//       <Hero />
+//       <FeaturedProperties />
+//       <ValueSection />
+      
+//       {/* 🚀 ফাইনাল কল-টু-অ্যাকশন */}
+//       <section className="py-20 text-center">
+//         <div className="container mx-auto px-6">
+//           <div className="bg-[#aac] p-12 md:p-20 rounded-[rem] text-white space-y-6 relative overflow-hidden">
+//              <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFC]/20 blur-[px]" />
+//              <h2 className="text-4xl md:text-6xl font-black tracking-tight">Join the RentNest <br/> Family Today</h2>
+//              <p className="text-slate-400 max-w-xl mx-auto font-medium">Over 5000+ people already found their dream homes. Why wait?</p>
+//              <button className="mt-8 bg-white text-black px-12 py-4 rounded-full font-black hover:bg-[#FFC] hover:text-white transition-all cursor-pointer active:scale-95 shadow-lg">
+//                 Get Started Now
+//              </button>
+//           </div>
+//         </div>
+//       </section>
+//     </main>
+//   );
+// }
+
+
+"use client";
+
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Send, Phone, Mail, Sparkles, Search, CalendarCheck, Home } from "lucide-react";
 import Hero from "./home/hero";
 import FeaturedProperties from "./home/featuredProperties";
 import ValueSection from "./home/valueSection";
 
+
+
+// 🚀 হাউ ইট ওয়ার্কস সেকশন (যেকোনো জায়গায় রিইউজ করতে পারবেন)
+const HowItWorks = () => {
+  const steps = [
+    { icon: Search, title: "Find Home", desc: "Search through thousands of verified listings" },
+    { icon: CalendarCheck, title: "Book Now", desc: "Secure your stay with instant online booking" },
+    { icon: Home, title: "Move In", desc: "Get the keys and enjoy your new lifestyle" },
+  ];
+
+  return (
+    <section className="py-20 bg-white">
+      <div className="container mx-auto px-6 text-center max-w-7xl">
+        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-14 tracking-tight">How it Works</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+            {/* কানেক্টিং ড্যাশড লাইন */}
+            <div className="hidden md:block absolute top-[rem] left-[%] right-[%] h-0.5 border-t-2 border-dashed border-slate-100 -z-0" />
+            
+            {steps.map((step, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.15, duration: 0.6 }}
+                viewport={{ once: true }}
+                className="relative z-10 space-y-4"
+              >
+                <div className="w-14 h-14 bg-white border border-slate-100 shadow-lg rounded-full flex items-center justify-center mx-auto text-[#FFC] hover:scale-110 transition-transform duration-300">
+                  <step.icon className="w-6 h-6 stroke-[px]" />
+                </div>
+                <h3 className="text-lg font-bold text-slate-800">{step.title}</h3>
+                <p className="text-slate-500 text-sm max-w-[px] mx-auto leading-relaxed">{step.desc}</p>
+              </motion.div>
+            ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function HomePage() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <main className="min-h-screen bg-white">
+      {/* ১. হিরো সেকশন */}
       <Hero />
+
+      {/* ২. প্রপার্টি গ্রিড */}
       <FeaturedProperties />
+
+      {/* ৩. প্রসেস সেকশন (নতুন) */}
+      <HowItWorks />
+
+      {/* ৪. ভ্যালু/বেনিফিট সেকশন */}
       <ValueSection />
-      
-      {/* 🚀 ফাইনাল কল-টু-অ্যাকশন */}
-      <section className="py-20 text-center">
-        <div className="container mx-auto px-6">
-          <div className="bg-[#aac] p-12 md:p-20 rounded-[rem] text-white space-y-6 relative overflow-hidden">
-             <div className="absolute top-0 right-0 w-64 h-64 bg-[#FFC]/20 blur-[px]" />
-             <h2 className="text-4xl md:text-6xl font-black tracking-tight">Join the RentNest <br/> Family Today</h2>
-             <p className="text-slate-400 max-w-xl mx-auto font-medium">Over 5000+ people already found their dream homes. Why wait?</p>
-             <button className="mt-8 bg-white text-black px-12 py-4 rounded-full font-black hover:bg-[#FFC] hover:text-white transition-all cursor-pointer active:scale-95 shadow-lg">
+
+      {/* ৫. ফাইনাল কল-টু-অ্যাকশন (কালার ও এনিমেশন ফিক্সড) */}
+      <section className="py-24 text-center">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="relative bg-gradient-to-br from-rose-500 via-[#FFC] to-rose-600 p-12 md:p-20 rounded-3xl text-white space-y-6 overflow-hidden shadow-2xl shadow-rose-500/10 border border-white/10"
+          >
+            {/* সফট গ্লো ইফেক্টস */}
+            <div className="absolute -top-10 -right-10 w-80 h-80 bg-white/15 rounded-full blur-[px]" />
+            <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-rose-900/30 rounded-full blur-[px]" />
+
+            <div className="relative z-10 max-w-2xl mx-auto space-y-5">
+              {/* লাইটার কমিউনিটি ট্যাগ */}
+              <div className="flex justify-center">
+                <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/20 text-white text-[px] font-bold backdrop-blur-md border border-white/20 uppercase tracking-widest">
+                  <Sparkles className="w-3.5 h-3.5 text-yellow-200 fill-yellow-200" /> 
+                  Join Our Community
+                </span>
+              </div>
+              
+              <h2 className="text-3xl md:text-6xl font-black tracking-tight leading-">
+                Join the RentNest <br className="hidden sm:inline" /> Family Today
+              </h2>
+              <p className="text-rose-50/90 text-sm md:text-base max-w-md mx-auto font-medium">
+                Over 5,000+ people already found their dream homes. Let's find yours next.
+              </p>
+              
+              <button 
+                onClick={() => setIsModalOpen(true)}
+                className="mt-6 bg-white text-[#FFC] px-12 py-4 rounded-full font-black text-sm md:text-base hover:bg-rose-50 transition-all cursor-pointer active:scale-95 shadow-xl shadow-rose-950/10"
+              >
                 Get Started Now
-             </button>
-          </div>
+              </button>
+            </div>
+          </motion.div>
         </div>
       </section>
+
+      {/* কন্টাক্ট মডাল */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z- flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
+            />
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="relative bg-white w-full max-w-md rounded-2xl p-8 shadow-2xl border border-slate-100 z-10 space-y-6"
+            >
+              <button onClick={() => setIsModalOpen(false)} className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:bg-slate-100">
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="text-left space-y-1">
+                <h3 className="text-xl font-bold text-slate-900">Get in Touch</h3>
+                <p className="text-slate-500 text-xs font-medium">We'll reach out within 24 hours.</p>
+              </div>
+
+              {/* কন্টাক্ট ফর্ম শর্টকাট */}
+              <form onSubmit={(e) => { e.preventDefault(); setIsModalOpen(false); }} className="space-y-4 text-left">
+                <input type="text" placeholder="Full Name" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#FFC]/20 focus:border-[#FFC] outline-none" />
+                <input type="email" placeholder="Email Address" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#FFC]/20 focus:border-[#FFC] outline-none" />
+                <textarea rows={3} placeholder="Your Message" className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-[#FFC]/20 focus:border-[#FFC] outline-none resize-none" />
+                <button type="submit" className="w-full py-4 bg-[#FFC] hover:bg-[#ECF] text-white font-black text-sm rounded-xl transition-all active:scale- flex items-center justify-center gap-2">
+                  <Send className="w-4 h-4" /> Send Message
+                </button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
+
