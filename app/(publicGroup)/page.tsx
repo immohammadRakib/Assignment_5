@@ -186,46 +186,11 @@ import { X, Send, Phone, Mail, Sparkles, Search, CalendarCheck, Home } from "luc
 import Hero from "./home/hero";
 import FeaturedProperties from "./home/featuredProperties";
 import ValueSection from "./home/valueSection";
+import HowItWorks from "./home/howWorks"
 
 
 
-// 🚀 হাউ ইট ওয়ার্কস সেকশন (যেকোনো জায়গায় রিইউজ করতে পারবেন)
-const HowItWorks = () => {
-  const steps = [
-    { icon: Search, title: "Find Home", desc: "Search through thousands of verified listings" },
-    { icon: CalendarCheck, title: "Book Now", desc: "Secure your stay with instant online booking" },
-    { icon: Home, title: "Move In", desc: "Get the keys and enjoy your new lifestyle" },
-  ];
 
-  return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-6 text-center max-w-7xl">
-        <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 mb-14 tracking-tight">How it Works</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            {/* কানেক্টিং ড্যাশড লাইন */}
-            <div className="hidden md:block absolute top-[rem] left-[%] right-[%] h-0.5 border-t-2 border-dashed border-slate-100 -z-0" />
-            
-            {steps.map((step, i) => (
-              <motion.div 
-                key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.15, duration: 0.6 }}
-                viewport={{ once: true }}
-                className="relative z-10 space-y-4"
-              >
-                <div className="w-14 h-14 bg-white border border-slate-100 shadow-lg rounded-full flex items-center justify-center mx-auto text-[#FFC] hover:scale-110 transition-transform duration-300">
-                  <step.icon className="w-6 h-6 stroke-[px]" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-800">{step.title}</h3>
-                <p className="text-slate-500 text-sm max-w-[px] mx-auto leading-relaxed">{step.desc}</p>
-              </motion.div>
-            ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 export default function HomePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -238,12 +203,13 @@ export default function HomePage() {
       {/* ২. প্রপার্টি গ্রিড */}
       <FeaturedProperties />
 
-      {/* ৩. প্রসেস সেকশন (নতুন) */}
-      <HowItWorks />
 
       {/* ৪. ভ্যালু/বেনিফিট সেকশন */}
       <ValueSection />
 
+      {/* ৩. প্রসেস সেকশন (নতুন) */}
+      <HowItWorks />
+      
       {/* ৫. ফাইনাল কল-টু-অ্যাকশন (কালার ও এনিমেশন ফিক্সড) */}
       <section className="py-24 text-center">
         <div className="container mx-auto px-6 max-w-6xl">
