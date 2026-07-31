@@ -1,159 +1,108 @@
+'use client';
 
-export const dynamic = "force-dynamic";
-
-import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HomeIcon, CalendarCheckIcon, BadgeCheckIcon, WalletIcon, ArrowUpRight } from "lucide-react";
-import { getMyProperties, getIncomingRequests } from "../_actions/landlordAction"; // 🎯 ফিক্স: রিয়াল রিকোয়েস্ট একশন ইম্পোর্ট করা হলো
+import { useState, useEffect } from 'react';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { LayoutDashboard, CalendarCheckIcon } from "lucide-react";
+import jwt from 'jsonwebtoken';
+import WelcomeBanner from "./overview/welcomenBanner";
+import StatsGrid from "./overview/statsGrid";
 import { IncomingRequestsList } from "../_components/incomingRequest";
 
-export default async function LandlordDashboardPage() {
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value;
+function LandlordDashboardContent() {
+  const [userName, setUserName] = useState('User');
+  const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
 
-  // 🎯 লগ আউট করার পর টোকেন না থাকলে ইউজারকে আর ড্যাশবোর্ড দেখতে দিবে না
-  if (!token) {
-    redirect("/login");
-  }
-  
-  // 🎯 ১. ম্যাজিক ট্রিক: ওল্ড ক্যাশ এড়িয়ে দুটি রিয়াল এপিআই অ্যাকশন একসাথে প্যারালাল ফেচ করা হচ্ছে
-  const [propertiesResult, requestsResult] = await Promise.all([
-    getMyProperties(),
-    getIncomingRequests()
-  ]);
-  
-
-  // 🛡️ ডিফেনসিভ সেফগার্ড লেয়ার: ডাটাবেজ রেসপন্স অবজেক্ট বা অ্যারে যেভাবে আসুক ক্র্যাশ করবে না
-  // const properties = Array.isArray(propertiesResult) 
-  //   ? propertiesResult 
-  //   : (propertiesResult?.data || []);
-
-  // const incomingRequests = Array.isArray(requestsResult) 
-  //   ? requestsResult 
-  //   : (requestsResult?.data || requestsResult?.result || []);
-
-
- 
-
-// ✅ একদম নিখুঁত, ক্র্যাশ-প্রুফ ও ডিফেনসিভ ফিক্সড ডাটা পার্সার:
-let properties: any[] = [];
-if (Array.isArray(propertiesResult)) {
-  properties = propertiesResult;
-} else if (propertiesResult && Array.isArray(propertiesResult.data)) {
-  properties = propertiesResult.data;
-} else if (propertiesResult && propertiesResult.data && Array.isArray(propertiesResult.data.data)) {
-  properties = propertiesResult.data.data;
-} else if (propertiesResult && Array.isArray(propertiesResult.properties)) {
-  properties = propertiesResult.properties;
-}
-
-let incomingRequests: any[] = [];
-if (Array.isArray(requestsResult)) {
-  incomingRequests = requestsResult;
-} else if (requestsResult && Array.isArray(requestsResult.data)) {
-  incomingRequests = requestsResult.data;
-} else if (requestsResult && requestsResult.data && Array.isArray(requestsResult.data.data)) {
-  incomingRequests = requestsResult.data.data;
-} else if (requestsResult && Array.isArray(requestsResult.result)) {
-  incomingRequests = requestsResult.result;
-}
-
-
-  // 🎯 ২. রিয়াল ডাটা স্ট্যাটস ক্যালকুলেশন (টাইপ সেফ অ্যান্ড ডাইনামিক)
-const totalEarnings = Array.isArray(incomingRequests)
-  ? incomingRequests.reduce((acc: number, curr: any) => {
-      if (curr?.status === "CONFIRMED" || curr?.status === "ACTIVE") {
-        return acc + (Number(curr?.totalPrice) || 0);
+  // ক্লায়েন্ট সাইডে টোকেন থেকে নাম রিড করা
+  useEffect(() => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
+    if (token) {
+      try {
+        const decoded = jwt.decode(token) as any;
+        if (decoded && decoded.name) {
+          setUserName(decoded.name);
+        }
+      } catch (err) {
+        console.error(err);
       }
-      return acc;
-    }, 0)
-  : 0;
-  // কার্ল ডকস ও তোমার ডাটা রেসপন্স অনুযায়ী PENDING এবং CONFIRMED রিকোয়েস্ট কাউন্টার ফিল্টারিং
-  const activeBookingsCount = incomingRequests.filter(
-    (r: any) => r?.status === "ACTIVE" || r?.status === "CONFIRMED"
-  ).length;
+    }
+  }, []);
 
-  // ডাইনামিক অকুপেন্সি রেট ক্যালকুলেশন
-  const occupancyRate = properties.length > 0 
-    ? `${Math.round((activeBookingsCount / properties.length) * 100)}%` 
-    : "0%";
+  // 🔄 ইনকামিং রিকোয়েস্ট লিস্টের ব্যাকগ্রাউন্ড ডাটা ফেচিং (TanStack Query)
+  const { data: reqResponse } = useQuery({
+    queryKey: ['incomingRequests'],
+    queryFn: async () => {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
+      
+      // 🚀 [ম্যাজিক ফিক্স] আপনার দেওয়া কার্ল কমান্ড অনুযায়ী নিখুঁত রুট ও মেথড সেট করা হলো
+      const res = await fetch(`${API_BASE}/api/rentals/landlord/requests`, { 
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': token } : {})
+        },
+        credentials: 'include'
+      });
+      if (!res.ok) throw new Error('Failed to fetch requests');
+      return res.json();
+    }
+  });
 
-  const stats = [
-    {
-      title: "My Properties",
-      value: properties.length.toString(),
-      change: "Total listed items",
-      icon: HomeIcon,
-    },
-    {
-      title: "Total Earnings",
-      value: `৳${totalEarnings}`,
-      change: "Calculated from listed assets",
-      icon: WalletIcon,
-    },
-    {
-      title: "Active Bookings",
-      value: activeBookingsCount.toString(),
-      change: "Confirmed running leases",
-      icon: CalendarCheckIcon,
-    },
-    {
-      title: "Occupancy Rate",
-      value: occupancyRate,
-      change: "Live rental statistics",
-      icon: BadgeCheckIcon,
-    },
-  ];
+  // ব্যাকএন্ড রেসপন্স যদি { success: true, data: [...] } ফরম্যাটে হয় তবে data.data ধরবে
+  const incomingRequests = reqResponse?.data?.data || reqResponse?.data || [];
+
   return (
-    <div className="space-y-8 p-4 md:p-6 max-w-7xl mx-auto">
-      {/* হেডার সেকশন */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-100 pb-5">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">Landlord Overview</h1>
-          <p className="text-sm text-muted-foreground">
-            Monitor real-time rental applications, track live revenue data, and oversee platform performance.
-          </p>
+    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
+      
+      {/* 🚀 পার্ট ১: ডাইনামিক নাম ব্যানার */}
+      <WelcomeBanner userName={userName} />
+
+      {/* 📊 পার্ট ২: তানস্ট্যাক কুয়েরি লাইভ মেট্রিড গ্রিড */}
+      <div className="space-y-4">
+        <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Portfolio Metrics
+        </h2>
+        <StatsGrid />
+      </div>
+
+      {/* 🚀 ইনকামিং রেন্টাল রিকোয়েস্ট টেবিল জোন */}
+      <div className="space-y-4 pt-2">
+        <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
+          <h2 className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
+            <span className="w-2 h-4 bg-rose-500 rounded-full inline-block" />
+            Incoming Rental Applications
+          </h2>
+          <span className="text-xs font-bold bg-slate-100 text-slate-500 px-2.5 py-1 rounded-lg">
+            Active Broadcast Queue
+          </span>
+        </div>
+
+        <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden p-2">
+          {incomingRequests.length > 0 ? (
+            <IncomingRequestsList initialRequests={incomingRequests} />
+          ) : (
+            <div className="text-center py-20 text-slate-400 max-w-xl mx-auto">
+              <div className="w-14 h-14 bg-slate-50 text-slate-400 flex items-center justify-center rounded-2xl mx-auto mb-4 border border-slate-100">
+                <CalendarCheckIcon className="w-6 h-6" />
+              </div>
+              <h3 className="font-bold text-slate-800">Clear Broadcast Queue</h3>
+              <p className="text-sm text-slate-400 mt-1">No incoming tenant applications found. Active property listings are searching for tenants live.</p>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* লাইভ স্ট্যাটস গ্রিড কার্ডস */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat, i) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={i} className="shadow-sm border-neutral-100 bg-white rounded-2xl">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                  {stat.title}
-                </CardTitle>
-                <div className="p-2 rounded-lg bg-rose-50 text-rose-500">
-                  <Icon className="size-4 shrink-0" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                <p className="text-xs text-emerald-600 flex items-center gap-1 mt-1 font-medium">
-                  <ArrowUpRight className="size-3" /> {stat.change}
-                </p>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* 🚀 রিয়াল-টাইম ইনকামিং রেন্টাল রিকোয়েস্ট টেবিল জোন */}
-      <div className="space-y-3 pt-2">
-        <h2 className="text-lg font-bold text-gray-900">Incoming Rental Requests</h2>
-        {incomingRequests.length > 0 ? (
-          <IncomingRequestsList initialRequests={incomingRequests} />
-        ) : (
-          <div className="text-center py-10 border border-dashed rounded-xl text-neutral-400 text-sm">
-            No incoming tenant applications found. Active listings are broadcasting live.
-          </div>
-        )}
-      </div>
     </div>
+  );
+}
+
+export default function LandlordDashboardPage() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LandlordDashboardContent />
+    </QueryClientProvider>
   );
 }
