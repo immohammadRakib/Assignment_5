@@ -14,14 +14,13 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
 
-  // 🎯 ব্যাকএন্ডের রিকোয়ারমেন্ট অনুযায়ী defaultValues এবং স্কিমা ফিল্ড সিঙ্ক করা হয়েছে
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(bookingSchema),
     defaultValues: {
       propertyId,
       phone: "",
-      startDate: "", // 🛠️ checkInDate বদলে startDate
-      endDate: ""    // 🛠️ stayDuration বদলে endDate
+      startDate: "", 
+      endDate: ""    
     }
   });
 
@@ -55,7 +54,6 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5 pt-4">
           <input type="hidden" {...register("propertyId")} />
 
-          {/* Phone Number */}
           <div className="space-y-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1 flex items-center gap-1">
               <Phone size={12} /> Phone Number
@@ -65,13 +63,12 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            {/* Start Date (Check-In) */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1 flex items-center gap-1">
                 <Calendar size={12} /> Check-In
               </label>
               <Input 
-                {...register("startDate")} // 🎯 'startDate' এ কনভার্ট করা হয়েছে
+                {...register("startDate")} 
                 type="date" 
                 className={`rounded-xl h-11 focus-visible:ring-rose-500 ${errors.startDate ? "border-rose-500" : "border-neutral-200"}`}
                 required 
@@ -79,13 +76,12 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
               {errors.startDate && <p className="text-[10px] text-rose-500 font-medium pl-1">{errors.startDate.message as string}</p>}
             </div>
 
-            {/* End Date (Check-Out) */}
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400 pl-1 flex items-center gap-1">
                 <Calendar size={12} /> Check-Out
               </label>
               <Input 
-                {...register("endDate")} // 🎯 'endDate' এ কনভার্ট করা হয়েছে
+                {...register("endDate")} 
                 type="date" 
                 className={`rounded-xl h-11 focus-visible:ring-rose-500 ${errors.endDate ? "border-rose-500" : "border-neutral-200"}`}
                 required 
@@ -94,7 +90,6 @@ export function RentalRequestModal({ propertyId, price }: { propertyId: string, 
             </div>
           </div>
 
-          {/* Submit Button */}
           <button type="submit" disabled={isPending} className="w-full h-12 bg-gray-900 hover:bg-black text-white rounded-xl mt-4 font-bold shadow-md transition-all active:scale-[0.97] cursor-pointer flex items-center justify-center gap-2 disabled:opacity-50" >
             {isPending ? (
               <div className="flex items-center gap-2">

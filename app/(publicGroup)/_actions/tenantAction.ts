@@ -2,11 +2,9 @@
 
 import { cookies } from "next/headers";
 
-// 🚀 সুরক্ষিত পেমেন্ট ইনিশিয়েটর সার্ভার অ্যাকশন (HttpOnly Cookie Friendly)
 export async function createPaymentSessionAction(rentalId: string) {
   try {
     const cookieStore = await cookies();
-    // 🎯 সার্ভার সাইড থেকে HttpOnly কুকি অনায়াসে রিড করা হচ্ছে
     const accessToken = cookieStore.get("accessToken")?.value || null;
 
     if (!accessToken) {
@@ -26,7 +24,7 @@ export async function createPaymentSessionAction(rentalId: string) {
         Cookie: `accessToken=${accessToken}`,
         Authorization: `Bearer ${accessToken}`
       },
-      body: JSON.stringify({ bookingId: rentalId }) // কার্ল ডকস অনুযায়ী পারফেক্ট বডি
+      body: JSON.stringify({ bookingId: rentalId }) 
     });
 
     if (!res.ok) throw new Error("Payment session generation failed on gateway.");
@@ -37,7 +35,8 @@ export async function createPaymentSessionAction(rentalId: string) {
   }
 }
 
-// 🚀 সুরক্ষিত রিভিউ ক্রিয়েটর সার্ভার অ্যাকশন
+
+
 export async function createReviewAction(payload: {
   propertyId: string;
   bookingId: string;
