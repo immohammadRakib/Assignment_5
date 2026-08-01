@@ -37,7 +37,7 @@ export default function JoinCommunity() {
             </div>
 
             <div className="pt-4">
-              <Link href="/register" className="inline-block">
+              <Link href="/auth/register" className="inline-block">
                 <motion.button
                   animate={{
                  rotate: [0, -2, 2, -2, 2, 0], 

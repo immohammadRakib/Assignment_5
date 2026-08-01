@@ -172,14 +172,14 @@ export default function ServicePage() {
           </div>
           <div className="flex gap-4 relative z-10 w-full md:w-auto">
             <button
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/auth/register")}
               className="flex-1 md:flex-none px-8 py-4 bg-[#FF385C] text-white font-black rounded-2xl hover:bg-[#E31C5F] transition-all active:scale-95 cursor-pointer"
             >
               I'm a Landlord
             </button>
 
             <button
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/auth/register")}
               className="flex-1 md:flex-none px-8 py-4 bg-white text-slate-900 font-black rounded-2xl hover:bg-slate-100 transition-all active:scale-95 cursor-pointer"
             >
               I'm a Tenant

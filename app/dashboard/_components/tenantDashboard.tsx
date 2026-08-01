@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CalendarDaysIcon, HeartIcon, CreditCardIcon, ClockIcon, ArrowUpRight, CheckCircle2, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { stat } from "fs/promises";
+import { ReviewActionButton } from "@/app/(publicGroup)/_components/properties/reviewButton";
 
 // অফিসিয়াল রিকোয়ারমেন্ট ব্যাজ কালার ম্যাপ
 const badgeStyles: any = {
@@ -81,15 +83,26 @@ export default function TenantDashboard({ rentals = [], payments = [] }: { renta
                           }
 
                           // ২. পেমেন্ট ডান বা বুকিং একটিভ
-                          if (["paid", "active", "completed", "success"].includes(status)) {
-                            return (
-                              <Link href={`/dashboard/tenant/reviews/write?propertyId=${propertyId}&bookingId=${bookingId}`}>
-                                <button className="bg-gray-950 hover:bg-black text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition active:scale-95 shadow-sm ml-auto">
-                                  Leave Review
-                                </button>
-                              </Link>
-                            );
-                          }
+                          // if (["paid", "active", "completed", "success"].includes(status)) {
+                          //   return (
+                          //     <Link href={`/dashboard/tenant/reviews/write?propertyId=${propertyId}&bookingId=${bookingId}`}>
+                          //       <button className="bg-gray-950 hover:bg-black text-white font-bold text-xs px-4 py-2 rounded-xl cursor-pointer transition active:scale-95 shadow-sm ml-auto">
+                          //         Leave Review
+                          //       </button>
+                          //     </Link>
+                          //   );
+                          // }
+
+
+                           if (
+                                          ["success", "valid", "paid", "active", "completed"].includes(
+                                            status,
+                                          )
+                                        ) {
+                                          return (
+                                            <ReviewActionButton pID={propertyId} bID={bookingId} status={status} />
+                                          );
+                                        }
 
                           // ৩. রিজেক্টেড
                           if (status === "rejected") {

@@ -17,7 +17,7 @@ export default function TenantBanner({ userName }: BannerProps) {
           <span>Verified Tenant Portal</span>
         </div>
         <h1 className="text-3xl md:text-4xl font-black tracking-tight leading-none">
-          Welcome back, <span className="underline decoration-wavy decoration-rose-400/60">{userName}</span>!
+          Welcome back, <span className="underline decoration-wavy decoration-purple-600">{userName}</span>!
         </h1>
         <p className="text-sm font-medium text-white/80 leading-relaxed">
           Manage your RentNest rental journey, review payment invoices, and track your active stays or pending applications.

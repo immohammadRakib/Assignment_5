@@ -11,7 +11,7 @@ async function getTenantPaymentsStream() {
   if (!token) return [];
 
   try {
-    const baseUrl = process.env.BACKEND_API_URL || "https://onrender.com";
+    const baseUrl = process.env.BACKEND_API_URL || "https://assignment-4-vnjw.onrender.com";
     const sanitizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
     
     console.log("🛰️ Server Side Fetching Payments from:", `${sanitizedBaseUrl}/api/payments`);

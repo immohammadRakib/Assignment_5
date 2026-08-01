@@ -41,7 +41,7 @@ export default function DashboardSidebar({ user }: { user: any }) {
       { label: "My Profile", href: "/dashboard/tenant/me", icon: UserCheck },
       { label: "Rental Requests", href: "/dashboard/tenant/requests", icon: Clock },
       { label: "Payment History", href: "/dashboard/tenant/payments", icon: CreditCard },
-      { label: "Reviews", href: "/dashboard/tenant/reviews", icon: Star },
+      // { label: "Reviews", href: "/dashboard/tenant/reviews", icon: Star },
       { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ]
   };
