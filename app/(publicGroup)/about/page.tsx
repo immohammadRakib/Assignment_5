@@ -18,10 +18,10 @@ import Link from "next/link";
 
 export default function AboutPage() {
   const stats = [
-    { label: "Verified Nests", value: "+" },
-    { label: "Happy Tenants", value: "k+" },
-    { label: "Active Cities", value: "+" },
-    { label: "Safety Score", value: "%" },
+    { label: "Verified Nests", value: "35K+" },
+    { label: "Happy Tenants", value: "10M+" },
+    { label: "Active Cities", value: "500+" },
+    { label: "Safety Score", value: "99%" },
   ];
 
   const values = [
