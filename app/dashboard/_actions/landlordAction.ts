@@ -22,7 +22,7 @@ async function getAuthHeaders() {
 // 🏷️ ০. গেট অল ক্যাটাগরিজ
 export async function getCategories() {
   try {
-    const res = await fetch(`${BASE_URL}/categories`, {
+    const res = await fetch(`${BASE_URL}/api/categories`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
       next: { revalidate: 60 }
@@ -215,26 +215,69 @@ export async function deleteProperty(id: string, token: string) {
 
 
 // app/(publicGroup)/_actions/propertiesAction.ts (অথবা যেখানে এই ফাংশনটি আছে)
-export async function toggleAvailability(id: string, currentStatus: boolean, token: string) {
-  try {
-    // ⚡ কারেন্ট বুুলিয়ান স্ট্যাটাসকে উল্টে দেওয়া হলো (true থাকলে false, false থাকলে true)
-    const newStatus = !currentStatus;
+// export async function toggleAvailability(id: string, currentStatus: boolean, token: string) {
+//   try {
+//     // ⚡ কারেন্ট বুুলিয়ান স্ট্যাটাসকে উল্টে দেওয়া হলো (true থাকলে false, false থাকলে true)
+//     const newStatus = !currentStatus;
 
-    const res = await fetch(`${BASE_URL}/api/landlord/properties/isAvailable/${id}`, {
+//     const res = await fetch(`${BASE_URL}/api/landlord/properties/isAvailable/${id}`, {
+      
+//       method: "PATCH",
+//       headers: {
+//         "Content-Type": "application/json",
+//         "Authorization": `Bearer ${token}`, // 🔐 ল্যান্ডলর্ড ভ্যালিডেশন টোকেন
+//       },
+//       body: JSON.stringify({ isAvailable: newStatus }), // 📦 ব্যাকএন্ডে নতুন স্ট্যাটাস পাঠানো হলো
+//     });
+
+//     console.log("👉 Target URL Fired :", `${BASE_URL}/api/landlord/properties/isAvailable/${id}`);
+//     console.log("👉 Request Method   :", "PATCH");
+//     console.log("👉 HTTP Status Code :", res.status); // এটি ৪MD (404) দেখাবে যদি রুট না পায়
+//     console.log("👉 HTTP Status Text :", res.statusText);
+
+//     const result = await res.json();
+//       console.log("👉 Ingestion Success Result:", result);
+//     return result;
+//   } catch (error) {
+//     return { success: false, message: "Toggle synchronization failed." };
+//   }
+// }
+
+
+export async function toggleAvailability(id: string, currentStatus: boolean) {
+  // 🔑 ১. তোর সেইম rentnest_token কী (Key) দিয়ে টোকেন রিড করা হলো
+  const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
+  const newStatus = !currentStatus;
+
+  try {
+    // 📡 তোর এডমিন এপিআই এর মতো হুবহু 'credentials' এবং হেডার ট্রিক ব্যবহার করে ফেচ
+    const res = await fetch(`https://onrender.com{id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`, // 🔐 ল্যান্ডলর্ড ভ্যালিডেশন টোকেন
+        ...(token ? { 'Authorization': token } : {}) // 🎯 [তোর কোডের সুপার ট্রিক]
       },
-      body: JSON.stringify({ isAvailable: newStatus }), // 📦 ব্যাকএন্ডে নতুন স্ট্যাটাস পাঠানো হলো
+      // তুই যদি তোর ড্যাশবোর্ডে সেশন কুকি ব্যবহার করিস, তবে এই লাইনটি প্রটেক্ট করবে:
+      // credentials: 'include', 
+      body: JSON.stringify({ isAvailable: newStatus }), 
     });
 
-    const result = await res.json();
-    return result;
+    if (res.ok) {
+      const result = await res.json();
+      return { success: true, data: result };
+    } else {
+      return { success: false, message: "Server validation error. Route or fields mismatch." };
+    }
+
   } catch (error) {
-    return { success: false, message: "Toggle synchronization failed." };
+    console.error(error);
+    return { success: false, message: "Network connection failed!" };
   }
 }
+
+
+
+
 
 
 

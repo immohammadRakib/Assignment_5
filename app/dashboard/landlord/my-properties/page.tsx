@@ -18,6 +18,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
+import error from "@/app/error";
 
 export default function MyListingsPage() {
   const [properties, setProperties] = useState<any[]>([]);
@@ -48,109 +49,49 @@ export default function MyListingsPage() {
     loadProperties();
   }, []);
 
-  //   const handleToggle = async (id: string) => {
-  //     await toggleAvailability(id);
-  //     toast.success("Availability status swapped successfully!");
-  //     loadProperties();
-  //   };
+  const handleToggle = async (propertyId: string, currentStatus: boolean) => {
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("rentnest_token")
+        : null;
+    const newStatus = !currentStatus;
 
-  // 🎯 ১০০% গ্যারান্টিড এবং ইনস্ট্যান্ট কালার চেঞ্জিং বাটন সোয়াপ লজিক:
-  // const handleToggle = async (id: string) => {
-  //   try {
-  //     // ১. ব্যাকগ্রাউন্ডে এপিআই হিট করে ক্লাউড ডাটাবেজে স্ট্যাটাস পার্মানেন্টলি সোয়াপ করা
-  //     const res = await toggleAvailability(id);
-
-  //     // ২. সোনির চমৎকার সাকসেস টোস্ট
-  //     toast.success("Availability status synced with cloud database!");
-
-  //     // 🎯 ৩. ম্যাজিক ট্রিক: রিয়েল-টাইমে বাটন কালার ও টেক্সট চেঞ্জ করার আইডি রি-ম্যাচিং গার্ড
-  //     setProperties((prevProperties) =>
-  //       prevProperties.map((item) => {
-  //         // MongoDB এর _id এবং Next.js এর id দুইটাকেই নিখুঁতভাবে কম্পেয়ার করা হচ্ছে
-  //         const matchId = item._id || item.id;
-  //         if (matchId === id) {
-  //           return { ...item, isAvailable: item.isAvailable === false ? true : false };
-  //         }
-  //         return item;
-  //       })
-  //     );
-
-  // 🚀 মোস্ট ইম্পর্ট্যান্ট ফিক্স: এখানে আর loadProperties() কল করা যাবে না!
-  // কারণ এপিআই রেসপন্স আসার আগেই ক্যাশ ওভাররাইড হয়ে বাটন কালার আটকে রাখছিল।
-  // আমরা অলরেডি নিখুঁতভাবে রিঅ্যাক্ট স্টেট চেঞ্জ করে দিয়েছি, তাই বাটন সাথে সাথে কালার চেঞ্জ করবে।
-  //   } catch (error) {
-  //     toast.error("Failed to sync status swap with server.");
-  //   }
-  // };
-
-  // ❌ তোমার পেজের বর্তমান ফাংশন (যা ২য় আর্গুমেন্ট মিস করার কারণে এরর দিচ্ছে):
-
-  // ✅ একদম নিখুঁত ও এরর-ফ্রি ফিক্সড ফাংশন (আইডি ও বুুলিয়ান স্ট্যাটাস দুটিই পাস হবে):
-  // const handleToggle = async (id: string, currentStatus: boolean) => {
-  //   try {
-  //     // ১. ক্লিক করার সাথে সাথে স্ক্রিনে ইনস্ট্যান্ট কালার ও টেক্সট চেঞ্জ (কোনো ল্যাগ ছাড়া)
-  //     setProperties((prevProperties) =>
-  //       prevProperties.map((item) => {
-  //         const matchId = item._id || item.id;
-  //         if (matchId === id) {
-  //           return { ...item, isAvailable: !currentStatus };
-  //         }
-  //         return item;
-  //       }),
-  //     );
-
-  //     // 🎯 ২. ফিক্স: আইডি এবং কারেন্ট বুুলিয়ান স্ট্যাটাস দুটিই অ্যাকশন ফাংশনে পাঠানো হচ্ছে
-  //     await toggleAvailability(id, currentStatus);
-  //     toast.success("Availability status synced with cloud database!");
-  //   } catch (error) {
-  //     toast.error("Failed to sync status swap with server.");
-  //     loadProperties(); // এরর হলে ডাটা রি-লোডের ব্যাকআপ ফলব্যাক
-  //   }
-  // };
-
-
-  const handleToggle = async (id: string, currentStatus: boolean) => {
-  // 🔑 LocalStorage থেকে ফ্রেশ অথরাইজেশন টোকেন তুলে নেওয়া
-  const possibleKeys = ["accessToken", "token", "access_token", "auth_token", "rentnest_token"];
-  let rawToken = "";
-  for (const key of possibleKeys) {
-    const val = localStorage.getItem(key);
-    if (val) { rawToken = val; break; }
-  }
-  const cleanToken = rawToken.replace(/^"|"$/g, '').trim();
-
-  if (!cleanToken) {
-    toast.error("Access token not found. Please log in again.");
-    return;
-  }
-
-  try {
-    // 🚀 ১. অ্যাকশন ফাংশনে আইডি, কারেন্ট স্ট্যাটাস এবং ফ্রেশ টোকেন পাস করা হলো
-    const res = await toggleAvailability(id, currentStatus, cleanToken);
-
-    if (res && res.success) {
-      // 💻 ২. ব্যাকএন্ডে সাকসেস হলেই কেবল ফ্রন্টএন্ড স্টেট আপডেট হবে (মাখনের মতো লক হবে)
-      setProperties((prevProperties) =>
-        prevProperties.map((item) => {
-          const matchId = item._id || item.id;
-          if (matchId === id) {
-            return { ...item, isAvailable: !currentStatus };
-          }
-          return item;
-        })
+    try {
+      // 📡 এবার খাঁটি ও স্থির প্রপার্টি আইডি দিয়ে এপিআই হিট (কোনো ৪0৪ আসবে না)
+      const res = await fetch(
+        `https://assignment-4-vnjw.onrender.com/api/landlord/properties/${propertyId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: token } : {}),
+          },
+          credentials: "include",
+          body: JSON.stringify({ isAvailable: newStatus }), // 📦 বডিতে পিওর বুুলিয়ান ভ্যালু পাস
+        },
       );
-      toast.success("Availability status synced with cloud database!");
-    } else {
-      // ব্যাকএন্ড রিজেক্ট করলে ডিরেক্ট এরর ওয়ার্নিং দিবে
-      toast.error(res?.message || "Database rejected status toggle. Token or Body missing.");
+
+      if (res.ok) {
+        // 💻 ব্যাকএন্ড সফল হলে ক্লায়েন্ট সাইড স্টেট লক হবে
+        setProperties((prevProperties) =>
+          prevProperties.map((p) => {
+            const matchId = p._id || p.id;
+            if (matchId === propertyId) {
+              return { ...p, isAvailable: newStatus };
+            }
+            return p;
+          }),
+        );
+        toast.success("Availability status synced with cloud database!");
+      } else {
+        const errRes = await res.json().catch(() => ({}));
+        toast.error(errRes?.message || "Server validation error.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Network connection failed!");
     }
-  } catch (error) {
-    toast.error("Failed to sync status swap with server.");
-  }
-};
-
-
-
+  };
 
   const promptDelete = (id: string, title: string) => {
     toast(`Delete listing "${title}"?`, {
@@ -190,26 +131,6 @@ export default function MyListingsPage() {
       },
     });
   };
-
-  // 🎯 উইন্ডোজ পপআপ বাদে সোনির (Sonner) জোস কাস্টম টোস্ট ডিলিট কনফার্মেশন লজিক
-  // const promptDelete = (id: string, title: string) => {
-  //   toast(`Delete listing "${title}"?`, {
-  //     description: "This action cannot be undone on the render database.",
-  //     duration: Infinity, // ইউজার ক্লিক না করা পর্যন্ত স্ক্রিনে থাকবে
-  //     action: {
-  //       label: "Confirm",
-  //       onClick: async () => {
-  //         const res = await deleteProperty(id);
-  //         toast.success("Asset removed from cloud inventory.");
-  //         setProperties((prev) => prev.filter((p) => p._id !== id));
-  //       },
-  //     },
-  //     cancel: {
-  //       label: "Cancel",
-  //       onClick: () => toast.dismiss(),
-  //     },
-  //   });
-  // };
 
   if (loading) {
     return (
@@ -325,11 +246,47 @@ export default function MyListingsPage() {
 
                     {/* 💛 তোমার রিকোয়েস্টেড কাস্টম হলুদ কালার এবং প্রফেশনাল স্ট্যাটাস বাটন */}
                     <td className="p-4">
-                      <button
+                      {/* <button
                         // 🚀 এখানে item._id এর পাশাপাশি item.isAvailable ও পাস করা হলো
                         onClick={() =>
                           handleToggle(item._id || item.id, item.isAvailable)
                         }
+                        className={`px-2.5 py-1 text-[11px] font-black rounded-lg border uppercase tracking-wider flex items-center gap-1 transition-all ${
+                          item.isAvailable !== false
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100"
+                            : "bg-amber-50 text-amber-600 border-amber-100 hover:bg-amber-100"
+                        }`}
+                      >
+                        <RefreshCw className="w-2.5 h-2.5" />
+                        {item.isAvailable !== false
+                          ? "Available"
+                          : "Not Available"}
+                      </button> */}
+
+                      <button
+                        // ⚡ [ম্যাজিক ফিক্স]: আইডির সোর্স ডাইনামিক করা হলো যাতে কোনো ভুল আইডি পাস না হয়
+                        // onClick={() => {
+                        //   const actualPropertyId = item.propertyId || item.property?.id || item.property?._id || item.id || item._id;
+                        //   handleToggle(actualPropertyId, item.isAvailable);
+                        // }}
+
+                        onClick={() => {
+                          // ⚡ [বুলেটপ্রুফ আইডি ট্র্যাকিং]: ব্যাকএন্ড যেভাবে প্রপার্টি বা প্রোডাক্ট আইডি পাঠাতে পারে:
+                          const actualPropertyId =
+                            item._id || // যদি মেইন লেভেলেই প্রপার্টি আইডি থাকে
+                            item.id || // যদি প্রিজমা আইডি মেইন লেভেলে থাকে
+                            item.property?._id || // যদি নেস্টেড অবজেক্টের ভেতর থাকে
+                            item.property?.id ||
+                            item.propertyId;
+
+                          // কনসোলে চেক করার জন্য আসল আইডিটা প্রিন্ট হবে
+                          console.log(
+                            "🎯 Pure Product ID Found:",
+                            actualPropertyId,
+                          );
+
+                          handleToggle(actualPropertyId, item.isAvailable);
+                        }}
                         className={`px-2.5 py-1 text-[11px] font-black rounded-lg border uppercase tracking-wider flex items-center gap-1 transition-all ${
                           item.isAvailable !== false
                             ? "bg-emerald-50 text-emerald-700 border-emerald-100 hover:bg-emerald-100"
