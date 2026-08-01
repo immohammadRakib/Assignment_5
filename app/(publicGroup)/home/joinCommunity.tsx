@@ -41,7 +41,7 @@ export default function JoinCommunity() {
 
             {/* 🚀 Rose Glass Button with Snappy Shake */}
             <div className="pt-4">
-              <Link href="/contact" className="inline-block">
+              <Link href="/register" className="inline-block">
                 <motion.button
                   // ⚡ [ফিক্সড লজিক] ঝাঁকুনি এবং পালস ইফেক্ট
                   animate={{

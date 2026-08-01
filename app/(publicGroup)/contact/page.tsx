@@ -24,8 +24,8 @@ export default function ContactPage() {
 
             <div className="space-y-6">
               {[
-                { icon: Mail, label: "Email us", value: "hello@rentnest.com" },
-                { icon: Phone, label: "Call us", value: "+880  " },
+                { icon: Mail, label: "Email us", value: "rentnest@gmail.com" },
+                { icon: Phone, label: "Call us", value: "+880 1875068566  " },
                 { icon: MapPin, label: "Visit us", value: "Sylhet, Bangladesh" },
               ].map((item, i) => (
                 <motion.div 
@@ -35,7 +35,7 @@ export default function ContactPage() {
                   transition={{ delay: i * 0.1 }}
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#FF385C] group-hover:bg-[#FF385C] group-hover:text-white transition-all">
+                  <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#FF385C] bg-white hover:bg-[#FF385C] hover:text-white transition-all">
                     <item.icon className="w-5 h-5" />
                   </div>
                   <div>
@@ -50,7 +50,7 @@ export default function ContactPage() {
           {/* ✉️ Right: Glassmorphism Form */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-            className="bg-white p-8 md:p-10 rounded-[rem] shadow-2xl shadow-rose-500/5 border border-slate-100 relative overflow-hidden"
+            className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-rose-500/5 border border-slate-100 relative overflow-hidden"
           >
             <div className="absolute top-0 right-0 w-32 h-32 bg-rose-50 blur-3xl -z-10" />
             <form className="space-y-6">

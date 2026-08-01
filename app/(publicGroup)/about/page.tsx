@@ -1,126 +1,183 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import { 
-  Users, Award, Building2, MapPin, 
-  Home, Store, Trees, Presentation, Layout 
+  ShieldCheck, 
+  Heart, 
+  Users, 
+  Sparkles, 
+  Building2, 
+  Globe, 
+  Briefcase, 
+  Terminal, 
+  Mail, 
+  CheckCircle2 
 } from "lucide-react";
+import Link from "next/link";
 
 export default function AboutPage() {
   const stats = [
-    { label: "Verified Listings", value: "+" },
-    { label: "Happy Tenants", value: "+" },
-    { label: "Property Owners", value: "+" },
-    { label: "Cities Covered", value: "+" },
+    { label: "Verified Nests", value: "+" },
+    { label: "Happy Tenants", value: "k+" },
+    { label: "Active Cities", value: "+" },
+    { label: "Safety Score", value: "%" },
   ];
 
-  const categories = [
-    { icon: Home, title: "Apartments & Houses" },
-    { icon: Layout, title: "Studios & Flats" },
-    { icon: Trees, title: "Playgrounds & Parks" },
-    { icon: Presentation, title: "Convention Centers" },
-    { icon: Store, title: "Commercial Stores" },
-    { icon: Building2, Buildingtitle: "Office Spaces" },
-  ];
-
-  // 📦 ঝটকা স্পিড এনিমেশন (ডান থেকে ছুটে আসা)
-  const cardVariants = {
-    hidden: { opacity: 0, x: "100vw", skewX: -10 },
-    visible: { 
-      opacity: 1, x: 0, skewX: 0,
-      transition: { type: "spring", stiffness: 400, damping: 25, mass: 0.5 }
+  const values = [
+    { 
+      icon: ShieldCheck, 
+      title: "Total Security", 
+      desc: "Every listing and landlord undergoes a rigorous -step verification process to ensure a safe community" 
+    },
+    { 
+      icon: Heart, 
+      title: "Tenant First", 
+      desc: "Our platform is optimized to find the most comfortable and budget-friendly nests matching your lifestyle" 
+    },
+    { 
+      icon: Globe, 
+      title: "Seamless Search", 
+      desc: "Find your preferred location using our high-speed filtered search algorithms with zero latency" 
     }
-  } as const;
+  ];
 
   return (
-    <main className="min-h-screen bg-white pt-24 pb-20 overflow-hidden">
-      <div className="container mx-auto px-6 max-w-7xl">
+    <main className="min-h-screen bg-white">
+      
+      {/* 🏡 ১. হিরো সেকশন: দ্য ভিশন */}
+      <section className="relative pt-24 pb-20 overflow-hidden bg-slate-50">
+        {/* ব্যাকগ্রাউন্ড ডেকোরেশন */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500/5 rounded-full blur-[px]" />
         
-        {/* 🏔️ Hero Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-32">
-          <motion.div 
-            initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
+        <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <span className="text-[#FFC] font-black text-xs uppercase tracking-widest px-4 py-2 bg-rose-50 rounded-full">
-              Our Vision
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-50 border border-rose-100 text-[#FF385C] text-xs font-black uppercase tracking-widest mb-6">
+              <Building2 className="w-4 h-4" /> About RentNest
             </span>
-            <h1 className="text-4xl md:text-7xl font-black text-slate-900 leading-tight tracking-tighter">
-              We provide the <br /> <span className="text-[#FFC]">Perfect Space</span> <br /> for your lifestyle.
+            <h1 className="text-4xl md:text-7xl font-black text-slate-900 tracking-tighter leading-tight">
+              Reimagining the way <br /> 
+              you find your <span className="text-[#FF385C]">Home</span>.
             </h1>
-            <p className="text-slate-500 font-medium text-lg leading-relaxed max-w-lg">
-              Started with a vision by Md Abdur Rahman Rakib, RentNest is now a one-stop destination for renting anything from a cozy studio to a grand convention hall.
+            <p className="mt-8 text-slate-500 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+              RentNest is more than just a listing site. We are a community-driven ecosystem 
+              designed to bridge the gap between premium landlords and verified tenants.
             </p>
           </motion.div>
 
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
-            className="relative rounded-[rem] overflow-hidden shadow-2xl"
-          >
-            <img 
-              src="https://unsplash.com" 
-              alt="Our Story" 
-              className="w-full h-[px] object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-rose-900/40 to-transparent" />
-          </motion.div>
-        </div>
-
-        {/* 📊 Stats Grid (থাস থাস এনিমেশন) */}
-        <motion.div 
-          initial="hidden" whileInView="visible" viewport={{ once: true }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-32"
-        >
-          {stats.map((stat, i) => (
-            <motion.div 
-              key={i} variants={cardVariants}
-              className="p-8 bg-slate-50 rounded-3xl border border-slate-100 text-center space-y-2"
-            >
-              <h2 className="text-3xl md:text-4xl font-black text-slate-900">{stat.value}</h2>
-              <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">{stat.label}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        {/* 🏢 Category Showcase */}
-        <div className="space-y-12">
-          <div className="text-center space-y-3">
-            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Any Space, Anytime.</h2>
-            <p className="text-slate-500 font-medium">We specialize in a diverse range of rental properties.</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {categories.map((cat, i) => (
+          {/* কুইক স্ট্যাটস গ্রিড */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 max-w-4xl mx-auto">
+            {stats.map((stat, i) => (
               <motion.div 
                 key={i}
-                whileHover={{ y: -10 }}
-                className="group p-10 bg-white border border-slate-100 rounded-[rem] shadow-sm hover:shadow-2xl hover:border-rose-100 transition-all flex flex-col items-center text-center gap-4"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 + i * 0.1 }}
+                className="text-center"
               >
-                <div className="w-16 h-16 bg-rose-50 text-[#FFC] rounded-2xl flex items-center justify-center group-hover:bg-[#FFC] group-hover:text-white transition-all duration-300">
-                  <cat.icon className="w-8 h-8" />
-                </div>
-                <h3 className="text-xl font-bold text-slate-800">{cat.title}</h3>
+                <p className="text-3xl md:text-4xl font-black text-[#FF385C]">{stat.value}</p>
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">{stat.label}</p>
               </motion.div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* 👤 Founder Quote (Optional/Personalized) */}
-        <motion.div 
-          initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }}
-          className="mt-32 p-12 bg-slate-900 rounded-[rem] text-center space-y-6 relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('https://wwwtransparenttexturescom/patterns/carbon-fibrepng')] opacity-10" />
-          <h2 className="text-2xl md:text-4xl font-black text-white italic leading-snug relative z-10">
-            "My mission is to simplify the rental journey for both landlords and tenants in Sylhet and beyond."
-          </h2>
-          <div className="relative z-10">
-            <p className="text-[#FFC] font-black text-lg">Md Abdur Rahman Rakib</p>
-            <p className="text-slate-400 text-sm font-bold uppercase tracking-widest">Founder, RentNest</p>
+      {/* 💎 ২. আওয়ার ভ্যালুস (Premium White Cards) */}
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16 space-y-3">
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter">Why Choose Us?</h2>
+            <p className="text-slate-500 font-medium">Built with trust, security, and premium user experience.</p>
           </div>
-        </motion.div>
 
-      </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {values.map((value, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -10 }}
+                className="p-10 rounded-2xl bg-white border border-slate-100 shadow-xl shadow-rose-500/5 text-center space-y-5 transition-all"
+              >
+                <div className="w-16 h-16 bg-rose-50 text-[#FF385C] rounded-2xl flex items-center justify-center mx-auto border border-rose-100/50">
+                  <value.icon className="w-8 h-8 stroke-[px]" />
+                </div>
+                <h3 className="text-xl font-black text-slate-800">{value.title}</h3>
+                <p className="text-sm text-slate-500 font-medium leading-relaxed">{value.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 🚀 ৩. মিট দ্য ডেভেলপার সেকশন */}
+      <section className="py-24 bg-slate-50 border-t border-slate-100">
+        <div className="container mx-auto px-6">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="max-w-5xl mx-auto bg-white rounded-2xl p-8 md:p-16 border border-slate-200 shadow-2xl shadow-rose-500/5 flex flex-col md:flex-row items-center gap-12"
+          >
+            {/* প্রোফাইল ইমেজ হোল্ডার */}
+            <div className="w-48 h-48 md:w-64 md:h-64 rounded-[rem] bg-rose-50 border-4 border-white shadow-xl overflow-hidden flex-shrink-0 rotate-3 hover:rotate-0 transition-transform duration-500">
+               <div className="w-full h-full flex items-center justify-center bg-gradient-to-br text-[#FF385C] to-pink-600">
+                 <Users className="w-20 h-20 text-white opacity-40" />
+               </div>
+            </div>
+
+            <div className="space-y-6 text-center md:text-left flex-1">
+              <div>
+                <span className="text-[#FF385C] font-black text-xs uppercase tracking-widest mb-2 block">Lead Software Engineer</span>
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter">Md Abdur Rahman Rakib</h2>
+                <p className="mt-4 text-slate-500 font-medium leading-relaxed">
+                  Hi, I'm Rakib! A passionate full-stack developer based in Sylhet, Bangladesh. 
+                  I built RentNest to solve the complexities of modern-day rental management, 
+                  focusing on scalability, performance, and world-class UI design.
+                </p>
+              </div>
+
+              {/* সোশ্যাল কুইক লিঙ্কস */}
+              <div className="flex flex-wrap justify-center md:justify-start gap-4">
+                {[
+                  { icon: Terminal, label: "GitHub", link: "#" },
+                  { icon: Briefcase, label: "LinkedIn", link: "#" },
+                  { icon: Mail, label: "Contact", link: "mailto:rakib@examplecom" }
+                ].map((social, i) => (
+                  <a 
+                    key={i} 
+                    href={social.link} 
+                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 text-[#FF385C] group-hover:bg-[#FF385C] group-hover:text-white border border-slate-200 rounded-xl text-xs font-black transition-all cursor-pointer shadow-sm active:scale-95"
+                  >
+                    <social.icon className="w-4 h-4" /> {social.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 🚀 ৪. ফাইনাল কল-টু-অ্যাকশন */}
+      <section className="py-24 text-center">
+        <div className="container mx-auto px-6 space-y-6">
+          <Sparkles className="w-10 h-10 text-[#FF385C] mx-auto animate-pulse" />
+          <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter">Ready to find your nest?</h2>
+          <p className="text-slate-500 font-medium max-w-sm mx-auto">Discover your dream nest or list your property with RentNest today.</p>
+          <Link href="/properties">
+            <button className="mt-8 px-12 py-4 bg-[#FF385C] hover:bg-[#E31C5F] text-white font-black rounded-full transition-all shadow-xl shadow-rose-500/20 active:scale-95 cursor-pointer">
+              Explore All Listings
+            </button>
+          </Link>
+        </div>
+      </section>
+
     </main>
   );
 }
