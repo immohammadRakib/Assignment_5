@@ -153,7 +153,7 @@ export default function AboutPage() {
                   <a 
                     key={i} 
                     href={social.link} 
-                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 text-[#FF385C] group-hover:bg-[#FF385C] group-hover:text-white border border-slate-200 rounded-xl text-xs font-black transition-all cursor-pointer shadow-sm active:scale-95"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-slate-50 text-[#FF385C] bg-white hover:bg-[#FF385C] hover:text-white border border-slate-200 rounded-xl text-xs font-black transition-all cursor-pointer shadow-sm active:scale-95"
                   >
                     <social.icon className="w-4 h-4" /> {social.label}
                   </a>

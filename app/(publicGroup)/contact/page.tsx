@@ -35,7 +35,7 @@ export default function ContactPage() {
                   transition={{ delay: i * 0.1 }}
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#FF385C] bg-white hover:bg-[#FF385C] hover:text-white transition-all">
+                  <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#FF385C] group-hover:bg-[#FF385C] group-hover:text-white transition-all">
                     <item.icon className="w-5 h-5" />
                   </div>
                   <div>
