@@ -138,8 +138,20 @@ const SYSTEM_FALLBACK_IMAGE = "https://img.magnific.com/free-vector/hand-drawn-n
 export function PropertyCard({ property }: PropertyCardProps) {
   const reviewCount = property._count?.reviews ?? property.reviews?.length ?? 0;
 
+
+    const hasValidImage = 
+    property.images && 
+    property.images.length > 0 && 
+    property.images[0] &&
+    property.images[0].trim() !== "" &&
+    // যদি লিংকটি শুধু গুগলের বা আনস্প্ল্যাশের মেইন ডোমেইন হয় (কোনো নির্দিষ্ট ছবি না হয়), তবে ওটাকে রিজেক্ট করবে
+    property.images[0] !== "https://unsplash.com" && 
+    property.images[0] !== "https://google.com" &&
+    // নিশ্চিত করা যে লিংকের ভেতর প্রোপার ইমেজ পাথ বা সোর্স আছে
+    (property.images[0].includes("http") || property.images[0].includes("/"));
+
   // ডাটাবেসে ইমেজ অ্যারে ফাঁকা থাকলে বা প্রথম ইনডেক্স ইনভ্যালিড হলে ফলব্যাক ইমেজ নেওয়ার লজিক
-  const activeImage = property.images && property.images.length > 0 && property.images[0].trim() !== ""
+  const activeImage = hasValidImage
     ? property.images[0]
     : SYSTEM_FALLBACK_IMAGE;
 

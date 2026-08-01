@@ -6,6 +6,10 @@ import { motion } from "framer-motion";
 import { Star, MapPin, Building2, ArrowRight } from "lucide-react";
 import Link from 'next/link';
 
+
+
+const SYSTEM_FALLBACK_IMAGE = "https://img.magnific.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg";
+
 export default function FeaturedProperties() {
   const API_BASE = 'https://assignment-4-vnjw.onrender.com';
 
@@ -19,6 +23,19 @@ export default function FeaturedProperties() {
   });
 
   const properties = apiResponse?.data?.data || apiResponse?.data || [];
+
+  const hasValidImage = 
+    properties.images && 
+    properties.images.length > 0 && 
+    properties.images[0] &&
+    properties.images[0].trim() !== "" &&
+    properties.images[0] !== "https://unsplash.com" && 
+    properties.images[0] !== "https://google.com" &&
+    (properties.images[0].includes("http") || properties.images[0].includes("/"));
+
+  const activeImage = hasValidImage
+    ? properties.images[0]
+    : SYSTEM_FALLBACK_IMAGE;
 
   return (
     <section className="py-16 bg-slate-50/40">
@@ -66,7 +83,7 @@ export default function FeaturedProperties() {
                 <Link href={`/properties/${property.id}`} className="relative aspect-[4/3] w-full rounded-xl overflow-hidden mb-4 bg-slate-100 block">
                   {property.images && property.images ? (
                     <img
-                      src={property.images}
+                      src={activeImage}
                       alt={property.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       loading="lazy"
