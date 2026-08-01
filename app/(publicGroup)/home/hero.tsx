@@ -18,19 +18,15 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center px-6 overflow-hidden bg-slate-900">
-      {/* 🏙️ ব্যাকগ্রাউন্ড ইমেজ ও ব্লার ইফেক্ট */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat scale-105 blur-[2px]" 
         style={{ backgroundImage: `url('https://www.thespruce.com/thmb/QeB-IPpXBpEnmPAfNQ7xXOxHnVQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Have-it-all-studio-apartment-587e9d153df78c17b6d4f076.jpg')` }} 
       />
       
-      {/* 🔴 ডার্কের বদলে রোজ/রোজ-টিন্টেড গ্রেডিয়েন্ট ওভারলে (Airbnb Feel) */}
       <div className="absolute inset-0 bg-gradient-to-b from-rose-950/40 via-black/50 to-rose-900/40 z-0" />
 
-      {/* 🌟 কন্টেন্ট কন্টেইনার */}
       <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10 text-white">
         
-        {/* 🔥 নতুন আকর্ষণীয় Airbnb স্টাইল টাইটেল */}
         <motion.h1 
           initial={{ opacity: 0, y: -20 }} 
           animate={{ opacity: 1, y: 0 }} 
@@ -41,7 +37,6 @@ export default function Hero() {
           match your <span className="text-[#FF385C] bg-white/10 px-4 py-1 rounded-2xl backdrop-blur-sm inline-block md:inline mt-2 md:mt-0">lifestyle.</span>
         </motion.h1>
 
-        {/* 📄 প্রিমিয়াম ও অর্থপূর্ণ সাবটেক্সট */}
         <motion.p 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -51,7 +46,6 @@ export default function Hero() {
           Discover curated stays and unique spaces designed for your comfort. Your perfect getaway is just a search away.
         </motion.p>
 
-        {/* 🔍 👈 আরও গ্লসি এবং মডার্ন সার্চ বার */}
         <motion.form 
           onSubmit={handleSearch} 
           initial={{ opacity: 0, y: 25 }} 

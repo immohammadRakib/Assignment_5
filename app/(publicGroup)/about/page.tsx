@@ -45,9 +45,7 @@ export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white">
       
-      {/* 🏡 ১. হিরো সেকশন: দ্য ভিশন */}
       <section className="relative pt-24 pb-20 overflow-hidden bg-slate-50">
-        {/* ব্যাকগ্রাউন্ড ডেকোরেশন */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-rose-500/5 rounded-full blur-[px]" />
         
         <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
@@ -69,7 +67,6 @@ export default function AboutPage() {
             </p>
           </motion.div>
 
-          {/* কুইক স্ট্যাটস গ্রিড */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-12 max-w-4xl mx-auto">
             {stats.map((stat, i) => (
               <motion.div 
@@ -87,7 +84,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 💎 ২. আওয়ার ভ্যালুস (Premium White Cards) */}
       <section className="py-24">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 space-y-3">
@@ -116,7 +112,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 🚀 ৩. মিট দ্য ডেভেলপার সেকশন */}
       <section className="py-24 bg-slate-50 border-t border-slate-100">
         <div className="container mx-auto px-6">
           <motion.div 
@@ -125,7 +120,6 @@ export default function AboutPage() {
             viewport={{ once: true }}
             className="max-w-5xl mx-auto bg-white rounded-2xl p-8 md:p-16 border border-slate-200 shadow-2xl shadow-rose-500/5 flex flex-col md:flex-row items-center gap-12"
           >
-            {/* প্রোফাইল ইমেজ হোল্ডার */}
             <div className="w-48 h-48 md:w-64 md:h-64 rounded-[rem] bg-rose-50 border-4 border-white shadow-xl overflow-hidden flex-shrink-0 rotate-3 hover:rotate-0 transition-transform duration-500">
                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br text-[#FF385C] to-pink-600">
                  <Users className="w-20 h-20 text-white opacity-40" />
@@ -143,7 +137,6 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              {/* সোশ্যাল কুইক লিঙ্কস */}
               <div className="flex flex-wrap justify-center md:justify-start gap-4">
                 {[
                   { icon: Terminal, label: "GitHub", link: "#" },
@@ -164,7 +157,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 🚀 ৪. ফাইনাল কল-টু-অ্যাকশন */}
       <section className="py-24 text-center">
         <div className="container mx-auto px-6 space-y-6">
           <Sparkles className="w-10 h-10 text-[#FF385C] mx-auto animate-pulse" />

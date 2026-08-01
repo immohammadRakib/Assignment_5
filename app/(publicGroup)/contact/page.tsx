@@ -8,7 +8,6 @@ export default function ContactPage() {
       <div className="container mx-auto px-6 max-w-6xl">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
-          {/* 📍 Left: Contact Info */}
           <div className="space-y-10">
             <motion.div 
               initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }}
@@ -47,7 +46,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* ✉️ Right: Glassmorphism Form */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
             className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl shadow-rose-500/5 border border-slate-100 relative overflow-hidden"

@@ -24,7 +24,6 @@ export default function FeaturedProperties() {
     <section className="py-16 bg-slate-50/40">
       <div className="container mx-auto px-6 max-w-7xl">
         
-        {/* 🏔️ হেডার সেকশন */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-3">
           <div className="space-y-1">
             <h2 className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
@@ -43,10 +42,8 @@ export default function FeaturedProperties() {
           </Link>
         </div>
 
-        {/* 🎴 প্রপার্টি গ্রিড */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8">
           {isLoading ? (
-            // 🚀 স্কেলিটন লোডার (এটির সাইজও মূল কার্ডের সমান করা হয়েছে)
             Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="flex flex-col space-y-3 animate-pulse">
                 <div className="aspect-[16/14] w-full rounded-2xl bg-slate-200" />
@@ -65,8 +62,7 @@ export default function FeaturedProperties() {
                 transition={{ delay: index * 0.08, duration: 0.5, ease: "easeOut" }}
                 className="group flex flex-col bg-white rounded-2xl p-3 border border-slate-100 shadow-sm hover:shadow-xl hover:border-rose-100 transition-all duration-300"
               >
-                {/* 📸 ইমেজ এরিয়া (সাইজ পরিবর্তনের মেইন জায়গা) */}
-                {/* আপনি যদি কার্ডটি আরও লম্বা করতে চান, তবে নিচের aspect-[4/3] বদলে aspect-[16/14] বা aspect-square করতে পারেন */}
+
                 <Link href={`/properties/${property.id}`} className="relative aspect-[4/3] w-full rounded-xl overflow-hidden mb-4 bg-slate-100 block">
                   {property.images && property.images ? (
                     <img
@@ -80,15 +76,13 @@ export default function FeaturedProperties() {
                       <Building2 className="w-10 h-10 opacity-30" />
                     </div>
                   )}
-                  
-                  {/* ⭐ ব্যাজ রেটিং */}
+
                   <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-bold text-slate-900 flex items-center gap-0.5 shadow-sm border border-slate-100">
                     <Star className="w-3 h-3 text-[#FF385C] fill-[#FF385C]" />
                     <span>{property.rating || "4.9"}</span>
                   </div>
                 </Link>
 
-                {/* 📝 কন্টেন্ট এরিয়া */}
                 <div className="px-1 pb-1 flex-1 flex flex-col justify-between space-y-3">
                   <div className="space-y-1">
                     <Link href={`/properties/${property.id}`}>
@@ -102,14 +96,12 @@ export default function FeaturedProperties() {
                     </p>
                   </div>
 
-                  {/* 💰 প্রাইস ট্যাগ এবং বাটন */}
                   <div className="pt-2.5 border-t border-slate-50 flex items-center justify-between">
                     <div>
                       <span className="text-base font-extrabold text-slate-900">৳ {Number(property.pricePerDay).toLocaleString()}</span>
                       <span className="text-slate-400 font-medium text-[10px]"> / night</span>
                     </div>
                     
-                    {/* ➡️ ভিউ ডিটেইলস ইন্ডিকেটর */}
                     <Link href={`/properties/${property.id}`} className="p-2 rounded-full bg-slate-50 text-slate-600 group-hover:bg-[#FF385C] group-hover:text-white transition-all duration-300">
                       <ArrowRight className="w-3.5 h-3.5 stroke-[2.5px]" />
                     </Link>

@@ -13,18 +13,18 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 🎯 ImgBB লাইভ ক্লাউড আপলোডার ইঞ্জিন (অফিসিয়াল API এন্ডপয়েন্ট সহ)
+  
   const uploadFile = async (file: File) => {
     if (!file) return;
     setIsUploading(true);
     
-    // 🛠️ ImgBB এর রিকোয়ারমেন্ট অনুযায়ী FormData এবং 'image' কি (Key) বাইন্ডিং
+    
     const formData = new FormData();
     formData.append("image", file);
 
     try {
-      // 🎯 ফিক্স: ভুল 'imgbb.com' লিঙ্ক বদলে তাদের অফিসিয়াল 'api.imgbb.com' আপলোড এন্ডপয়েন্ট বসানো হয়েছে
-      const res = await fetch("https://imgbb.com", {
+    
+      const res = await fetch("https://api.imgbb.com/1/upload", {
         method: "POST",
         body: formData,
       });
@@ -32,7 +32,7 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
       const data = await res.json();
       
       if (data?.success && data?.data?.url) {
-        onChange(data.data.url); // জড ফর্মে লাইভ ইমেজ ইউআরএল পুশ হবে
+        onChange(data.data.url);
       } else {
         console.error("ImgBB API Response Error:", data);
       }
@@ -58,7 +58,6 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
     e.stopPropagation();
     setDragActive(false);
     
-    // dataTransfer থেকে প্রথম ফাইলটি সেফলি রিড করা হচ্ছে
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       uploadFile(e.dataTransfer.files[0]);
     }
@@ -66,7 +65,7 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
 
   const onButtonClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // মডালের ইন্টারনাল ক্লিক বাবলিং স্টপ
+    e.stopPropagation(); 
     fileInputRef.current?.click();
   };
 
@@ -114,7 +113,7 @@ export function ImageUploader({ value, onChange }: ImageUploaderProps) {
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                onChange(""); // রিমুভ করলে ফাঁকা হয়ে প্লাস বাটন ব্যাক করবে
+                onChange(""); 
               }}
               className="absolute -top-1.5 -right-1.5 p-1 rounded-full bg-rose-500 hover:bg-rose-600 text-white shadow-md transition-all active:scale-90 cursor-pointer z-20"
             >

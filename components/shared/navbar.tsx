@@ -22,7 +22,6 @@ const navItems = [
   { label: "Services", href: "/services" },
   { label: "Contact", href: "/contact" },
   { label: "Properties", href: "/properties" },
-  { label: "Premium", href: "/premium" },
 ];
 
 const userMenuItems = [
@@ -50,20 +49,20 @@ export function Navbar({ user }: NavbarProps) {
     if (action === "profile") {
       const role = user?.data?.profile?.role;
     if (role === "USER" || role === "TENANT") {
-      router.push("/dashboard/tenant/me"); // টেন্যান্টের সেই প্রিমিয়াম প্রোফাইল পেজ
+      router.push("/dashboard/tenant/me"); 
     } else if (role === "AUTHOR" || role === "LANDLORD") {
-      router.push("/dashboard/landlord/me"); // ল্যান্ডলর্ডের জন্য ডিফল্ট ওভারভিউ/প্রোফাইল
+      router.push("/dashboard/landlord/me"); 
     } else if (role === "ADMIN") {
       router.push("/dashboard/admin/me");
     }
     return;
   }
 
-  // 🎯 ৩. সেটিংস রিডাইরেক্ট লজিক
+  // settings logic
   if (action === "settings") {
     const role = user?.data?.profile?.role;
     if (role === "USER" || role === "TENANT") {
-      router.push("/dashboard/settings"); // সেটিংস এবং প্রোফাইল একই পেজে হ্যান্ডেল করা হয়েছে
+      router.push("/dashboard/settings"); 
     } else if (role === "AUTHOR" || role === "LANDLORD") {
       router.push("/dashboard/settings");
     } else if (role === "ADMIN") {

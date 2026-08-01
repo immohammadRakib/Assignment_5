@@ -10,7 +10,6 @@ export default function UnauthorizedPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // 🎯 পেজে আসার সাথে সাথে ইউজারকে সুন্দর একটা লাল এরর টোস্ট দেখানো হবে
     toast.error("Access Denied: You do not have permission to view this page!", {
       id: "unauthorized-toast",
     });

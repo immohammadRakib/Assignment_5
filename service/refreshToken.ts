@@ -38,11 +38,6 @@ export const isAccessTokenExist = async () => {
     
         if (!accessToken && !refreshToken) {
             throw new Error("User Not Logged In!");
-    
-            // return {
-            //     success: false,
-            //     message: "User not logged in!"
-            // }
         }
     
         const decodedAccessToken = accessToken ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string) : null;

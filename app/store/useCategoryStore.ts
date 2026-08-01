@@ -5,8 +5,7 @@
 //   allProperties: any;
 //   isLoading: boolean;
 //   errorMessage: string | null;
-  
-//   // অ্যাকশনসমূহ
+
 //   setCategories: (data: any) => void;
 //   setAllProperties: (data: any) => void;
 //   setLoading: (status: boolean) => void;
