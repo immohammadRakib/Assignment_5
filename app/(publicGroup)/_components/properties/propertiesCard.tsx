@@ -1,106 +1,3 @@
-// "use client";
-
-// import { Badge } from "@/components/ui/badge";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { MessageSquareIcon, MapPinIcon, StarIcon } from "lucide-react";
-// import Image from "next/image";
-// import Link from "next/link";
-
-// export interface IProperty {
-//   id: string;
-//   title: string;
-//   description: string;
-//   location: string;
-//   city: string;
-//   pricePerDay: number;
-//   images: string[];
-//   isAvailable: boolean;
-//   categoryId: string;
-//   createdAt: string;
-//   reviews?: any[];
-//   _count?: {
-//     reviews?: number;
-//   };
-// }
-
-// type PropertyCardProps = {
-//   property: IProperty;
-// };
-
-// export function PropertyCard({ property }: PropertyCardProps) {
-//   const reviewCount = property._count?.reviews ?? property.reviews?.length ?? 0;
-
-//   return (
-//     <Card className="overflow-hidden group hover:shadow-md transition duration-200 bg-white border border-neutral-100 rounded-xl">
-      
-//       <Link href={`/properties/${property.id}`} className="block relative w-full h-56 bg-neutral-100 overflow-hidden">
-//         {property.images && property.images.length > 0 ? (
-//           <Image
-//             src={property.images[0]} 
-//             unoptimized
-//             alt={property.title}
-//             width={400}
-//             height={300}
-//             className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
-//           />
-//         ) : (
-//           <div className="w-full h-full bg-neutral-200 flex items-center justify-center text-xs text-muted-foreground">
-//             No Image Available
-//           </div>
-//         )}
-
-//         <div className="absolute top-3 left-3">
-//           {property.isAvailable ? (
-//             <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-medium">Available</Badge>
-//           ) : (
-//             <Badge variant="destructive">Rented</Badge>
-//           )}
-//         </div>
-//       </Link>
-
-//       <CardHeader className="p-4 pb-0">
-//         <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
-//           <div className="flex items-center gap-1 text-gray-500 font-medium">
-//             <MapPinIcon className="size-3.5 text-rose-500" />
-//             <span>{property.location}, {property.city}</span>
-//           </div>
-
-//           <div className="flex items-center gap-1 font-semibold text-gray-800">
-//             <StarIcon className="size-3 text-amber-500 fill-amber-500" />
-//             <span>{reviewCount > 0 ? `${reviewCount} Reviews` : "New"}</span>
-//           </div>
-//         </div>
-
-//         <Link href={`/properties/${property.id}`} className="block mt-1">
-//           <CardTitle className="text-base font-bold text-gray-805 hover:text-rose-500 transition-colors line-clamp-1">
-//             {property.title}
-//           </CardTitle>
-//         </Link>
-//       </CardHeader>
-
-//       <CardContent className="p-4 pt-2 space-y-3">
-//         <p className="line-clamp-2 text-sm text-muted-foreground">
-//           {property.description}
-//         </p>
-
-//         <div className="border-t pt-3 flex items-center justify-between text-xs text-muted-foreground">
-//           <div className="text-sm font-bold text-gray-900">
-//             <span className="text-rose-500 font-extrabold text-base">৳{property.pricePerDay}</span>
-//             <span className="font-normal text-xs text-gray-500"> / night</span>
-//           </div>
-          
-//           <span className="text-neutral-400">
-//             Listed: {new Date(property.createdAt).toLocaleDateString()}
-//           </span>
-//         </div>
-//       </CardContent>
-
-//     </Card>
-//   );
-// }
-
-
-
 
 "use client";
 
@@ -132,7 +29,6 @@ type PropertyCardProps = {
   property: IProperty;
 };
 
-// 🏙️ কোনো ইমেজ না থাকলে এই প্রিমিয়াম লাক্সারি ঘরের ছবি ডিফল্ট হিসেবে শো করবে
 const SYSTEM_FALLBACK_IMAGE = "https://img.magnific.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg";
 
 export function PropertyCard({ property }: PropertyCardProps) {
@@ -144,20 +40,16 @@ export function PropertyCard({ property }: PropertyCardProps) {
     property.images.length > 0 && 
     property.images[0] &&
     property.images[0].trim() !== "" &&
-    // যদি লিংকটি শুধু গুগলের বা আনস্প্ল্যাশের মেইন ডোমেইন হয় (কোনো নির্দিষ্ট ছবি না হয়), তবে ওটাকে রিজেক্ট করবে
     property.images[0] !== "https://unsplash.com" && 
     property.images[0] !== "https://google.com" &&
-    // নিশ্চিত করা যে লিংকের ভেতর প্রোপার ইমেজ পাথ বা সোর্স আছে
     (property.images[0].includes("http") || property.images[0].includes("/"));
 
-  // ডাটাবেসে ইমেজ অ্যারে ফাঁকা থাকলে বা প্রথম ইনডেক্স ইনভ্যালিড হলে ফলব্যাক ইমেজ নেওয়ার লজিক
   const activeImage = hasValidImage
     ? property.images[0]
     : SYSTEM_FALLBACK_IMAGE;
 
   return (
     <motion.div
-      // ✨ মাখনের মতো প্রিমিয়াম এন্ট্রান্স ও স্মুথ বাউন্স হোভার এনিমেশন (কোনো হিজিবিজি নেই)
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
@@ -167,7 +59,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
     >
       <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 bg-white border border-neutral-100 rounded-2xl">
         
-        {/* 📸 ইমেজ এরিয়া উইথ জুম ইফেক্ট */}
         <Link href={`/properties/${property.id}`} className="block relative w-full h-56 bg-neutral-50 overflow-hidden">
           <Image
             src={activeImage}
@@ -178,7 +69,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           />
           
-          {/* এভেইলেবিলিটি ব্যাজ */}
           <div className="absolute top-3 left-3 z-10">
             {property.isAvailable ? (
               <Badge className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg px-2.5 py-1 text-[10px] shadow-sm tracking-wide">
@@ -192,7 +82,6 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </div>
         </Link>
 
-        {/* 📝 কার্ড হেডার */}
         <CardHeader className="p-4 pb-0">
           <div className="flex flex-wrap items-center justify-between gap-1.5 text-xs">
             <div className="flex items-center gap-1 text-gray-500 font-medium">
@@ -211,13 +100,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
           </Link>
         </CardHeader>
 
-        {/* 📄 কার্ড কন্টেন্ট */}
         <CardContent className="p-4 pt-2 space-y-3">
           <p className="line-clamp-2 text-xs md:text-sm text-slate-400 font-medium leading-relaxed">
             {property.description}
           </p>
           
-          {/* ৳ প্রাইস ট্যাগ (English Number Format) */}
           <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-xs text-slate-400">
             <div className="text-sm font-bold text-slate-900">
               <span className="text-[#FF385C] font-black text-base">
