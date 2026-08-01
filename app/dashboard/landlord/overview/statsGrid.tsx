@@ -1,10 +1,15 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { HomeIcon, WalletIcon, CalendarCheckIcon, BadgeCheckIcon, TrendingUp } from 'lucide-react';
+import {
+  HomeIcon,
+  WalletIcon,
+  CalendarCheckIcon,
+  BadgeCheckIcon,
+  TrendingUp,
+} from "lucide-react";
 
-// বড় টাকাকে K, M, B ফরম্যাটে রূপান্তর করার ইন্টারন্যাশনাল ইউটিলিটি
 const formatEarnings = (num: number) => {
   if (!num) return "0";
   if (num >= 1e12) return (num / 1e12).toFixed(2).replace(/\.00$/, "") + " T";
@@ -15,77 +20,78 @@ const formatEarnings = (num: number) => {
 };
 
 export default function StatsGrid() {
-  const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
+  const API_BASE =
+    process.env.BACKEND_API_URL || "https://assignment-4-vnjw.onrender.com";
 
-  // 🔄 TanStack Query দিয়ে ল্যান্ডলর্ড স্ট্যাটস নিয়ে আসা
   const { data: apiResponse, isLoading } = useQuery({
-    queryKey: ['landlordStats'],
+    queryKey: ["landlordStats"],
     queryFn: async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("rentnest_token")
+          : null;
       const res = await fetch(`${API_BASE}/api/dashboard/stats`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': token } : {})
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
         },
-        credentials: 'include'
+        credentials: "include",
       });
-      if (!res.ok) throw new Error('Failed to fetch stats');
+      if (!res.ok) throw new Error("Failed to fetch stats");
       return res.json();
     },
   });
 
-  // ব্যাকএন্ড রেসপন্স যদি { data: { ... } } হয় তবে ডট ডাটা ধরবে, অন্যথায় সরাসরি অবজেক্ট
   const stats = apiResponse?.data || apiResponse || {};
 
-  // 🚀 [ম্যাজিক ফিক্স] আপনার ল্যান্ডলর্ড কনসোল ডাটা অনুযায়ী নিখুঁত ভ্যারিয়েবল ম্যাপিং
   const propertiesCount = Number(stats.myTotalProperties || 0);
   const totalEarnings = Number(stats.myTotalEarnings || 0);
   const confirmedBookings = Number(stats.myConfirmedBookings || 0);
   const pendingRequests = Number(stats.myPendingRequests || 0);
   const propertyViews = Number(stats.myPropertyViews || 0);
 
-  // ডাইনামিক অকুপেন্সি বা পারফরম্যান্স রেট ক্যালকুলেশন
-  const occupancyRate = propertiesCount > 0 
-    ? `${Math.round((confirmedBookings / propertiesCount) * 100)}%` 
-    : "0%";
+  const occupancyRate =
+    propertiesCount > 0
+      ? `${Math.round((confirmedBookings / propertiesCount) * 100)}%`
+      : "0%";
 
   const cardData = [
-    { 
-      title: "My Properties", 
-      value: propertiesCount.toString(), 
-      change: "Total listed items", 
-      subText: `${stats.myAvailableProperties || 0} Units Available`, 
-      icon: HomeIcon, 
-      color: "from-rose-500 to-pink-500", 
-      bgLight: "bg-rose-50 text-rose-500" 
+    {
+      title: "My Properties",
+      value: propertiesCount.toString(),
+      change: "Total listed items",
+      subText: `${stats.myAvailableProperties || 0} Units Available`,
+      icon: HomeIcon,
+      color: "from-rose-500 to-pink-500",
+      bgLight: "bg-rose-50 text-rose-500",
     },
-    { 
-      title: "Total Earnings", 
-      value: `৳${formatEarnings(totalEarnings)}`, 
-      change: "Calculated revenue", 
-      subText: "100% Processed Secured", 
-      icon: WalletIcon, 
-      color: "from-emerald-500 to-teal-500", 
-      bgLight: "bg-emerald-50 text-emerald-600" 
+    {
+      title: "Total Earnings",
+      value: `৳${formatEarnings(totalEarnings)}`,
+      change: "Calculated revenue",
+      subText: "100% Processed Secured",
+      icon: WalletIcon,
+      color: "from-emerald-500 to-teal-500",
+      bgLight: "bg-emerald-50 text-emerald-600",
     },
-    { 
-      title: "Active Leases", 
-      value: confirmedBookings.toString(), 
-      change: "Confirmed contracts", 
-      subText: `${pendingRequests} Application Pending`, 
-      icon: CalendarCheckIcon, 
-      color: "from-amber-500 to-orange-500", 
-      bgLight: "bg-amber-50 text-amber-500" 
+    {
+      title: "Active Leases",
+      value: confirmedBookings.toString(),
+      change: "Confirmed contracts",
+      subText: `${pendingRequests} Application Pending`,
+      icon: CalendarCheckIcon,
+      color: "from-amber-500 to-orange-500",
+      bgLight: "bg-amber-50 text-amber-500",
     },
-    { 
-      title: "Property Traffic", 
-      value: formatEarnings(propertyViews), 
-      change: "Total profile views", 
-      subText: `${stats.myTotalReviews || 0} Tenant Reviews`, 
-      icon: BadgeCheckIcon, 
-      color: "from-indigo-500 to-purple-500", 
-      bgLight: "bg-indigo-50 text-indigo-500" 
+    {
+      title: "Property Traffic",
+      value: formatEarnings(propertyViews),
+      change: "Total profile views",
+      subText: `${stats.myTotalReviews || 0} Tenant Reviews`,
+      icon: BadgeCheckIcon,
+      color: "from-indigo-500 to-purple-500",
+      bgLight: "bg-indigo-50 text-indigo-500",
     },
   ];
 
@@ -93,7 +99,10 @@ export default function StatsGrid() {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[...Array(4)].map((_, i) => (
-          <Card key={i} className="shadow-sm border-slate-100 bg-white rounded-2xl animate-pulse h-28" />
+          <Card
+            key={i}
+            className="shadow-sm border-slate-100 bg-white rounded-2xl animate-pulse h-28"
+          />
         ))}
       </div>
     );
@@ -104,19 +113,30 @@ export default function StatsGrid() {
       {cardData.map((stat, i) => {
         const Icon = stat.icon;
         return (
-          <Card key={i} className="shadow-sm border-slate-100 bg-white rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group">
+          <Card
+            key={i}
+            className="shadow-sm border-slate-100 bg-white rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-400">{stat.title}</CardTitle>
-              <div className={`p-3 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-tr ${stat.color} group-hover:text-white ${stat.bgLight}`}>
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                {stat.title}
+              </CardTitle>
+              <div
+                className={`p-3 rounded-2xl transition-all duration-300 group-hover:bg-gradient-to-tr ${stat.color} group-hover:text-white ${stat.bgLight}`}
+              >
                 <Icon className="w-5 h-5 shrink-0" />
               </div>
             </CardHeader>
             <CardContent className="space-y-1">
-              <div className="text-3xl font-black text-slate-800 tracking-tight">{stat.value}</div>
+              <div className="text-3xl font-black text-slate-800 tracking-tight">
+                {stat.value}
+              </div>
               <p className="text-[10px] text-emerald-600 flex items-center gap-0.5 font-bold">
                 <TrendingUp className="w-3 h-3 shrink-0" /> {stat.change}
               </p>
-              <span className="text-[10px] text-slate-400 font-semibold block pt-1 border-t border-slate-100 mt-1">{stat.subText}</span>
+              <span className="text-[10px] text-slate-400 font-semibold block pt-1 border-t border-slate-100 mt-1">
+                {stat.subText}
+              </span>
             </CardContent>
           </Card>
         );

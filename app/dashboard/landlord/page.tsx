@@ -1,9 +1,13 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 import { LayoutDashboard, CalendarCheckIcon } from "lucide-react";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import WelcomeBanner from "./overview/welcomenBanner";
 import StatsGrid from "./overview/statsGrid";
 import { IncomingRequestsList } from "../_components/incomingRequest";
@@ -13,12 +17,15 @@ const queryClient = new QueryClient({
 });
 
 function LandlordDashboardContent() {
-  const [userName, setUserName] = useState('User');
-  const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
+  const [userName, setUserName] = useState("User");
+  const API_BASE =
+    process.env.BACKEND_API_URL || "https://assignment-4-vnjw.onrender.com";
 
-  // ক্লায়েন্ট সাইডে টোকেন থেকে নাম রিড করা
   useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("rentnest_token")
+        : null;
     if (token) {
       try {
         const decoded = jwt.decode(token) as any;
@@ -31,44 +38,41 @@ function LandlordDashboardContent() {
     }
   }, []);
 
-  // 🔄 ইনকামিং রিকোয়েস্ট লিস্টের ব্যাকগ্রাউন্ড ডাটা ফেচিং (TanStack Query)
   const { data: reqResponse } = useQuery({
-    queryKey: ['incomingRequests'],
+    queryKey: ["incomingRequests"],
     queryFn: async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
-      
-      // 🚀 [ম্যাজিক ফিক্স] আপনার দেওয়া কার্ল কমান্ড অনুযায়ী নিখুঁত রুট ও মেথড সেট করা হলো
-      const res = await fetch(`${API_BASE}/api/rentals/landlord/requests`, { 
-        method: 'GET',
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("rentnest_token")
+          : null;
+
+      const res = await fetch(`${API_BASE}/api/rentals/landlord/requests`, {
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': token } : {})
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: token } : {}),
         },
-        credentials: 'include'
+        credentials: "include",
       });
-      if (!res.ok) throw new Error('Failed to fetch requests');
+      if (!res.ok) throw new Error("Failed to fetch requests");
       return res.json();
-    }
+    },
   });
 
-  // ব্যাকএন্ড রেসপন্স যদি { success: true, data: [...] } ফরম্যাটে হয় তবে data.data ধরবে
   const incomingRequests = reqResponse?.data?.data || reqResponse?.data || [];
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
-      
-      {/* 🚀 পার্ট ১: ডাইনামিক নাম ব্যানার */}
       <WelcomeBanner userName={userName} />
 
-      {/* 📊 পার্ট ২: তানস্ট্যাক কুয়েরি লাইভ মেট্রিড গ্রিড */}
       <div className="space-y-4">
         <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Portfolio Metrics
+          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Portfolio
+          Metrics
         </h2>
         <StatsGrid />
       </div>
 
-      {/* 🚀 ইনকামিং রেন্টাল রিকোয়েস্ট টেবিল জোন */}
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
           <h2 className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
@@ -88,13 +92,17 @@ function LandlordDashboardContent() {
               <div className="w-14 h-14 bg-slate-50 text-slate-400 flex items-center justify-center rounded-2xl mx-auto mb-4 border border-slate-100">
                 <CalendarCheckIcon className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-slate-800">Clear Broadcast Queue</h3>
-              <p className="text-sm text-slate-400 mt-1">No incoming tenant applications found. Active property listings are searching for tenants live.</p>
+              <h3 className="font-bold text-slate-800">
+                Clear Broadcast Queue
+              </h3>
+              <p className="text-sm text-slate-400 mt-1">
+                No incoming tenant applications found. Active property listings
+                are searching for tenants live.
+              </p>
             </div>
           )}
         </div>
       </div>
-
     </div>
   );
 }

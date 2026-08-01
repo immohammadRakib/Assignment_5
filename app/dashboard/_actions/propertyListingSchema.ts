@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-// 🛡️ Centralized Landlord Property Validation Engine
+
 export const propertySchema = z.object({
   title: z
     .string()
@@ -24,5 +24,4 @@ export const propertySchema = z.object({
     .min(15, { message: "Description must be at least 15 characters long to guide tenants" }),
 });
 
-// Export inferred TypeScript type for cleaner components
 export type PropertyFormData = z.infer<typeof propertySchema>;

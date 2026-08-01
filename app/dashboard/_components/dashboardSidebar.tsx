@@ -16,7 +16,6 @@ export default function DashboardSidebar({ user }: { user: any }) {
   
   const role = user?.data?.profile?.role || user?.data?.role || "TENANT";
 
-  // 🎯 থিম কালার এখন ফিক্সড (Rose Theme), শুধু টাইটেল ডাইনামিক
   const panelTitle = role === "ADMIN" ? "Admin Panel" : role === "LANDLORD" ? "Landlord Panel" : "Tenant Panel";
 
   const menuConfig = {
@@ -59,11 +58,9 @@ export default function DashboardSidebar({ user }: { user: any }) {
   };
 
   return (
-    // 🛠️ mt-8 এবং pt-4 দিয়ে উপরের মার্জিন বাড়ানো হয়েছে
     <aside className="w-72 bg-white dark:bg-slate-900 dark:border-slate-800 border-r border-neutral-100 p-6 hidden md:flex flex-col justify-between shrink-0 sticky top-16 h-[calc(100vh-4rem)] select-none mt-4">
       <div className="space-y-8">
         
-        {/* 🎨 সিগনেচার রোজ থিম প্রোফাইল কার্ড */}
         <div className="px-5 py-4 bg-rose-50/50 border border-rose-100/50 rounded-[24px] relative overflow-hidden group">
           <div className="absolute -right-2 -top-2 w-12 h-12 bg-rose-100 rounded-full blur-2xl opacity-50 group-hover:opacity-100 transition-opacity" />
           <p className="text-[10px] font-black uppercase tracking-[0.15em] text-rose-500/80">Authorized Access</p>
@@ -71,7 +68,6 @@ export default function DashboardSidebar({ user }: { user: any }) {
           <p className="text-[11px] font-medium text-gray-500 truncate mt-1">{user?.data?.profile?.email || user?.data?.email}</p>
         </div>
 
-        {/* ডাইনামিক মেনু */}
         <nav className="space-y-2">
           {currentMenuItems.map((item) => {
             const Icon = item.icon;
@@ -97,7 +93,6 @@ export default function DashboardSidebar({ user }: { user: any }) {
         </nav>
       </div>
 
-      {/* অ্যাকশন প্যানেল */}
       <div className="space-y-2 border-t border-neutral-50 pt-6">
         <Link href="/" className="flex items-center gap-3 px-4 py-3 rounded-2xl text-[13px] font-bold text-gray-500 hover:bg-neutral-50 hover:text-gray-900 transition-all group">
           <Home className="w-4.5 h-4.5 text-gray-400 group-hover:text-gray-900" />
