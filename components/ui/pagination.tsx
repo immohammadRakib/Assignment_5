@@ -45,20 +45,34 @@ function PaginationLink({
   ...props
 }: PaginationLinkProps) {
   return (
-    <Button
+    // <Button
+    //   variant={isActive ? "outline" : "ghost"}
+    //   size={size}
+    //   className={cn(className)}
+    //   nativeButton={false}
+    //   render={
+    //     <a
+    //       aria-current={isActive ? "page" : undefined}
+    //       data-slot="pagination-link"
+    //       data-active={isActive}
+    //       {...props}
+    //     />
+    //   }
+    // />
+
+     <Button
       variant={isActive ? "outline" : "ghost"}
       size={size}
       className={cn(className)}
-      nativeButton={false}
-      render={
-        <a
-          aria-current={isActive ? "page" : undefined}
-          data-slot="pagination-link"
-          data-active={isActive}
-          {...props}
-        />
-      }
-    />
+      asChild // 🚀 [ম্যাজিক ফিক্স] nativeButton আর render কেটে এটি দেওয়া হলো
+    >
+      <a
+        aria-current={isActive ? "page" : undefined}
+        data-slot="pagination-link"
+        data-active={isActive}
+        {...props}
+      />
+    </Button>
   )
 }
 
