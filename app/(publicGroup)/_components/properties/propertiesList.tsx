@@ -45,7 +45,7 @@ export async function PublicPropertiesList({ searchParams }: PublicPropertiesLis
 
   if (finalProperties.length === 0 && currentPage === 1) {
     return (
-      <div className="py-24 text-center bg-slate-50 rounded-3xl w-full border border-dashed border-slate-200 max-w-2xl mx-auto space-y-4">
+      <div className="py-24 text-center bg-slate-50 rounded-3xl w-full border border-dashed border-slate-200 dark:border-slate-700 dark:bg-slate-800 max-w-2xl mx-auto space-y-4">
         <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-sm">
           <Building2 className="w-8 h-8 text-slate-300 stroke-[2px]" />
         </div>
@@ -65,18 +65,18 @@ export async function PublicPropertiesList({ searchParams }: PublicPropertiesLis
         ))}
       </div>
 
-      <div className="flex flex-col items-center gap-6 pt-10 border-t border-slate-100">
+      <div className="flex flex-col items-center gap-6 pt-10 border-t border-slate-100 dark:border-slate-700">
         <div className="flex items-center gap-2">
           
           {currentPage > 1 ? (
             <Link 
               href={getPageUrl(currentPage - 1)} 
-              className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-all active:scale-95"
+              className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 text-slate-600 transition-all active:scale-95"
             >
               <ChevronLeft className="w-5 h-5 stroke-[2.5px]" />
             </Link>
           ) : (
-            <button disabled className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-100 text-slate-200 cursor-not-allowed">
+            <button disabled className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-100 dark:border-slate-700 text-slate-200 cursor-not-allowed">
               <ChevronLeft className="w-5 h-5 stroke-[2.5px]" />
             </button>
           )}
@@ -103,18 +103,18 @@ export async function PublicPropertiesList({ searchParams }: PublicPropertiesLis
           {currentPage < totalPages ? (
             <Link 
               href={getPageUrl(currentPage + 1)} 
-              className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-600 transition-all active:scale-95"
+              className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 text-slate-600 transition-all active:scale-95"
             >
               <ChevronRight className="w-5 h-5 stroke-[2.5px]" />
             </Link>
           ) : (
-            <button disabled className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-100 text-slate-200 cursor-not-allowed">
+            <button disabled className="w-11 h-11 flex items-center justify-center rounded-xl border border-slate-100 dark:border-slate-700 text-slate-200 cursor-not-allowed">
               <ChevronRight className="w-5 h-5 stroke-[2.5px]" />
             </button>
           )}
         </div>
         
-        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest dark:text-slate-500">
           Page {currentPage} of {totalPages} — Total {totalItems} Listings
         </p>
       </div>

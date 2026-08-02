@@ -90,12 +90,12 @@ function DashboardHomeContent() {
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
+    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50 dark:bg-slate-900">
       <WelcomeBanner userRole={userRole} userName={userName} />
 
       <div className="space-y-4">
         <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Platform
+          <LayoutDashboard className="w-4 h-4 text-rose-500 dark:text-rose-400" /> Live Platform
           Metrics
         </h2>
 
@@ -104,22 +104,22 @@ function DashboardHomeContent() {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-pulse h-28"
+                className="bg-white p-6 rounded-2xl border border-slate-100 dark:border-slate-600 shadow-sm animate-pulse h-28"
               />
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
+            <div className="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-100 dark:border-slate-600 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
               <div className="space-y-1">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider block">
                   Total Properties
                 </span>
-                <h3 className="text-3xl font-black text-emerald-600 tracking-tight">
+                <h3 className="text-3xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
                   {stats.totalProperties}
                 </h3>
 
-                <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-0.5">
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-0.5">
                   <TrendingUp className="w-3 h-3" /> System Live
                 </span>
               </div>
@@ -128,16 +128,16 @@ function DashboardHomeContent() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 dark:bg-slate-800 dark:border-slate-600 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
               <div className="space-y-1">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider block">
                   Registered Users
                 </span>
-                <h3 className="text-3xl font-black text-slate-800 tracking-tight">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">
                   {Number(stats.totalTenants || 0) +
                     Number(stats.totalLandlords || 0)}
                 </h3>
-                <span className="text-[10px] text-indigo-500 font-bold">
+                <span className="text-[10px] text-indigo-500 dark:text-indigo-400 font-bold">
                   {stats.totalLandlords ?? 0} Owners | {stats.totalTenants ?? 0}{" "}
                   Tenants
                 </span>
@@ -147,15 +147,15 @@ function DashboardHomeContent() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 dark:bg-slate-800 dark:border-slate-600 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
               <div className="space-y-1">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider block">
                   Active Leases
                 </span>
-                <h3 className="text-3xl font-black text-slate-800 tracking-tight">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white tracking-tight">
                   {stats.totalConfirmedBookings ?? 0}
                 </h3>
-                <span className="text-[10px] text-amber-500 font-bold">
+                <span className="text-[10px] text-amber-500 dark:text-amber-400 font-bold">
                   {stats.totalRentalRequests ?? 0} Pending Requests
                 </span>
               </div>
@@ -164,15 +164,15 @@ function DashboardHomeContent() {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 dark:bg-slate-800 dark:border-slate-600 shadow-sm flex items-center justify-between hover:shadow-md transition-all duration-300 group">
               <div className="space-y-1">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wider block">
                   Gross Earnings
                 </span>
-                <h3 className="text-3xl font-black text-emerald-600 tracking-tight">
+                <h3 className="text-3xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight">
                   {formatEarnings(stats.totalPlatformEarnings)} BDT
                 </h3>
-                <span className="text-[10px] text-slate-400 font-semibold">
+                <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold">
                   100% Processed Secured
                 </span>
               </div>

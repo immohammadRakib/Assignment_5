@@ -95,7 +95,7 @@ export function RentalRequestModal({
         <div
           role="button"
           tabIndex={0}
-          className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center select-none active:scale-[0.98] px-4"
+          className="w-full h-12 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-600 hover:to-pink-700 text-white dark:text-white font-bold text-sm rounded-xl shadow-md transition-all duration-200 cursor-pointer flex items-center justify-center select-none active:scale-[0.98] px-4"
         >
           Request to Rent
         </div>

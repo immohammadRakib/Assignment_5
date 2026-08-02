@@ -65,21 +65,19 @@ function CategoryContent() {
   };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-8 min-h-screen bg-slate-50/50 relative">
+    <div className="p-6 max-w-5xl mx-auto space-y-8 min-h-screen bg-slate-50/50 dark:bg-slate-900 relative">
       
-      {/* 🌟 গ্লসি হেডার সেকশন উইথ প্লাস বাটন */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 border-b border-slate-200/60 pb-6">
         <div className="flex items-center gap-4">
           <div className="p-3.5 bg-gradient-to-tr from-rose-500 to-pink-500 text-white rounded-2xl shadow-lg shadow-rose-500/20">
             <FolderHeart className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Property Categories</h1>
-            <p className="text-sm font-medium text-slate-500 mt-0.5">Total categories configured: <span className="font-bold text-rose-500">{categories.length}</span></p>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight dark:text-white">Property Categories</h1>
+            <p className="text-sm font-medium text-slate-500 mt-0.5 dark:text-slate-400">Total categories configured: <span className="font-bold text-rose-500 dark:text-rose-400">{categories.length}</span></p>
           </div>
         </div>
 
-        {/* ➕ এই যে আপনার কাঙ্ক্ষিত প্লাস বাটন */}
         <button
           onClick={() => setIsModalOpen(true)}
           className="flex items-center gap-2 px-5 py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs rounded-xl shadow-md shadow-rose-500/10 active:scale-95 transition-all cursor-pointer"
@@ -88,7 +86,6 @@ function CategoryContent() {
         </button>
       </div>
 
-      {/* 🗂️ স্লিম ও সুন্দর ক্যাটাগরি লিস্ট টেবিল */}
       <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden">
         <div className="hidden lg:grid grid-cols-12 gap-4 px-6 py-4 bg-slate-50 border-b border-slate-100 text-xs font-bold uppercase tracking-wider text-slate-500">
           <div className="col-span-5">Category Identity</div>
@@ -116,7 +113,6 @@ function CategoryContent() {
         )}
       </div>
 
-      {/* 📥 পপ-আপ ক্রিয়েশন মডাল (Modal UI) */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center z-50 animate-in fade-in duration-200">
           <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-2xl w-full max-w-sm space-y-4 m-4 animate-in zoom-in-95 duration-200">
@@ -132,14 +128,14 @@ function CategoryContent() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-400 uppercase tracking-wide">Category Name</label>
+                <label className="text-xs font-bold text-slate-400 dark:text-slate-400 uppercase tracking-wide">Category Name</label>
                 <input 
                   type="text" 
                   autoFocus
                   placeholder="e.g., Convention Hall"
                   value={categoryName}
                   onChange={(e) => setCategoryName(e.target.value)}
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all font-medium text-slate-800"
+                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all font-medium text-slate-800 dark:text-white dark:bg-slate-700 dark:border-slate-500"
                 />
               </div>
 

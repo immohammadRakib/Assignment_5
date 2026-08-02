@@ -104,7 +104,7 @@ export default function ServicePage() {
                   damping: 20,
                   delay: i * 0.1,
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 className="group p-8 bg-slate-50 rounded-3xl border border-slate-100 hover:bg-white hover:shadow-2xl hover:shadow-slate-200/50 transition-all cursor-default"
               >
                 <div className="w-12 h-12 bg-white text-[#FF385C] rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-6">
@@ -141,7 +141,7 @@ export default function ServicePage() {
                   damping: 20,
                   delay: i * 0.1,
                 }}
-                viewport={{ once: true }}
+                viewport={{ once: false }}
                 className="group p-8 bg-rose-50/30 rounded-3xl border border-rose-100/20 hover:bg-white hover:shadow-2xl hover:shadow-rose-500/10 transition-all cursor-default"
               >
                 <div className="w-12 h-12 bg-white text-[#FF385C] rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mb-6">

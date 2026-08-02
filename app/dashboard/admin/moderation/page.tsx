@@ -69,17 +69,17 @@ function ModerationContent() {
   ).length;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
+    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50 dark:bg-slate-900">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-slate-200/60 pb-6">
         <div className="flex items-center gap-4">
           <div className="p-3.5 bg-gradient-to-tr from-amber-500 to-orange-500 text-white rounded-2xl shadow-lg shadow-amber-500/20">
             <ShieldAlert className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight dark:text-white">
               Property Approvals
             </h1>
-            <p className="text-sm font-medium text-slate-500 mt-0.5">
+            <p className="text-sm font-medium text-slate-500 mt-0.5 dark:text-slate-400">
               Control submissions, verify landlord listings, and update RentNest
               statuses
             </p>

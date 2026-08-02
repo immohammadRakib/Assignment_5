@@ -66,18 +66,18 @@ function UserManagementContent() {
   );
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
-      {/* হেডার */}
+    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50 dark:bg-slate-900">
+
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-slate-200/60 pb-6">
         <div className="flex items-center gap-4">
           <div className="p-3.5 bg-gradient-to-tr from-rose-500 to-pink-500 text-white rounded-2xl shadow-lg shadow-rose-500/20">
             <Users className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight dark:text-white">
               User Management
             </h1>
-            <p className="text-sm font-medium text-slate-500 mt-0.5">
+            <p className="text-sm font-medium text-slate-500 mt-0.5 dark:text-slate-400">
               Monitor all Registered RentNest user Accounts
             </p>
           </div>
@@ -90,7 +90,7 @@ function UserManagementContent() {
             placeholder="Search on this page..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all w-full shadow-sm"
+            className="pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 transition-all w-full shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-white"
           />
         </div>
       </div>
