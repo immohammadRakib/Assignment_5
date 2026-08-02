@@ -3,10 +3,10 @@ export const dynamic = "force-dynamic";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { LayoutDashboard, CalendarCheckIcon } from "lucide-react";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import TenantDashboard from "../_components/tenantDashboard";
-import TenantBanner from "./overview/tenantBanner"; // পার্ট ১ ইম্পোর্ট
-import TenantStatsGrid from "./overview/tenantStatsGrid"; // পার্ট ২ ইম্পোর্ট
+import TenantBanner from "./overview/tenantBanner";
+import TenantStatsGrid from "./overview/tenantStatsGrid";
 
 export default async function TenantOverviewPage() {
   const cookieStore = await cookies();
@@ -16,7 +16,6 @@ export default async function TenantOverviewPage() {
     redirect("/login");
   }
 
-  // 🔐 সার্ভার সাইডেই নেটিভলি টোকেন থেকে নাম ডিকোড করা
   let userName = "User";
   try {
     const decoded = jwt.decode(token) as any;
@@ -27,17 +26,19 @@ export default async function TenantOverviewPage() {
     console.error("Token decode error on server:", err);
   }
 
-  // 🎯 ওল্ড ক্যাশ এড়াতে নেটিভ নো-ক্যাশ ফেচ এপিআই কল
   let rentals: any[] = [];
   try {
-    const res = await fetch("https://assignment-4-vnjw.onrender.com/api/rentals", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+    const res = await fetch(
+      "https://assignment-4-vnjw.onrender.com/api/rentals",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        cache: "no-store",
       },
-      cache: 'no-store' // 🚀 ওল্ড মেমরি ক্যাশ ব্রেক করার ট্রিক
-    });
+    );
     const result = await res.json();
     const rawRentals = result?.data || result || [];
     rentals = Array.isArray(rawRentals) ? rawRentals : [];
@@ -47,19 +48,15 @@ export default async function TenantOverviewPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
-      
-      {/* 🚀 পার্ট ১: ডাইনামিক নাম ব্যানার উইথ রোজ-পার্পল গ্রেডিয়েন্ট */}
       <TenantBanner userName={userName} />
 
-      {/* 📊 পার্ট ২: লাইভ মেট্রিড কার্ড গ্রিড */}
       <div className="space-y-4">
         <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Rental Metrics
+          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Rental
+          Metrics
         </h2>
         <TenantStatsGrid rentals={rentals} />
       </div>
-
-      {/* 🚀 রিয়াল-টাইম টেন্যান্ট ড্যাশবোর্ড জোন (লিস্ট/টেবিল ভিউ) */}
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
           <h2 className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
@@ -80,12 +77,14 @@ export default async function TenantOverviewPage() {
                 <CalendarCheckIcon className="w-6 h-6" />
               </div>
               <h3 className="font-bold text-slate-800">No Active Stays</h3>
-              <p className="text-sm text-slate-400 mt-1">You haven't requested any property bookings yet. Head over to the home page to find your next nest!</p>
+              <p className="text-sm text-slate-400 mt-1">
+                You haven't requested any property bookings yet. Head over to
+                the home page to find your next nest!
+              </p>
             </div>
           )}
         </div>
       </div>
-
     </div>
   );
 }

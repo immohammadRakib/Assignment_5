@@ -15,6 +15,7 @@ import {
   Edit3,
   Plus,
   Tag,
+  Loader2,
   ArrowUpRight,
 } from "lucide-react";
 import Link from "next/link";
@@ -28,16 +29,15 @@ export default function MyListingsPage() {
     setLoading(true);
     try {
       const res = await getMyProperties();
-      if (Array.isArray(res)) {
-        setProperties(res);
-      } else if (res && Array.isArray(res.data)) {
-        setProperties(res.data);
-      } else if (res && res.data && Array.isArray(res.data.data)) {
-        setProperties(res.data.data);
+
+      const extractedData = res?.data?.data || res?.data || res;
+      if (Array.isArray(extractedData)) {
+        setProperties(extractedData);
       } else {
         setProperties([]);
       }
     } catch (err) {
+      console.error("Error loading landlord properties:", err);
       setProperties([]);
     } finally {
       setLoading(false);
@@ -129,11 +129,34 @@ export default function MyListingsPage() {
 
   if (loading) {
     return (
-      <div className="text-center py-20 text-sm text-neutral-500 font-bold animate-pulse">
-        Fetching live landlord inventory list...
+      <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
+        <div className="flex items-center gap-2 text-slate-400 text-xs font-black uppercase tracking-widest animate-pulse">
+          <Loader2 className="w-4 h-4 animate-spin text-[#FF385C]" />
+          Synchronizing landlord asset registry...
+        </div>
+        <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-sm animate-pulse">
+          <div className="h-12 bg-neutral-50 border-b border-neutral-100" />
+          {[...Array(4)].map((_, i) => (
+            <div
+              key={i}
+              className="p-6 flex items-center justify-between border-b border-neutral-50"
+            >
+              <div className="flex items-center gap-3 w-1/3">
+                <div className="w-10 h-10 rounded-xl bg-neutral-100 shrink-0" />
+                <div className="space-y-2 w-full">
+                  <div className="h-4 bg-neutral-100 rounded w-3/4" />
+                  <div className="h-3 bg-neutral-100 rounded w-1/2" />
+                </div>
+              </div>
+              <div className="h-4 bg-neutral-100 rounded w-1/4" />
+              <div className="h-8 bg-neutral-100 rounded w-24" />
+            </div>
+          ))}
+        </div>
       </div>
     );
   }
+
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-100 pb-5">

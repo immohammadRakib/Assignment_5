@@ -10,7 +10,6 @@
 | Landlord Dashboard | /api/landlord/properties | GET |
 
 
-
 # API Integration Mapping - RentNest
 
 ## 🔑 Authentication

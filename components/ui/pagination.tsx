@@ -64,7 +64,7 @@ function PaginationLink({
       variant={isActive ? "outline" : "ghost"}
       size={size}
       className={cn(className)}
-      asChild // 🚀 [ম্যাজিক ফিক্স] nativeButton আর render কেটে এটি দেওয়া হলো
+      asChild 
     >
       <a
         aria-current={isActive ? "page" : undefined}

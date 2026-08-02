@@ -1,8 +1,7 @@
 import { cookies } from "next/headers";
 import { ShieldCheck, ArrowLeft } from "lucide-react";
 import Link from "next/link";
-// 🎯 নতুন সাব-ক্লায়েন্ট রো কম্পোনেন্ট ইম্পোর্ট করা হলো
-import PaymentRow from "../../_components/paymentRow"; 
+import PaymentRow from "../../_components/paymentRow";
 
 async function getTenantPaymentsStream() {
   const cookieStore = await cookies();
@@ -11,19 +10,25 @@ async function getTenantPaymentsStream() {
   if (!token) return [];
 
   try {
-    const baseUrl = process.env.BACKEND_API_URL || "https://assignment-4-vnjw.onrender.com";
-    const sanitizedBaseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
-    
-    console.log("🛰️ Server Side Fetching Payments from:", `${sanitizedBaseUrl}/api/payments`);
+    const baseUrl =
+      process.env.BACKEND_API_URL || "https://assignment-4-vnjw.onrender.com";
+    const sanitizedBaseUrl = baseUrl.endsWith("/")
+      ? baseUrl.slice(0, -1)
+      : baseUrl;
+
+    console.log(
+      "🛰️ Server Side Fetching Payments from:",
+      `${sanitizedBaseUrl}/api/payments`,
+    );
 
     const res = await fetch(`${sanitizedBaseUrl}/api/payments`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Cookie": `accessToken=${token}`,
-        "Authorization": `Bearer ${token}`
+        Cookie: `accessToken=${token}`,
+        Authorization: `Bearer ${token}`,
       },
-      next: { revalidate: 0 }
+      next: { revalidate: 0 },
     });
 
     const contentType = res.headers.get("content-type");
@@ -32,7 +37,9 @@ async function getTenantPaymentsStream() {
     }
 
     const result = await res.json();
-    const finalPayments = Array.isArray(result) ? result : (result?.data || result?.result || []);
+    const finalPayments = Array.isArray(result)
+      ? result
+      : result?.data || result?.result || [];
     return Array.isArray(finalPayments) ? finalPayments : [];
   } catch (error) {
     console.error("Failed to load payment streams on server:", error);
@@ -45,28 +52,30 @@ export default async function TenantPaymentsHistoryPage() {
 
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto select-none font-sans">
-      
-      {/* হেডার সেকশন */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
-          <h1 className="text-xl font-black text-gray-900 tracking-tight">Verified Transaction Receipts</h1>
-          <p className="text-xs text-neutral-500 font-medium">Review your platform billing logs, verified payment tokens, and retry unfulfilled checkouts.</p>
+          <h1 className="text-xl font-black text-gray-900 tracking-tight">
+            Verified Transaction Receipts
+          </h1>
+          <p className="text-xs text-neutral-500 font-medium">
+            Review your platform billing logs, verified payment tokens, and
+            retry unfulfilled checkouts.
+          </p>
         </div>
-        <Link 
-          href="/dashboard/tenant/requests" 
+        <Link
+          href="/dashboard/tenant/requests"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 hover:bg-neutral-100 border border-neutral-200 bg-white px-4 py-2.5 rounded-xl transition-all"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Back to Request Feed
         </Link>
       </div>
 
-      {/* কন্ডিশনাল রেন্ডারিং */}
       {payments.length === 0 ? (
         <div className="text-center py-16 border border-dashed rounded-2xl text-neutral-400 text-sm max-w-md mx-auto mt-10">
-          No transaction history recorded yet. Validated invoices will broadcast live here.
+          No transaction history recorded yet. Validated invoices will broadcast
+          live here.
         </div>
       ) : (
-        /* 💳 লাক্সারি ট্রানজেকশন হিস্ট্রি টেবিল UI */
         <div className="bg-white border border-neutral-100 rounded-2xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-sm">
@@ -82,8 +91,11 @@ export default async function TenantPaymentsHistoryPage() {
               </thead>
               <tbody className="divide-y divide-neutral-50 font-semibold text-gray-700">
                 {payments.map((pay: any, index: number) => (
-                  // 🎯 ফিক্স: লুপের ভেতর ডাইনামিক সাব-কম্পোনেন্ট বাইন্ড করা হলো
-                  <PaymentRow key={pay.id || pay._id || index} pay={pay} index={index} />
+                  <PaymentRow
+                    key={pay.id || pay._id || index}
+                    pay={pay}
+                    index={index}
+                  />
                 ))}
               </tbody>
             </table>
@@ -95,7 +107,6 @@ export default async function TenantPaymentsHistoryPage() {
         <ShieldCheck className="w-4 h-4 shrink-0" />
         <span>100% AES-256 Encrypted Platform Ledger Audit Logs</span>
       </div>
-
     </div>
   );
 }
