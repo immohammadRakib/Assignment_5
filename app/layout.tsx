@@ -51,7 +51,8 @@ return (
   <html 
     lang="en" 
     className={cn("h-full antialiased", "font-sans", inter.variable)} 
-    suppressHydrationWarning={true} 
+    // suppressHydrationWarning={true} 
+    suppressHydrationWarning
   >
 <body className="min-h-full flex flex-col" suppressHydrationWarning={true}>
      <TanstackProvider>
