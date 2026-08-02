@@ -48,8 +48,8 @@ export default function PaymentInitiationPage() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-4 bg-neutral-50/50 min-h-[85vh] select-none font-sans">
-      <div className="w-full max-w-4xl bg-white border border-neutral-100 rounded-3xl overflow-hidden shadow-xl shadow-neutral-200/50 grid grid-cols-1 md:grid-cols-12">
+    <div className="dark:bg-slate-900 flex-1 flex items-center justify-center p-4 bg-neutral-50/50 min-h-[85vh] select-none font-sans">
+      <div className="dark:bg-slate-900 w-full max-w-4xl bg-white border border-neutral-100 rounded-3xl overflow-hidden shadow-xl shadow-neutral-200/50 grid grid-cols-1 md:grid-cols-12">
         <div className="md:col-span-5 bg-gradient-to-br from-neutral-900 via-neutral-800 to-gray-900 p-8 text-white flex flex-col justify-between relative overflow-hidden">
           <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl" />
           <div className="space-y-6 relative z-10">

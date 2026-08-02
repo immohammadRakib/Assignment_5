@@ -45,7 +45,7 @@ export default function PaymentSuccessPage() {
         const token = cookiesMap["accessToken"] || null;
 
         const baseUrl =
-          process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+          process.env.BACKEND_API_URL ||
           "https://assignment-4-vnjw.onrender.com";
         const res = await fetch(`${baseUrl}/api/rentals`, {
           method: "GET",
@@ -105,7 +105,7 @@ export default function PaymentSuccessPage() {
 
         <div className="space-y-2">
           <h2 className="text-2xl font-black text-gray-900 tracking-tight">
-            Remittance Confirmed!
+            Payment Confirmed!
           </h2>
           <p className="text-xs text-neutral-400 max-w-xs mx-auto font-medium">
             Your secure booking ledger signature has been successfully validated
