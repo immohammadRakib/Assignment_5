@@ -171,10 +171,10 @@ export default function DashboardSidebar({ user }: { user: any }) {
     ],
     LANDLORD: [
       { label: "Overview", href: "/dashboard/landlord", icon: LayoutDashboard },
-      { label: "My Profile", href: "/dashboard/landlord/me", icon: UserCheck },
       { label: "Create Listing", href: "/dashboard/landlord/properties/new", icon: PlusCircle },
       { label: "Incoming Requests", href: "/dashboard/landlord/requests", icon: Inbox },
       { label: "My Listings", href: "/dashboard/landlord/my-properties", icon: Building },
+      { label: "Earnings", href: "/dashboard/landlord/earnings", icon: CreditCard },
       { label: "Settings Panel", href: "/dashboard/settings", icon: Settings },
     ],
     TENANT: [
