@@ -57,11 +57,15 @@ export function RentalRequestModal({
 
         let userRole = "";
         try {
-          const rawUser =
+          let rawUser =
             localStorage.getItem("user") ||
-            localStorage.getItem("rentnest_token");
-          if (rawUser) {
-            const parsedUser = JSON.parse(rawUser);
+            localStorage.getItem("rentnest_user") ||
+            "";
+
+          const cleanUserStr = rawUser.replace(/^"|"$/g, "").trim();
+
+          if (cleanUserStr && cleanUserStr.startsWith("{")) {
+            const parsedUser = JSON.parse(cleanUserStr);
             userRole = parsedUser?.role?.toLowerCase() || "";
           }
         } catch (e) {
