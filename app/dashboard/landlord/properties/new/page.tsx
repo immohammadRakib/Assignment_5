@@ -139,10 +139,10 @@ export default function NewPropertyPage() {
     <div className="max-w-4xl mx-auto p-4 md:p-6 bg-white border border-neutral-100 shadow-sm rounded-2xl my-6 space-y-6">
       <div>
         <h1 className="text-xl font-black text-gray-900">
-          🚀 Launch New Smart Property Listing
+           Launch New Smart Property Listing
         </h1>
-        <p className="text-xs text-neutral-500">
-          Zod engine validated type-safe server pipeline deployment.
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
+          validated type-safe server pipeline deployment.
         </p>
       </div>
 

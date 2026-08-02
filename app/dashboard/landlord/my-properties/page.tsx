@@ -161,10 +161,10 @@ export default function MyListingsPage() {
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
-          <h1 className="text-xl font-black text-gray-900">
+          <h1 className="text-xl font-black text-gray-900 dark:text-white">
             Inventory Management
           </h1>
-          <p className="text-xs text-neutral-500">
+          <p className="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5">
             Live grid-less operational registry of your assets.
           </p>
         </div>

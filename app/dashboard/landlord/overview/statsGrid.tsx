@@ -115,10 +115,10 @@ export default function StatsGrid() {
         return (
           <Card
             key={i}
-            className="shadow-sm border-slate-100 bg-white rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+            className="dark:bg-slate-800 shadow-sm border-slate-100 bg-white rounded-2xl hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              <CardTitle className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300">
                 {stat.title}
               </CardTitle>
               <div
@@ -128,13 +128,13 @@ export default function StatsGrid() {
               </div>
             </CardHeader>
             <CardContent className="space-y-1">
-              <div className="text-3xl font-black text-slate-800 tracking-tight">
+              <div className="text-3xl font-black text-slate-800 dark:text-rose-400 tracking-tight">
                 {stat.value}
               </div>
               <p className="text-[10px] text-emerald-600 flex items-center gap-0.5 font-bold">
                 <TrendingUp className="w-3 h-3 shrink-0" /> {stat.change}
               </p>
-              <span className="text-[10px] text-slate-400 font-semibold block pt-1 border-t border-slate-100 mt-1">
+              <span className="text-[10px] text-slate-400 dark:text-slate-400 font-semibold block pt-1 border-t border-slate-100 mt-1">
                 {stat.subText}
               </span>
             </CardContent>

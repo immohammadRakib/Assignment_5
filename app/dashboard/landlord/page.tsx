@@ -62,13 +62,13 @@ function LandlordDashboardContent() {
   const incomingRequests = reqResponse?.data?.data || reqResponse?.data || [];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
+    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50 dark:bg-slate-900">
       <WelcomeBanner userName={userName} />
 
       <div className="space-y-4">
         <h2 className="text-xs font-black uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-          <LayoutDashboard className="w-4 h-4 text-rose-500" /> Live Portfolio
-          Metrics
+          <LayoutDashboard className="w-4 h-4 text-rose-500" />
+         <span className="dark:text-slate-300">Live Portfolio Metrics</span> 
         </h2>
         <StatsGrid />
       </div>
@@ -76,26 +76,26 @@ function LandlordDashboardContent() {
       <div className="space-y-4 pt-2">
         <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
           <h2 className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
-            <span className="w-2 h-4 bg-rose-500 rounded-full inline-block" />
-            Incoming Rental Applications
+           <span className="w-2 h-4 bg-rose-500 dark:bg-rose-500 rounded-full inline-block" />
+           <span className="dark:text-slate-300">Incoming Tenant Requests</span>
           </h2>
-          <span className="text-xs font-bold bg-slate-100 text-slate-500 px-2.5 py-1 rounded-lg">
+          <span className="text-xs dark:text-slate-300 font-bold bg-slate-100 dark:bg-slate-600 text-slate-500 px-2.5 py-1 rounded-lg">
             Active Broadcast Queue
           </span>
         </div>
 
-        <div className="bg-white border border-slate-100 rounded-3xl shadow-sm overflow-hidden p-2">
+        <div className="bg-white border border-slate-100 dark:border-slate-700 rounded-3xl shadow-sm overflow-hidden p-2">
           {incomingRequests.length > 0 ? (
             <IncomingRequestsList initialRequests={incomingRequests} />
           ) : (
-            <div className="text-center py-20 text-slate-400 max-w-xl mx-auto">
-              <div className="w-14 h-14 bg-slate-50 text-slate-400 flex items-center justify-center rounded-2xl mx-auto mb-4 border border-slate-100">
+            <div className="text-center py-20 text-slate-400 dark:text-slate-300 max-w-xl mx-auto">
+              <div className="w-14 h-14 bg-slate-50 dark:bg-slate-600 text-slate-400 dark:text-slate-300 flex items-center justify-center rounded-2xl mx-auto mb-4 border border-slate-100 dark:border-slate-500">
                 <CalendarCheckIcon className="w-6 h-6" />
               </div>
-              <h3 className="font-bold text-slate-800">
+              <h3 className="font-bold dark:text-slate-200 text-slate-800 text-lg">
                 Clear Broadcast Queue
               </h3>
-              <p className="text-sm text-slate-400 mt-1">
+              <p className="text-sm text-slate-400 dark:text-slate-300 mt-1">
                 No incoming tenant applications found. Active property listings
                 are searching for tenants live.
               </p>

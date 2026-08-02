@@ -72,12 +72,12 @@ export default function LandlordRequestsPage() {
   return (
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto">
       <div>
-        <h1 className="text-xl font-black text-gray-900">
+        <h1 className="text-xl font-black text-gray-900 dark:text-white">
           Incoming Rental Requests
         </h1>
-        <p className="text-xs text-neutral-500">
+        <p className="text-xs text-neutral-500 dark:text-neutral-400">
           Manage tenant lease requests and lock booking confirmations with live
-          database sync.
+          database
         </p>
       </div>
 

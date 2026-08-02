@@ -86,7 +86,7 @@ export function IncomingRequestsList({
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-sm">
           <thead>
-            <tr className="bg-neutral-50 border-b border-neutral-100 text-gray-500 font-bold uppercase tracking-wider text-[11px]">
+            <tr className="bg-neutral-50 border-b border-neutral-100 text-gray-500 dark:text-neutral-400 font-bold uppercase tracking-wider text-[11px]">
               <th className="p-4">Property / Asset</th>
               <th className="p-4">Tenant Name</th>
               <th className="p-4">Duration & Rent</th>
