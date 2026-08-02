@@ -52,8 +52,33 @@ export function RentalRequestModal({
         reset();
         setOpen(false);
 
+        // router.refresh();
+        // router.push("/properties");
+
+        let userRole = "";
+        try {
+          const rawUser =
+            localStorage.getItem("user") ||
+            localStorage.getItem("rentnest_token");
+          if (rawUser) {
+            const parsedUser = JSON.parse(rawUser);
+            userRole = parsedUser?.role?.toLowerCase() || "";
+          }
+        } catch (e) {
+          console.error("Failed to parse user role from local storage:", e);
+        }
+
         router.refresh();
-        router.push("/properties");
+
+        if (userRole === "landlord") {
+          router.push("/dashboard/landlord");
+        } else if (userRole === "tenant") {
+          router.push("/dashboard/tenant");
+        } else if (userRole === "admin") {
+          router.push("/dashboard/admin");
+        } else {
+          router.push("/properties");
+        }
       } else {
         toast.error(result.message || "Failed to submit request.");
       }
