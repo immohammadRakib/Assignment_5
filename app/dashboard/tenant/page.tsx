@@ -47,7 +47,7 @@ export default async function TenantOverviewPage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50">
+    <div className="p-6 max-w-7xl mx-auto space-y-8 min-h-screen bg-slate-50/50 dark:bg-slate-900">
       <TenantBanner userName={userName} />
 
       <div className="space-y-4">
@@ -61,9 +61,9 @@ export default async function TenantOverviewPage() {
         <div className="flex items-center justify-between border-b border-slate-200/60 pb-3">
           <h2 className="text-lg font-black tracking-tight text-slate-800 flex items-center gap-2">
             <span className="w-2 h-4 bg-rose-500 rounded-full inline-block" />
-            My Rental Applications & Stays
+           <span className="dark:text-slate-300">Rental History Logs</span>
           </h2>
-          <span className="text-xs font-bold bg-slate-100 text-slate-500 px-2.5 py-1 rounded-lg">
+          <span className="text-xs font-bold bg-slate-100 dark:bg-slate-600 dark:text-slate-300 text-slate-500 px-2.5 py-1 rounded-lg">
             Personal History Logs
           </span>
         </div>

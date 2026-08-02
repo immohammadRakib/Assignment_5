@@ -74,17 +74,17 @@ export default async function TenantRequestsPage() {
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto select-none font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
-          <h1 className="text-xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
             My Rental Requests Feed
           </h1>
-          <p className="text-xs text-neutral-500 font-medium">
+          <p className="text-xs text-neutral-500 dark:text-slate-500 font-medium">
             Track your application approvals, lease status, and execute gateway
             checkouts.
           </p>
         </div>
         <Link
           href="/properties"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-rose-500 hover:text-rose-600 border border-rose-200/60 bg-rose-50/50 px-4 py-2.5 rounded-xl transition-all"
+          className="dark:bg-white inline-flex items-center gap-1.5 text-xs font-bold text-rose-500 hover:text-rose-600 border border-rose-200/60 bg-rose-50/50 px-4 py-2.5 rounded-xl transition-all"
         >
           <ArrowLeft className="w-3.5 h-3.5" /> Book Another Property
         </Link>

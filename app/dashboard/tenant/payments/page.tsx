@@ -54,10 +54,10 @@ export default async function TenantPaymentsHistoryPage() {
     <div className="space-y-6 p-4 md:p-6 max-w-7xl mx-auto select-none font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-neutral-100 pb-5">
         <div>
-          <h1 className="text-xl font-black text-gray-900 tracking-tight">
+          <h1 className="text-xl font-black text-gray-900 tracking-tight dark:text-white">
             Verified Transaction Receipts
           </h1>
-          <p className="text-xs text-neutral-500 font-medium">
+          <p className="text-xs text-neutral-500 font-medium darK:text-slate-500">
             Review your platform billing logs, verified payment tokens, and
             retry unfulfilled checkouts.
           </p>
