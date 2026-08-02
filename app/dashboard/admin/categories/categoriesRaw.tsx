@@ -2,27 +2,28 @@
 
 import { useUserStore } from '@/app/store/userStore';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
-import { Tag, Trash2, Eye, EyeOff, Info, Compass, Building } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { Tag, Trash2, Eye, EyeOff, Info, Compass, Building, RefreshCw } from 'lucide-react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 
+
 export default function CategoryRow({ category }: { category: any }) {
+  // const searchParams = useSearchParams();
+  // const categoryFilter = searchParams.get("category"); 
   const queryClient = useQueryClient();
   const router = useRouter();
-  
-  // Zustand গ্লোবাল স্টেট কানেকশন
-  const { expandedCategoryId, setExpandedCategoryId } = useUserStore();
-  const isExpanded = expandedCategoryId === category.id;
-  const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
+  // const paramsObj = await searchParams;
+    
+    const { expandedCategoryId, setExpandedCategoryId } = useUserStore();
+    const isExpanded = expandedCategoryId === category.id;
+    const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
 
-  // 🚀 প্রপার্টি কাউন্ট লজিক (ব্যাকএন্ডের অবজেক্ট স্ট্রাকচার অনুযায়ী প্রপার্টির সংখ্যা বের করা)
-  const propertyCount = category.properties?.length || category._count?.properties || 0;
+    const propertyCount = category.properties?.length || category._count?.properties || 0;
 
-  // 🗑️ ক্যাটাগরি ডিলিট করার Mutation (🚀 কার্ল কমান্ড অনুযায়ী রুট ফিক্সড)
   const deleteCategoryMutation = useMutation({
     mutationFn: async () => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
-      // ✅ আপনার লোকালহোস্ট কার্ল কমান্ড প্যাটার্ন অনুযায়ী নিখুঁত রুট হিট
+
       const res = await fetch(`${API_BASE}/api/categories/${category.id}`, {
         method: 'DELETE',
         headers: {
@@ -96,7 +97,7 @@ export default function CategoryRow({ category }: { category: any }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  router.push(`/dashboard/admin/moderation?category=${category.slug}`); // 🚀 মডারেশন পেজে সার্চ প্যারাম সহ পাঠানো
+                  router.push(`/properties?search=${category.name}`); // 🚀 মডারেশন পেজে সার্চ প্যারাম সহ পাঠানো
                 }}
                 className="flex items-center gap-1.5 px-3 py-2 bg-slate-800 text-white text-xs font-bold rounded-xl hover:bg-slate-700 transition-all active:scale-95 cursor-pointer"
               >
@@ -104,7 +105,7 @@ export default function CategoryRow({ category }: { category: any }) {
               </button>
 
               {/* ഡিলিট বাটন */}
-              <button
+              {/* <button
                 onClick={(e) => {
                   e.stopPropagation();
                   if(confirm('Are you sure you want to completely remove this category?')) {
@@ -115,7 +116,48 @@ export default function CategoryRow({ category }: { category: any }) {
                 className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-100 text-xs font-black rounded-xl hover:bg-red-100 active:scale-95 transition-all cursor-pointer disabled:opacity-40"
               >
                 <Trash2 className="w-3.5 h-3.5" /> Remove
-              </button>
+              </button> */}
+
+
+              <button
+  type="button"
+  disabled={deleteCategoryMutation.isPending}
+  onClick={(e) => {
+    // 🚀 ১. টেবিল বা কার্ডের মেইন ক্লিকে যাতে জ্যাম না লাগে তার জন্য প্রোপাগেশন অফ
+    e.stopPropagation();
+
+    // 🚀 ২. [ম্যাজিক ফিক্স] ব্রাউজারের পপআপ ডিলিট করে সোনমোর (Sonner) জোশ টোস্ট অ্যাকশন যোগ
+    toast.error("Remove Category?", {
+      description: "This will completely delete this category registry from the cloud database.",
+      duration: Infinity, // ইউজার অ্যাকশন না নেওয়া পর্যন্ত টোস্ট স্ক্রিনে আটকে থাকবে
+      action: {
+        label: "Confirm",
+        onClick: () => {
+          // ৩. ইউজার কনফার্ম বাটনে চাপ দিলে তানস্ট্যাক মিউটেশন ফায়ার হবে
+          deleteCategoryMutation.mutate();
+        },
+      },
+      cancel: {
+        label: "Cancel",
+        onClick: () => toast.dismiss(), // ক্যানসেল চাপলে সুন্দরভাবে ফেইড আউট হয়ে যাবে
+      },
+    });
+  }}
+  className="flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 border border-red-100/60 text-xs font-black rounded-xl hover:bg-red-100 active:scale-95 transition-all cursor-pointer disabled:opacity-40 select-none"
+>
+  {deleteCategoryMutation.isPending ? (
+    <>
+        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+        <span>Removing...</span>
+      </>
+    ) : (
+    <>
+      <Trash2 className="w-3.5 h-3.5" />
+      <span>Remove</span>
+    </>
+  )}
+</button>
+
             </div>
 
           </div>

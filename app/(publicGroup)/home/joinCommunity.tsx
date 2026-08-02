@@ -32,7 +32,8 @@ export default function JoinCommunity() {
                 Join the RentNest <br /> Family Today
               </h2>
               <p className="text-slate-500 text-sm md:text-lg font-medium max-w-sm mx-auto leading-relaxed">
-                Unlock premium listings and secure stays with our trusted community of 5,000+ members.
+                Unlock premium listings and secure stays with our trusted
+                community of 5,000+ members.
               </p>
             </div>
 
@@ -40,17 +41,17 @@ export default function JoinCommunity() {
               <Link href="/auth/register" className="inline-block">
                 <motion.button
                   animate={{
-                 rotate: [0, -2, 2, -2, 2, 0], 
-                    scale: [1, 1.05, 1], 
+                    rotate: [0, -2, 2, -2, 2, 0],
+                    scale: [1, 1.05, 1],
                   }}
                   transition={{
-                    duration: 0.6,      
-                    repeat: Infinity,   
-                    repeatDelay: 2.5,   
-                    ease: "easeInOut"
+                    duration: 0.6,
+                    repeat: Infinity,
+                    repeatDelay: 2.5,
+                    ease: "easeInOut",
                   }}
-                  whileHover={{ scale: 1.08 }} 
-                  whileTap={{ scale: 0.92 }}   
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
                   className="px-12 h-16 text-white font-black text-lg rounded-full transition-all duration-300 shadow-xl bg-[#FF385C] hover:bg-[#E31C5F] flex items-center justify-center gap-3 cursor-pointer group border border-white/20 backdrop-blur-sm"
                 >
                   <span>Get Started Now</span>

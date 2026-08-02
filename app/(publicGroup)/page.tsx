@@ -20,6 +20,7 @@ export default function HomePage() {
     <main className="min-h-screen bg-white">
       <Hero />
       <FeaturedProperties />
+      <CategorySlider/>
       <HowItWorks />
       <ValueSection />
       <JoinCommunity />

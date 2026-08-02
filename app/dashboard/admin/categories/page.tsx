@@ -74,7 +74,7 @@ function CategoryContent() {
             <FolderHeart className="w-6 h-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight">System Categories</h1>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight">Property Categories</h1>
             <p className="text-sm font-medium text-slate-500 mt-0.5">Total categories configured: <span className="font-bold text-rose-500">{categories.length}</span></p>
           </div>
         </div>

@@ -26,10 +26,10 @@ export async function PublicPropertiesList({ searchParams }: PublicPropertiesLis
   const finalProperties = rawData.filter((item: IProperty) => item.isAvailable !== false);
 
   const backendTotalCount = 
-    result?.pagination?.total || 
-    result?.meta?.total || 
-    result?.total || 
-    propertiesData?.total || 11;
+    result?.data?.pagination?.total || 
+    result?.data?.meta?.total || 
+    result?.data?.total || 
+    propertiesData?.data?.total || 0;
 
   const totalItems = parseInt(backendTotalCount, 10);
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
