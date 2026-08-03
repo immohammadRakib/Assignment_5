@@ -46,7 +46,7 @@ export function PropertySearchBar() {
       whileHover={{ scale: 1.01 }}
       className="w-full max-w-xl mx-auto"
     >
-      <div className="bg-white/95 backdrop-blur-md p-1.5 rounded-full border border-rose-200/30 shadow-xl shadow-rose-950/5 flex items-center transition-all focus-within:ring-2 focus-within:ring-[#FF385C]/50" >
+      <div className="bg-white/95 dark:bg-slate-800 backdrop-blur-md p-1.5 rounded-full border border-rose-200/30 shadow-xl shadow-rose-950/5 flex items-center transition-all focus-within:ring-2 focus-within:ring-[#FF385C]/50" >
         <div className="flex-1 flex items-center px-4 gap-3">
           <MapPin className="text-[#FF385C] w-4 h-4 md:w-5 md:h-5 shrink-0 stroke-[2.5px] animate-pulse" />
           <input 
