@@ -125,7 +125,6 @@ export function EditFormWrapper({ property }: { property: any }) {
     });
   };
 
-  // ⏳ ডেটা লোড হওয়ার সময় এই সুন্দর অ্যানিমেটেড স্কেলিটনটি স্ক্রিনে ভেসে থাকবে
   if (isLoading) {
     return (
       <div className="bg-white p-6 md:p-10 rounded-3xl border border-slate-150/80 shadow-xl shadow-rose-950/5 space-y-6 max-w-3xl mx-auto animate-pulse text-left">

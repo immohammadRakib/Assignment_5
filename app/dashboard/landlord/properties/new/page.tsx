@@ -68,7 +68,7 @@ export default function NewPropertyPage() {
     formData.append("image", file);
 
     try {
-      const res = await fetch(`https://imgbb.com{IMGBB_API_KEY}`, {
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=67f3f4d128f456040dee4bac7c148877`, {
         method: "POST",
         body: formData,
       });
