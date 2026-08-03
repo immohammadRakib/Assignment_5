@@ -221,6 +221,9 @@ export default function CategorySlider() {
       if (!res.ok) throw new Error("Failed to fetch categories");
       return res.json();
     },
+    refetchOnMount: true,
+  refetchOnWindowFocus: true,
+  staleTime: 0
   });
 
   const categories = apiResponse?.data || apiResponse || [];

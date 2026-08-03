@@ -176,6 +176,9 @@ export default function FeaturedProperties() {
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
+    refetchOnMount: true,
+  refetchOnWindowFocus: true,
+  staleTime: 0
   });
 
   const properties = apiResponse?.data?.data || apiResponse?.data || [];
