@@ -160,28 +160,40 @@
 //   );
 // }
 
-
-
-
 "use client";
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { motion, Variants } from "framer-motion";
-import { Building2, Hotel, Home, Store, Warehouse, Tent, Compass } from "lucide-react";
+import {
+  Building2,
+  Hotel,
+  Home,
+  Store,
+  Warehouse,
+  Tent,
+  Compass,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
-
 const getCategoryIcon = (name: string) => {
   const n = name?.toLowerCase();
-  if (n?.includes("studio") || n?.includes("apartment") || n?.includes("flat")) return Hotel;
-  if (n?.includes("house") || n?.includes("villa") || n?.includes("luxury")) return Home;
-  if (n?.includes("playground") || n?.includes("field") || n?.includes("garden")) return Compass;
+  if (n?.includes("studio") || n?.includes("apartment") || n?.includes("flat"))
+    return Hotel;
+  if (n?.includes("house") || n?.includes("villa") || n?.includes("luxury"))
+    return Home;
+  if (
+    n?.includes("playground") ||
+    n?.includes("field") ||
+    n?.includes("garden")
+  )
+    return Compass;
   if (n?.includes("hall") || n?.includes("convention")) return Store;
-  if (n?.includes("office-space") || n?.includes("commercial")) return Building2;
+  if (n?.includes("office-space") || n?.includes("commercial"))
+    return Building2;
   if (n?.includes("warehouse")) return Warehouse;
   return Tent;
 };
@@ -212,8 +224,8 @@ const cardVariants = {
 
 export default function CategorySlider() {
   const router = useRouter();
-//   const API_BASE = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}`;
-const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
+  const API_BASE =
+    process.env.BACKEND_API_URL || "https://assignment-4-vnjw.onrender.com";
 
   const { data: apiResponse, isLoading } = useQuery({
     queryKey: ["homeCategories"],
@@ -222,10 +234,6 @@ const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onren
       if (!res.ok) throw new Error("Failed to fetch categories");
       return res.json();
     },
-    refetchOnMount: true,
-  refetchOnWindowFocus: true,
-  staleTime: 0,
-    gcTime: 0,
   });
 
   const categories = apiResponse?.data || apiResponse || [];
@@ -233,7 +241,6 @@ const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onren
   return (
     <section className="py-16 bg-slate-50/60 border-t border-b border-slate-100 overflow-hidden dark:bg-slate-900 dark:border-slate-800/60 transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-7xl">
-        
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -242,21 +249,28 @@ const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onren
           className="mb-10 space-y-1"
         >
           <span className="text-[#FF385C] font-black text-xs uppercase tracking-widest flex items-center gap-1.5 dark:text-rose-400">
-            <Compass className="w-3.5 h-3.5 animate-spin" style={{ animationDuration: "6s" }} /> 
+            <Compass
+              className="w-3.5 h-3.5 animate-spin"
+              style={{ animationDuration: "6s" }}
+            />
             Explore Rentals
           </span>
           <h2 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight dark:text-slate-100">
             Browse by Property Type
           </h2>
           <p className="text-slate-500 text-xs font-semibold dark:text-slate-400">
-            Find tailored accommodations matching your exact structural requirements.
+            Find tailored accommodations matching your exact structural
+            requirements.
           </p>
         </motion.div>
 
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-32 rounded-2xl bg-white border border-slate-100 animate-pulse shadow-sm dark:bg-slate-800 dark:border-slate-700/50" />
+              <div
+                key={i}
+                className="h-32 rounded-2xl bg-white border border-slate-100 animate-pulse shadow-sm dark:bg-slate-800 dark:border-slate-700/50"
+              />
             ))}
           </div>
         ) : (
@@ -269,8 +283,9 @@ const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onren
           >
             {categories.slice(0, 5).map((cat: any, index: number) => {
               const Icon = getCategoryIcon(cat.name);
-              const count = cat.properties?.length || cat._count?.properties || 0;
-              
+              const count =
+                cat.properties?.length || cat._count?.properties || 0;
+
               return (
                 <motion.div
                   key={cat.id || index}
@@ -278,7 +293,8 @@ const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onren
                   whileHover={{
                     y: -10,
                     scale: 1.03,
-                    boxShadow: "0 20px 25px -5px rgb(255 56 92 / 0.1), 0 8px 10px -6px rgb(255 56 92 / 0.1)",
+                    boxShadow:
+                      "0 20px 25px -5px rgb(255 56 92 / 0.1), 0 8px 10px -6px rgb(255 56 92 / 0.1)",
                   }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => router.push(`/properties?search=${cat.name}`)}
@@ -286,7 +302,7 @@ const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onren
                   relative overflow-hidden dark:bg-card dark:border-border dark:hover:border-rose-900/40 ${index > 3 ? "hidden md:flex" : "flex"}`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-b from-rose-50/0 to-rose-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 dark:from-rose-950/0 dark:to-rose-950/20" />
-                  
+
                   <motion.div
                     whileHover={{ rotate: 15, scale: 1.1 }}
                     className="p-3 bg-rose-50/60 text-[#FF385C] rounded-2xl group-hover:bg-[#FF385C] group-hover:text-white transition-all duration-300 shadow-xs relative z-10 dark:bg-rose-950/40 dark:text-rose-400 dark:group-hover:bg-rose-600 dark:group-hover:text-white"
