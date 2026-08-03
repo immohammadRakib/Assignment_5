@@ -52,7 +52,7 @@ Follow these quick commands to spin up the application on your local workstation
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repository-github-link>
+git clone <https://github.com/immohammadRakib/Assignment_5>
 cd RentNest
 ```
 
