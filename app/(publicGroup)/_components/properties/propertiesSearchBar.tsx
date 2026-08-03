@@ -54,7 +54,7 @@ export function PropertySearchBar() {
             value={value}
             onChange={(e) => handleChange(e.target.value)}
             placeholder="Search properties by title, location, or city..." 
-            className="w-full bg-transparent border-none p-0 text-slate-800 text-xs md:text-sm font-semibold placeholder:text-slate-400 focus:outline-none focus:ring-0" 
+            className="w-full bg-transparent border-none p-0 text-slate-800 dark:text-white text-xs md:text-sm font-semibold placeholder:text-slate-400 focus:outline-none focus:ring-0" 
           />
         </div>
 

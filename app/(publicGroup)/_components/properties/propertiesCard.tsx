@@ -57,7 +57,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
       whileHover={{ y: -6, transition: { duration: 0.2, ease: "easeOut" } }}
       className="w-full"
     >
-      <Card className="overflow-hidden group hover:shadow-xl transition-all duration-300 bg-white border border-neutral-100 rounded-2xl">
+      <Card className="overflow-hidden dark:bg-card group hover:shadow-xl transition-all duration-300 bg-white border border-neutral-100 rounded-2xl">
         
         <Link href={`/properties/${property.id}`} className="block relative w-full h-56 bg-neutral-50 overflow-hidden">
           <Image
@@ -90,11 +90,11 @@ export function PropertyCard({ property }: PropertyCardProps) {
             </div>
             <div className="flex items-center gap-1 font-bold text-gray-800">
               <StarIcon className="size-3 text-amber-500 fill-amber-500" />
-              <span>{reviewCount > 0 ? `${reviewCount} Reviews` : "New"}</span>
+              <span className="dark:text-slate-400">{reviewCount > 0 ? `${reviewCount} Reviews` : "New"}</span>
             </div>
           </div>
           <Link href={`/properties/${property.id}`} className="block mt-1">
-            <CardTitle className="text-base font-black text-slate-800 hover:text-[#FF385C] transition-colors line-clamp-1 leading-tight">
+            <CardTitle className="text-base font-black text-slate-800 dark:text-white hover:text-[#FF385C] transition-colors line-clamp-1 leading-tight">
               {property.title}
             </CardTitle>
           </Link>
@@ -105,7 +105,7 @@ export function PropertyCard({ property }: PropertyCardProps) {
             {property.description}
           </p>
           
-          <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-xs text-slate-400">
+          <div className="border-t border-slate-100 dark:border-slate-800 pt-3 flex items-center justify-between text-xs text-slate-400">
             <div className="text-sm font-bold text-slate-900">
               <span className="text-[#FF385C] font-black text-base">
                 ৳{Number(property.pricePerDay || 0).toLocaleString("en-US")}
