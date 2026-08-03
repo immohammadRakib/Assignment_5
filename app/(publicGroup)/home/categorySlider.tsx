@@ -212,7 +212,8 @@ const cardVariants = {
 
 export default function CategorySlider() {
   const router = useRouter();
-  const API_BASE = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}`;
+//   const API_BASE = `${process.env.NEXT_PUBLIC_BACKEND_API_URL}`;
+const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
 
   const { data: apiResponse, isLoading } = useQuery({
     queryKey: ["homeCategories"],

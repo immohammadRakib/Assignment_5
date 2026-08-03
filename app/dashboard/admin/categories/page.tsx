@@ -16,7 +16,6 @@ function CategoryContent() {
   const [categoryName, setCategoryName] = useState('');
   const API_BASE = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
 
-  // 🔄 ১. সব ক্যাটাগরি ফেচ করা (TanStack Query)
   const { data: apiResponse, isLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -28,18 +27,17 @@ function CategoryContent() {
 
   const categories = apiResponse?.data || apiResponse || [];
 
-  // ➕ ২. নতুন ক্যাটাগরি তৈরি করার Mutation (🚀 কার্ল কমান্ড অনুযায়ী রুট ও বডি ফিক্সড)
   const createCategoryMutation = useMutation({
     mutationFn: async (name: string) => {
       const token = typeof window !== 'undefined' ? localStorage.getItem('rentnest_token') : null;
-      const res = await fetch(`${API_BASE}/api/categories/create`, { // ✅ /create প্যাথ যোগ করা হয়েছে
+      const res = await fetch(`${API_BASE}/api/categories/create`, { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           ...(token ? { 'Authorization': token } : {})
         },
         credentials: 'include',
-        body: JSON.stringify({ name }), // ✅ বডিতে শুধু নেম যাচ্ছে
+        body: JSON.stringify({ name }), 
       });
       if (!res.ok) throw new Error('Failed to create category');
       return res.json();
@@ -47,8 +45,8 @@ function CategoryContent() {
     onSuccess: () => {
       toast.success('New category added to RentNest!');
       setCategoryName('');
-      setIsModalOpen(false); // মডাল বন্ধ করা
-      queryClient.invalidateQueries({ queryKey: ['categories'] }); // লিস্ট রিফ্রেশ
+      setIsModalOpen(false); 
+      queryClient.invalidateQueries({ queryKey: ['categories'] }); 
     },
     onError: () => {
       toast.error('Failed to create category. Maybe it already exists.');

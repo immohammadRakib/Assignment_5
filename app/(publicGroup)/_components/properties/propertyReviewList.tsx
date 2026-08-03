@@ -3,7 +3,7 @@ import { StarIcon, Users, Calendar } from "lucide-react";
 
 async function getPropertyReviews(propertyId: string) {
   try {
-    const baseUrl = process.env.BACKEND_API_URL || 'https://onrender.com';
+    const baseUrl = process.env.BACKEND_API_URL || 'https://assignment-4-vnjw.onrender.com';
     const res = await fetch(`${baseUrl}/api/reviews/property/${propertyId}`, {
       method: "GET",
       next: { revalidate: 0 }
