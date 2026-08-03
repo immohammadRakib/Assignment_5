@@ -1,18 +1,28 @@
+
+
+
 # 🔌 RentNest — Full-Stack API Integration Mapping & System Architecture
 
 This document details the exhaustive synchronization matrix between the Next.js client layers and the remote REST API endpoint cluster. It maps specific user features, frontend presentation components, protected dashboard paths, and verified server adapters.
 
 ---
+  
+
+
 
 ## 🛰️ Global Gateways & Environment Variable Spec
 
 To secure network requests across cross-origin requests (CORS), the system consumes production URLs securely bounded via Next.js client environments.
 
-*   **Production API Server:** `https://onrender.com`
+*   **Production API Server:** `https://assignment-4-vnjw.onrender.com`
 *   **Dynamic Variable Engine Key:** `process.env.NEXT_PUBLIC_BACKEND_API_URL`
 *   **Secure Authorization Protocol:** JSON Web Tokens (JWT) dispatched via standard `Bearer` authorization headers.
 
 ---
+
+
+
+
 
 ## 🔑 1. Authentication & Session Lifecycles
 
@@ -27,6 +37,10 @@ Handles cryptographic registration payloads, secure authorization token validati
 
 ---
 
+
+
+
+
 ## 🏠 2. Public Catalogs & Dynamic Filtering Mesh
 
 Consumes heavy listing data streams, provides zero-latency parameter query indexing, and maps relational properties into responsive UI grids.
@@ -40,9 +54,17 @@ Consumes heavy listing data streams, provides zero-latency parameter query index
 
 ---
 
+
+
+
+
+
 ## 💻 3. Authorized Panel Clusters (Role-Based Roster)
 
 Protected interfaces requiring token verification guarded under the global Next.js `middleware.ts` layer. Mapped distinctly across **Tenant**, **Landlord**, and **Admin** actors.
+
+
+
 
 ### 🛡️ Tenant Access Matrix
 
@@ -52,6 +74,9 @@ Protected interfaces requiring token verification guarded under the global Next.
 | **Rental Tracking Checks** | `/dashboard/tenant/requests` | `/api/rentals/my-requests` | `GET` | `RentalRequestTable` |
 | **Payment Ledgers Logs** | `/dashboard/tenant/payments` | `/api/payments` | `GET` | `PaymentLedger` |
 
+
+
+
 ### 🏠 Landlord Roster
 
 | Feature / User Flow | Next.js Page Route | Backend API Endpoint | HTTP Method | Frontend Controller Component |
@@ -60,6 +85,9 @@ Protected interfaces requiring token verification guarded under the global Next.
 | **Write Asset Instance (Form)** | `/dashboard/landlord/properties/new` | `/api/landlord/properties` | `POST` | `CreateListingForm` |
 | **Audit Incoming Contracts** | `/dashboard/landlord/requests` | `/api/landlord/requests` | `GET` | `IncomingRequests` |
 | **Mutate Contract State** | `/dashboard/landlord/requests` | `/api/landlord/requests/:id` | `PATCH` | `RequestManager` |
+
+
+
 
 ### 👑 Admin Management
 
@@ -73,6 +101,9 @@ Protected interfaces requiring token verification guarded under the global Next.
 
 ---
 
+
+
+
 ## 💳 4. Production Fiscal Gateways & Payment Outcomes
 
 Manages real-time billing calculations, secure gateway redirections, and digital verification handshakes for transactional receipts.
@@ -85,9 +116,15 @@ Manages real-time billing calculations, secure gateway redirections, and digital
 
 ---
 
+
+
+
+
 ## 🔒 5. Route Guards & Interceptor Policies
 
 All `/dashboard/:path*` targets automatically traverse the native server `middleware.ts` stack to decode JWT payloads using low-level base64 buffers before rendering views.
+
+
 
 ### Next.js Middleware Matcher Node:
 ```typescript
@@ -100,6 +137,8 @@ export const config = {
   ],
 };
 ```
+
+
 *Note: Public callback strings (`/dashboard/tenant/payments/success` and `/dashboard/tenant/payments/fail`) are dynamically white-listed inside the middleware thread to allow direct validation returns from external banking IPs without route guard blocks.*
 
 ---
