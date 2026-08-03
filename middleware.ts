@@ -61,7 +61,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // '/dashboard/:path*', 
-        '/dashboard/(?!tenant/payments/success|tenant/payments/fail|tenant/payments/cancel):path*',
+    '/dashboard/(?!tenant/payments/success|tenant/payments/fail|tenant/payments/cancel):path*',
     '/auth/:path*',
     '/login',
     '/register'
