@@ -1,7 +1,7 @@
 
 
 
-# 🔌 RentNest — Full-Stack API Integration Mapping & System Architecture
+# 🏠 RentNest — Full-Stack API Integration Mapping & System Architecture
 
 This document details the exhaustive synchronization matrix between the Next.js client layers and the remote REST API endpoint cluster. It maps specific user features, frontend presentation components, protected dashboard paths, and verified server adapters.
 
