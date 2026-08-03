@@ -167,7 +167,7 @@ export const fetchCache = "force-no-store";
 const SYSTEM_FALLBACK_IMAGE = "https://img.magnific.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg";
 
 export default function FeaturedProperties() {
-  const API_BASE = "https://assignment-4-vnjw.onrender.com";
+  const API_BASE = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
   const { data: apiResponse, isLoading } = useQuery({
     queryKey: ["homeProperties"],
