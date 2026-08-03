@@ -34,7 +34,7 @@ export function EditFormWrapper({ property }: { property: any }) {
   const [imageTab, setImageTab] = useState<"link" | "upload">("link");
   const [linkInput, setLinkInput] = useState("");
   const [isDragging, setIsDragging] = useState(false);
-  // ➕ লিংক দিয়ে ইমেজ অ্যাড করা
+
   const handleAddLink = () => {
     if (linkInput.trim() !== "") {
       setImages((prev) => [...prev, linkInput.trim()]);

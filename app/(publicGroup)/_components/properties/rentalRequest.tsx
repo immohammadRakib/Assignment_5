@@ -52,9 +52,6 @@ export function RentalRequestModal({
         reset();
         setOpen(false);
 
-        // router.refresh();
-        // router.push("/properties");
-
         let userRole = "";
         try {
           let rawUser =
