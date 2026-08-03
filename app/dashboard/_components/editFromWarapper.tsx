@@ -43,22 +43,52 @@ export function EditFormWrapper({ property }: { property: any }) {
     }
   };
 
-  const handleFileUpload = (files: FileList | null) => {
+  const handleFileUpload = async (files: FileList | null) => {
     if (!files) return;
-    Array.from(files).forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setImages((prev) => [...prev, reader.result as string]);
+
+    const fileArray = Array.from(files);
+
+    toast.loading("Deploying assets to ImgBB mesh...", { id: "upload-toast" });
+
+    try {
+      const uploadPromises = fileArray.map(async (file) => {
+        const formData = new FormData();
+        formData.append("image", file);
+
+        const res = await fetch(
+          `https://api.imgbb.com/1/upload?key=67f3f4d128f456040dee4bac7c148877`,
+          {
+            method: "POST",
+            body: formData,
+          },
+        );
+
+        const data = await res.json();
+        if (data.success) {
+          return data.data.url;
+        } else {
+          throw new Error("ImgBB upload failed");
         }
-      };
-      reader.readAsDataURL(file);
-    });
-    toast.success("Local assets ingested successfully.");
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+
+      setImages((prev) => [...prev, ...uploadedUrls]);
+
+      toast.success(`${uploadedUrls.length} image(s) hosted successfully!`, {
+        id: "upload-toast",
+      });
+    } catch (error) {
+      console.error("Upload error:", error);
+      toast.error("Cloud synchronization failed. Please retry.", {
+        id: "upload-toast",
+      });
+    }
   };
 
   const handleRemoveImage = (indexToRemove: number) => {
     setImages((prev) => prev.filter((_, idx) => idx !== indexToRemove));
+    toast.info("Asset removed from local queue.");
   };
 
   const handleUpdateSubmit = async (e: React.FormEvent) => {
@@ -106,6 +136,7 @@ export function EditFormWrapper({ property }: { property: any }) {
             body: JSON.stringify(payload),
           },
         );
+        console.log("📡 [DEBUG] API Network Response Status:", res.status);
 
         if (res.ok) {
           toast.success("Listing updated successfully on the cloud inventory!");
