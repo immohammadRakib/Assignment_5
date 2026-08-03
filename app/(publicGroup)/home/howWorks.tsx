@@ -334,7 +334,7 @@ export default function HowItWorks() {
             const isDarkMode = typeof window !== "undefined" && document.documentElement.classList.contains("dark");
             
             return (
-              <div key={i} className={`flex flex-col md:flex-row items-start md:items-center w-full relative ${isEven ? "md:flex-row" : "md:flex-row-reverse"}`}>
+              <div key={i} className={`flex flex-col md:flex-row items-start md:items-center w-full relative pl-14 pr-4 md:pl-0 ${isEven ? "md:flex-row" : "md:flex-row-reverse"}`}>
                 
                 {/* 🚀 প্রতিটি কার্ডের ডাইনামিক ফ্রেমার মোশন অ্যানিমেশন - এখন ১০০% সার্ভার সেফ */}
                 <motion.div
@@ -353,7 +353,7 @@ export default function HowItWorks() {
                       : "0 4px 6px -1px rgba(0, 0, 0, 0.01)",
                   }}
                   transition={{ type: "spring", stiffness: 100, damping: 18 }}
-                  className={`w-full md:w-[45%] ml-14 md:ml-0 backdrop-blur-md border p-6 md:p-8 rounded-[2.5rem] flex flex-col gap-4 group transition-colors duration-300 ${isEven ? "md:text-right md:items-end" : "md:text-left md:items-start"}`}
+                  className={`w-full md:w-[45%] md:ml-0 backdrop-blur-md border p-6 md:p-8 rounded-[2.5rem] flex flex-col gap-4 group transition-colors duration-300 ${isEven ? "md:text-right md:items-end" : "md:text-left md:items-start"}`}
                 >
                   {/* ছোট আইকন ব্যাজ */}
                   <motion.div
@@ -379,7 +379,7 @@ export default function HowItWorks() {
                   </div>
 
                   {/* নিচের ফিচার চেকলিস্ট বাটন */}
-                  <div className="grid grid-cols-1 gap-2 pt-3 border-t border-slate-100 w-full text-left dark:border-slate-800/60">
+                  <div className="grid grid-cols-1 gap-2 pt-3 ml-14 md:ml-0 border-t border-slate-100 w-full text-left dark:border-slate-800/60">
                     {step.features.map((feat, idx) => (
                       <div key={idx} className={`flex items-center gap-2 text-[11px] font-bold ${isStepActive ? "text-rose-600 dark:text-rose-400" : "text-slate-400 dark:text-slate-500"} ${isEven ? "md:justify-end" : "md:justify-start"}`}>
                         {!isEven && <CheckCircle2 className="w-3.5 h-3.5 text-[#FF385C]/60 shrink-0 dark:text-rose-500/60" />}

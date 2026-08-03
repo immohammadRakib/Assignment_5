@@ -223,7 +223,8 @@ export default function CategorySlider() {
     },
     refetchOnMount: true,
   refetchOnWindowFocus: true,
-  staleTime: 0
+  staleTime: 0,
+    gcTime: 0,
   });
 
   const categories = apiResponse?.data || apiResponse || [];
@@ -284,7 +285,8 @@ export default function CategorySlider() {
                   whileTap={{ scale: 0.97 }}
                   onClick={() => router.push(`/properties?search=${cat.name}`)}
                   // 🎯 কাস্টম কার্ড টিউনিং - ডার্ক মোডে শ্যাড-সিএন এর থিম কালার (`dark:bg-card`, `dark:border-border`) অটোমেটিক নিয়ে নিবে
-                  className="bg-white p-6 rounded-2xl border border-slate-200/60 shadow-xs flex flex-col items-center justify-center text-center gap-4 cursor-pointer group transition-colors duration-300 hover:border-rose-300 relative overflow-hidden dark:bg-card dark:border-border dark:hover:border-rose-900/40"
+                  className={`bg-white p-6 rounded-2xl border border-slate-200/60 shadow-xs flex flex-col items-center justify-center text-center gap-4 cursor-pointer group transition-colors duration-300 hover:border-rose-300 
+                  relative overflow-hidden dark:bg-card dark:border-border dark:hover:border-rose-900/40 ${index > 3 ? "hidden md:flex" : "flex"}`}
                 >
                   {/* হোভার ব্যাকগ্রাউন্ড গ্লো */}
                   <div className="absolute inset-0 bg-gradient-to-b from-rose-50/0 to-rose-50/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 dark:from-rose-950/0 dark:to-rose-950/20" />
