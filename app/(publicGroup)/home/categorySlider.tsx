@@ -171,6 +171,10 @@ import { motion, Variants } from "framer-motion";
 import { Building2, Hotel, Home, Store, Warehouse, Tent, Compass } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
+
 const getCategoryIcon = (name: string) => {
   const n = name?.toLowerCase();
   if (n?.includes("studio") || n?.includes("apartment") || n?.includes("flat")) return Hotel;

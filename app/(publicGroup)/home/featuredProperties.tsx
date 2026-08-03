@@ -160,6 +160,10 @@ import { motion } from "framer-motion";
 import { Building2, ArrowRight, StarIcon, MapPin } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
+
 const SYSTEM_FALLBACK_IMAGE = "https://img.magnific.com/free-vector/hand-drawn-no-data-concept_52683-127823.jpg";
 
 export default function FeaturedProperties() {
