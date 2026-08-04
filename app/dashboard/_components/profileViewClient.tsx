@@ -348,6 +348,7 @@ export default function ProfileViewClient({
     try {
       const res = await fetch(`https://api.imgbb.com/1/upload?key=67f3f4d128f456040dee4bac7c148877`, {
         method: "POST",
+        headers: {},
         body: formData,
       });
 
