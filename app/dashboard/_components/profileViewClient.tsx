@@ -311,6 +311,8 @@ export default function ProfileViewClient({
   const [isPending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [isImageUploading, setIsImageUploading] = useState(false); 
+    const [uploadingImage, setUploadingImage] = useState(false);
+     const [imageUrl, setImageUrl] = useState("");
 
   const { register, handleSubmit, control, setValue, watch, formState: { errors } } = useForm({
     resolver: zodResolver(profileSchema),
@@ -335,37 +337,32 @@ export default function ProfileViewClient({
     });
   };
 
-
-  // 🎯 আপনার প্রোফাইল পেজের ইমেজ আপলোড ফাংশনটি এভাবে টিউন করে নিন:
-const handleAvatarChange = async (file: File) => {
-  try {
+const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingImage(true);
     const formData = new FormData();
     formData.append("image", file);
 
-    const res = await fetch(`https://api.imgbb.com/1/upload?key=67f3f4d128f456040dee4bac7c148877`, {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-    
-    if (data.success && data.data?.url) {
-      return data.data.url;
-    } else {
-      throw new Error("ImgBB Down");
+    try {
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=67f3f4d128f456040dee4bac7c148877`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setImageUrl(data.data.url);
+        toast.success("Image uploaded to ImgBB cloud!");
+      } else {
+        toast.error("Cloud upload failed. Please verify API key in env.");
+      }
+    } catch (err) {
+      toast.error("Error uploading image to cloud.");
+    } finally {
+      setUploadingImage(false);
     }
-  } catch (error) {
-    console.warn("⚠️ ImgBB API dropped thread, injecting backup luxury cryptographic avatar matrix!");
-    
-    // 🎯 ম্যাজিক: ImgBB ক্র্যাশ করলেও এটি ইউজারনেম অনুযায়ী একটি চমৎকার প্রিমিয়াম ডিফল্ট অবতার লিঙ্ক তৈরি করবে
-    // ফলে আপনার এপিআই 'PUT' রিকোয়েস্ট ১০০% সাকসেস হবে এবং ডাটাবেজে সেভ হয়ে যাবে!
-    const fallbackAvatar = `https://dicebear.com{encodeURIComponent(user?.data?.profile?.name || "Rakib")}`;
-    
-    return fallbackAvatar;
-  }
-};
-
-
+  };
+  
 
 
   // const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -381,7 +378,7 @@ const handleAvatarChange = async (file: File) => {
   //   try {
   //     const res = await fetch(`https://api.imgbb.com/1/upload?key=67f3f4d128f456040dee4bac7c148877`, {
   //       method: "POST",
-  //       headers: {},
+  //        headers: {},
   //       body: formData,
   //     });
 
